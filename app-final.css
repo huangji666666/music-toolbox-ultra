@@ -1,0 +1,502 @@
+/* 音乐工具箱 Ultra v13.5.8 最终样式 */
+/* 最终结构安全边界：任何页面 ID 都不得直接改变页面显隐。 */
+
+/* 页面互斥是最高优先级的安全边界。 */
+.page:not(.active){
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+}
+.page.active{visibility:visible;pointer-events:auto}
+
+button,select,[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:rgba(10,132,255,.16)}
+button:active,[role="button"]:active{filter:brightness(.92)}
+
+/* 调弦方案｜搜索｜变调夹：调音器与两个和弦子页共用同一比例。 */
+.compact-tuning-toolbar{
+    width:100%;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 42px minmax(66px,82px);
+    align-items:stretch;
+    gap:6px;
+    margin:0 0 5px;
+    position:relative;
+    z-index:40;
+}
+.compact-tuning-toolbar>.tuning-picker,
+.compact-tuning-toolbar>.chord-tuning-picker,
+.compact-tuning-toolbar>.explore-tuning-picker{min-width:0;width:100%;margin:0!important}
+.compact-tuning-toolbar .tuning-bar{height:100%;min-height:42px;margin:0}
+.compact-tuning-toolbar .tb-left,.compact-tuning-toolbar .tb-left>span:last-child{min-width:0}
+.compact-tuning-toolbar .tb-name,.compact-tuning-toolbar .tb-en{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.compact-tuning-toolbar .tb-arrow{flex:0 0 auto}
+.compact-tuning-toolbar>.special-tuning-open,
+.compact-capo-button{
+    min-width:0;
+    min-height:42px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--surf);
+    color:var(--text);
+    font-weight:800;
+    font-size:10px;
+    padding:4px 5px;
+}
+.compact-tuning-toolbar>.special-tuning-open{font-size:21px;color:var(--prim)}
+.compact-capo-button.active{border-color:rgba(52,199,89,.48);background:rgba(52,199,89,.12);color:var(--green)}
+.legacy-capo-controls,
+#chord-spider-config,
+#explore-spider-config{display:none!important}
+
+/* 乐理：子元素永远不截获按钮事件，所有操作保持单击与大触控。 */
+#page-theory button,
+.theory-cat-btn,.theory-topic-btn,.theory-back-btn,.theory-nav button,
+.theory-tone-node,.theory-chord-actions button,.theory-cof-actions button{
+    min-height:48px!important;
+    cursor:pointer;
+    position:relative;
+    user-select:none;
+}
+#page-theory button>*,
+.theory-cat-btn svg,.theory-topic-btn span,.theory-back-btn svg,
+.theory-tone-node>*,.theory-chord-actions button>*,.theory-cof-actions button>*{pointer-events:none}
+#page-theory button:active{transform:scale(.975);box-shadow:inset 0 0 0 2px rgba(10,132,255,.22)}
+.theory-chord-visual{display:flex!important;align-items:center!important;gap:8px!important;padding:10px!important;overflow:hidden!important}
+.theory-tone-node{flex:1 1 0;min-width:0!important;width:auto!important;padding:8px 4px!important}
+.theory-chord-actions{gap:8px!important}
+.theory-chord-actions button{font-size:12px!important}
+
+/* 视唱：谱窗是主体，曲目信息与导航全部收进谱窗。 */
+#page-practice.sight-mode{overflow:hidden!important}
+#page-practice.sight-mode #sight-panel{gap:5px;overflow:auto;padding-bottom:6px}
+.sight-score-shell{
+    flex:1 0 330px!important;
+    min-height:330px!important;
+    overflow:hidden;
+    border-radius:16px;
+}
+.sight-score-head{
+    min-height:76px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    gap:4px 8px!important;
+    padding:7px 9px!important;
+    align-items:center;
+}
+.sight-score-identity{min-width:0!important;display:block!important;margin:0!important;white-space:normal!important}
+.sight-score-identity strong{
+    display:block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color:var(--prim)!important;
+    font-size:13px!important;
+}
+.sight-score-identity small{
+    display:-webkit-box!important;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    margin-top:2px;
+    color:var(--text-sub)!important;
+    font-size:8px!important;
+    line-height:1.3;
+    text-align:left!important;
+}
+.sight-score-tools{display:flex!important;align-items:center;gap:5px!important;margin:0!important;white-space:nowrap!important}
+.sight-score-tools label{display:flex;flex-direction:column;gap:1px;color:var(--text-sub);font-size:7px}
+.sight-score-tools select{min-height:32px;max-width:112px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--text);padding:3px 5px;font-size:9px}
+.sight-library-info{width:32px;height:32px;min-height:32px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--prim);font-weight:900}
+.sight-score-head>#sight-prep-hint{min-width:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left!important;font-size:8px!important}
+.sight-score-head>#sight-segment-label{justify-self:end;margin:0!important;color:var(--prim);font-size:8px;white-space:nowrap}
+.sight-playback-strip{height:20px!important}
+.sight-score{
+    flex:1 1 auto!important;
+    min-height:205px!important;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x pan-y;
+}
+.sight-score svg{min-height:205px!important;height:auto!important;width:max(100%,660px)!important}
+.sight-score .notation-bar{shape-rendering:crispEdges}
+.sight-score-navigation{
+    display:grid;
+    grid-template-columns:52px 58px minmax(78px,1fr) 58px 52px;
+    align-items:center;
+    gap:4px;
+    min-height:43px;
+    padding:4px 6px;
+    border-top:1px solid var(--border);
+    background:var(--bg);
+}
+.sight-score-navigation button{min-width:0;min-height:34px;border:1px solid var(--border);border-radius:9px;background:var(--surf);color:var(--text);font-size:8px;font-weight:800;padding:3px}
+.sight-score-navigation button:disabled{opacity:.32}
+.sight-score-navigation strong{text-align:center;color:var(--prim);font-size:9px;font-variant-numeric:tabular-nums}
+.sight-compact-control{grid-template-columns:minmax(84px,.72fr) minmax(94px,.8fr) minmax(142px,1.25fr)!important}
+.sight-actions-main{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.sight-actions-main button{min-height:42px!important}
+.sight-length-location{justify-content:center;border:1px dashed rgba(10,132,255,.25);border-radius:10px;padding:5px 7px}
+.sight-stats{align-items:center;gap:6px!important}
+.sight-stats button{min-height:28px;border:1px solid var(--border);border-radius:8px;background:var(--surf);color:var(--text-sub);font-size:8px;padding:3px 7px}
+
+/* 和弦查询首屏：根音滚轮 + 九个常用性质 + 更多。 */
+.chord-controls{gap:5px!important;margin-bottom:5px!important}
+.chord-root-wheel-host{display:block!important}
+.chord-root-wheel-host .chord-root-wheel-open{width:100%;min-height:42px!important;display:flex;align-items:center;justify-content:space-between;padding:6px 11px!important;text-align:left}
+.chord-root-wheel-open strong{color:var(--prim);font-size:15px}.chord-root-wheel-open small{color:var(--text-sub);font-size:9px}
+.chord-type-row{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px!important}
+.chord-type-row button{min-width:0!important;min-height:38px;padding:4px 2px!important;font-size:9px!important}
+.chord-type-row .chord-more-button{color:var(--prim);border-style:dashed}
+.chord-bass-control{margin-top:0!important}
+.chord-guess-console{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;gap:5px;margin:1px 0 6px}
+.chord-guess-console .chord-guess-display{margin:0!important;min-width:0}
+.explore-result-audition{display:grid;grid-template-columns:40px 40px;grid-template-rows:1fr 1fr;gap:4px}
+.explore-result-audition button{min-height:32px;border:1px solid var(--border);border-radius:9px;background:var(--surf);color:var(--prim);font-size:11px;font-weight:800;padding:2px}
+.explore-result-audition button:last-child{grid-column:1/-1;font-size:8px}
+
+/* 虚拟乐器：五个控件永远是一行；极窄屏仅滚动工具栏，不压缩指板。 */
+#page-instrument.active{overflow:hidden!important}
+.instrument-toolbar{
+    display:grid!important;
+    grid-template-columns:minmax(84px,1.2fr) minmax(84px,1.15fr) minmax(62px,.8fr) minmax(58px,.72fr) minmax(58px,.72fr)!important;
+    gap:5px!important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    flex:0 0 auto;
+    scrollbar-width:none;
+    padding-bottom:1px;
+}
+.instrument-toolbar::-webkit-scrollbar{display:none}
+.instrument-toolbar>*{grid-column:auto!important;min-height:38px!important;min-width:0!important;white-space:nowrap}
+.instrument-tone-note{min-height:28px!important;padding:4px 8px!important;font-size:9px!important;flex:0 0 auto}
+.instrument-tuning-picker{flex:0 0 auto}
+#instrument-stage{flex:1 1 auto!important;min-height:260px!important}
+
+/* 统一滚轮、音色、自定义调弦与变调夹弹窗。 */
+.release-modal .practice-modal-card{width:min(430px,calc(100vw - 20px));max-height:min(82vh,720px);overflow:auto;padding:13px}
+.release-modal h3{margin:0 0 9px;color:var(--prim);font-size:16px}
+.release-modal-note{margin:0 0 9px;color:var(--text-sub);font-size:10px;line-height:1.45}
+.release-form-row{display:grid;grid-template-columns:82px minmax(0,1fr);align-items:center;gap:8px;min-height:46px;border-bottom:1px solid var(--border)}
+.release-form-row>span{font-size:11px;font-weight:750}.release-form-row select,.release-form-row input[type="range"]{width:100%;min-width:0}
+.release-form-row select{min-height:36px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);padding:4px 7px}
+.release-form-row output{color:var(--prim);font-size:10px;text-align:right}
+.release-switch{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.release-switch input{width:22px;height:22px;accent-color:var(--green)}
+.release-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.release-actions button{min-height:46px;border:1px solid var(--border);border-radius:12px;background:var(--surf);color:var(--text);font-weight:800}.release-actions .primary{background:var(--prim);border-color:var(--prim);color:#fff}
+.capo-spider-list{display:flex;flex-direction:column;gap:5px;margin-top:7px}.capo-spider-list .release-form-row{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);border:1px solid var(--border);border-radius:10px;padding:4px 6px}
+.custom-tuning-rows{display:flex;flex-direction:column;gap:5px}.custom-tuning-row{display:grid;grid-template-columns:44px minmax(0,1fr) 64px;align-items:center;gap:6px;min-height:44px;padding:4px 6px;border:1px solid var(--border);border-radius:11px;background:linear-gradient(120deg,rgba(10,132,255,.06),var(--surf))}.custom-tuning-row strong{color:var(--prim);font-size:10px}.custom-tuning-row select{min-width:0;min-height:34px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--text);padding:3px 5px}
+.wheel-list{height:242px;overflow-y:auto;scroll-snap-type:y mandatory;padding:96px 0}.wheel-list button{display:flex;width:100%;min-height:50px;align-items:center;justify-content:space-between;scroll-snap-align:center;border:0;border-bottom:1px solid var(--border);background:transparent;color:var(--text);padding:7px 14px}.wheel-list button.selected{background:rgba(10,132,255,.13);color:var(--prim)}.wheel-list button small{color:var(--text-sub)}
+.chord-more-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.chord-more-grid button{min-height:46px;border:1px solid var(--border);border-radius:11px;background:var(--surf);color:var(--text);font-size:10px}.chord-more-grid button.active{background:var(--prim);border-color:var(--prim);color:#fff}
+
+/* 设置入口各占半行并真正铺满。 */
+.settings-community{width:100%;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important}
+.settings-community button{width:100%;min-width:0;min-height:56px!important;padding:8px 10px!important;font-size:12px!important}
+
+@media(max-width:600px){
+    .sight-score-shell{flex-basis:308px!important;min-height:308px!important}
+    .sight-score{min-height:190px!important}.sight-score svg{min-height:190px!important}
+    .sight-compact-control{grid-template-columns:minmax(76px,.7fr) minmax(92px,.82fr)!important}
+    .sight-tempo-inline{grid-column:1/-1}
+    .instrument-toolbar{grid-template-columns:96px 96px 68px 62px 62px!important}
+}
+@media(max-width:390px){
+    .compact-tuning-toolbar{grid-template-columns:minmax(0,1fr) 38px 62px;gap:4px}
+    .compact-tuning-toolbar>.special-tuning-open,.compact-capo-button{min-height:40px}
+    .sight-score-head{grid-template-columns:minmax(0,1fr) auto;min-height:72px!important;padding:5px 7px!important}
+    .sight-score-tools select{max-width:96px;font-size:8px}
+    .sight-score-navigation{grid-template-columns:46px 52px minmax(66px,1fr) 52px 46px;gap:3px;padding-inline:4px}
+    .sight-score-navigation button{font-size:7px}
+    .chord-type-row{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .chord-type-row button{font-size:8px!important}
+}
+
+/* 调音器调弦面板独立悬浮，不把搜索与变调夹一同拉高。 */
+#page-tuner.active{overflow:visible!important}
+#page-tuner .compact-tuning-toolbar{align-self:start;isolation:isolate}
+#page-tuner .compact-tuning-toolbar>.tuning-picker{position:relative!important;z-index:92}
+#page-tuner #tuning-panel{
+    position:absolute!important;
+    top:calc(100% + 5px);
+    left:0;
+    right:0;
+    z-index:96;
+    max-height:0!important;
+    overflow:hidden!important;
+    padding:0 7px;
+    border:0 solid var(--border);
+    border-radius:15px;
+    background:var(--bg);
+    box-shadow:0 18px 42px rgba(0,0,0,.22);
+    overscroll-behavior:contain;
+    transition:max-height .24s ease,border-width .14s ease,padding .14s ease!important;
+}
+#page-tuner #tuning-panel.open{
+    max-height:min(56dvh,470px)!important;
+    overflow-y:auto!important;
+    padding:5px 7px 10px;
+    border-width:1px;
+    -webkit-overflow-scrolling:touch;
+}
+#page-tuner #tuning-panel .tuning-grid{grid-template-columns:1fr!important}
+#page-tuner #tuning-panel .tuning-card{min-height:58px}
+
+/* 渐速训练：高级版由步长和间隔推导时间；精简版固定 +1 BPM。 */
+.metro-ramp-modal .practice-modal-card{width:min(430px,calc(100vw - 20px));max-height:min(88dvh,760px);overflow:auto}
+.ramp-bpm-display{margin:5px 0 10px!important}
+.ramp-bpm-display strong{color:var(--prim);line-height:1}
+.ramp-range-grid{gap:7px!important}
+.ramp-field-wide{grid-column:1/-1}
+.ramp-field input[readonly]{color:var(--prim);font-weight:800;background:rgba(10,132,255,.07)}
+.ramp-stepper-field{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:6px;align-items:center}
+.ramp-stepper-field button{min-height:42px;border:1px solid var(--border);border-radius:12px;background:var(--surf);color:var(--prim);font-size:21px;font-weight:800}
+.ramp-stepper-field input{min-width:0}
+.ramp-derived{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:42px;padding:7px 10px;border:1px solid rgba(10,132,255,.25);border-radius:12px;background:rgba(10,132,255,.06);font-size:10px;color:var(--text-sub)}
+.ramp-derived strong{color:var(--prim);font-size:12px;font-variant-numeric:tabular-nums}
+.ramp-lite-rule{grid-column:1/-1;text-align:center;color:var(--text-sub);font-size:10px;line-height:1.45;padding:6px 8px;border-radius:10px;background:var(--bg)}
+.ramp-actions{grid-template-columns:minmax(0,1.35fr) minmax(108px,.65fr)!important}
+
+/* 视唱：空闲时隐藏进度条；谱面缩放与标准休止符保持清楚。 */
+.sight-playback-strip{display:none!important;height:18px!important;position:relative}
+.sight-playback-strip.active{display:block!important}
+.sight-playback-strip span{font-size:8px!important}
+.sight-score-tools{flex-wrap:wrap;justify-content:flex-end}
+.sight-zoom-tools{display:grid;grid-template-columns:26px 39px 26px;align-items:center;gap:2px}
+.sight-zoom-tools button{width:26px;height:30px;min-height:30px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--prim);font-size:15px;font-weight:850;padding:0}
+.sight-zoom-tools output{font-size:8px;color:var(--text-sub);text-align:center;font-variant-numeric:tabular-nums}
+.sight-rest{color:var(--text);pointer-events:none}
+
+/* 指板与演奏区使用同一弦轴：格线位置由真实 SVG 琴弦坐标写入。 */
+.performance-string-cells{position:absolute!important;inset:0!important;display:block!important;pointer-events:none;overflow:hidden}
+.performance-string-cell{position:absolute!important;margin:0!important;padding:0 2px!important;border:0!important;background:transparent;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--text-sub);white-space:nowrap}
+.strum-vertical .performance-string-cell{left:0;right:0;top:var(--string-axis,50%);height:28px;transform:translateY(-50%);border-top:1px solid rgba(10,132,255,.22)!important}
+.strum-horizontal .performance-string-cell{top:0;bottom:0;left:var(--string-axis,50%);width:42px;height:auto;transform:translateX(-50%);border-left:1px solid rgba(10,132,255,.22)!important}
+.performance-string-cell.disabled{background:rgba(255,59,48,.10)!important}
+.virtual-fret-wrap.is-horizontal{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 72px!important;
+    grid-template-rows:minmax(0,1fr) auto auto!important;
+    align-items:stretch!important;
+}
+.virtual-fret-wrap.is-horizontal>.virtual-board-scroll{grid-column:1;grid-row:1;min-height:0}
+.virtual-fret-wrap.is-horizontal>.strum-zone{grid-column:2;grid-row:1;min-height:0!important;height:auto!important}
+.virtual-fret-wrap.is-horizontal>.instrument-scroll-control{grid-column:1;grid-row:2}
+.virtual-fret-wrap.is-horizontal>.instrument-technique{grid-column:1/-1;grid-row:3}
+.virtual-fret-wrap.vertical{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr) 62px auto auto!important;
+    align-items:stretch!important;
+}
+.virtual-fret-wrap.vertical>.virtual-board-scroll{grid-row:1;min-height:0;width:100%}
+.virtual-fret-wrap.vertical>.strum-zone{grid-row:2;width:100%!important;height:62px!important;min-height:62px!important}
+.virtual-fret-wrap.vertical>.instrument-scroll-control{grid-row:3}
+.virtual-fret-wrap.vertical>.instrument-technique{grid-row:4}
+
+@media(max-width:390px){
+    #page-tuner #tuning-panel.open{max-height:min(58dvh,430px)!important}
+    .sight-zoom-tools{grid-template-columns:24px 35px 24px}
+    .sight-zoom-tools button{width:24px}
+    .ramp-stepper-field{grid-template-columns:39px minmax(0,1fr) 39px}
+}
+
+/* 调式筛选只过滤题库，不改写原谱。 */
+.sight-mode-filter-open{
+    width:100%;min-height:36px;border:1px solid var(--border);border-radius:10px;
+    background:var(--bg);color:var(--prim);padding:5px 8px;text-align:left;
+    font-size:9px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sight-mode-presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}
+.sight-mode-presets button{min-height:42px;border:1px solid rgba(10,132,255,.3);border-radius:11px;background:rgba(10,132,255,.08);color:var(--prim);font-weight:800}
+.sight-mode-filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sight-mode-filter-grid label{display:grid;grid-template-columns:25px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;min-height:52px;padding:6px 8px;border:1px solid var(--border);border-radius:11px;background:var(--bg)}
+.sight-mode-filter-grid input{grid-row:1/3;width:20px;height:20px;accent-color:var(--prim)}
+.sight-mode-filter-grid span{font-size:11px;font-weight:800}.sight-mode-filter-grid small{font-size:8px;color:var(--text-sub)}
+
+/* 正规简谱时值：短音用下划线，长音用延音横线，附点与三连音独立标记。 */
+.sight-jianpu{align-items:center!important;gap:10px!important;padding:30px 24px!important;min-height:205px!important;box-sizing:border-box;font-size:24px!important;overflow:visible}
+.jianpu-note{display:inline-flex;align-items:center;gap:4px;min-width:34px;min-height:54px;justify-content:center;position:relative;color:var(--text)}
+.jianpu-pitch{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:24px;min-height:38px;padding:5px 3px 8px;line-height:1}
+.jianpu-pitch b{font:800 24px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+.jianpu-pitch[class*="beams-"]::after{content:"";position:absolute;left:2px;right:2px;bottom:3px;height:0;background:repeating-linear-gradient(to bottom,var(--text) 0 1.4px,transparent 1.4px 4px)}
+.jianpu-pitch.beams-1::after{height:1.5px}.jianpu-pitch.beams-2::after{height:5.5px}.jianpu-pitch.beams-3::after{height:9.5px}
+.jianpu-dot{font-style:normal;font-size:20px;line-height:1;margin-left:1px;transform:translateY(-1px)}
+.jianpu-triplet{position:absolute;top:-7px;left:50%;font-style:normal;font-size:8px;color:var(--text-sub)}
+.jianpu-extension{font-style:normal;font-size:20px;font-weight:600;letter-spacing:-3px;color:var(--text)}
+.jianpu-octave{position:absolute;left:50%;transform:translateX(-50%);font-style:normal;font-size:11px;letter-spacing:1px;white-space:nowrap}.jianpu-octave.above{top:-10px}.jianpu-octave.below{bottom:-10px}
+.jianpu-note.rest{color:var(--text-sub)}.jianpu-bar{font-size:26px;line-height:1;color:var(--text-sub);font-weight:500}.jianpu-bar.final{color:var(--text)}
+
+/* 可命名自定义调弦与历史记录。 */
+#release-tuning-name{width:100%;min-width:0;min-height:38px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);padding:5px 8px}
+.custom-tuning-saved{display:flex;flex-direction:column;gap:5px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+.custom-tuning-saved>strong{font-size:10px;color:var(--text-sub)}
+.custom-tuning-saved-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:5px;min-height:48px;padding:5px 6px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
+.custom-tuning-saved-row span{min-width:0}.custom-tuning-saved-row b,.custom-tuning-saved-row small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.custom-tuning-saved-row b{font-size:10px;color:var(--prim)}.custom-tuning-saved-row small{font-size:8px;color:var(--text-sub);margin-top:2px}
+.custom-tuning-saved-row button{min-height:36px;border:1px solid var(--border);border-radius:9px;background:var(--surf);color:var(--prim);font-size:8px;font-weight:800;padding:4px 7px}.custom-tuning-saved-row button.danger{color:var(--red)}
+.special-tuning-card.custom-result{border-color:rgba(52,199,89,.38);background:linear-gradient(120deg,rgba(52,199,89,.09),var(--surf))}
+.special-confidence.custom{background:rgba(52,199,89,.14);color:var(--green)}
+.special-tuning-card-actions{display:flex;flex-direction:column;gap:4px;min-width:72px}.special-tuning-card-actions button{min-height:34px!important}.special-tuning-card-actions .danger{color:var(--red);background:transparent;border-color:rgba(255,59,48,.3)}
+
+/* 精简渐速只有间隔－／＋、撤回、完成四个操作；高级版保持完整参数。 */
+.metro-ramp-modal .ramp-tabs{grid-template-columns:1fr 1fr!important}
+.ramp-lite-panel{padding:8px 0 4px}
+.ramp-lite-stepper{display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:stretch;gap:10px}
+.ramp-lite-stepper>button{min-height:76px;border:1px solid rgba(10,132,255,.34);border-radius:17px;background:rgba(10,132,255,.08);color:var(--prim);font-size:32px;font-weight:800}
+.ramp-lite-stepper>span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:76px;border:1px solid var(--border);border-radius:17px;background:var(--bg)}
+.ramp-lite-stepper small{font-size:9px;color:var(--text-sub)}.ramp-lite-stepper strong{font-size:24px;color:var(--prim);font-variant-numeric:tabular-nums}.ramp-lite-stepper em{font-style:normal;font-size:9px;color:var(--green);font-weight:800}
+.ramp-lite-panel p{margin:7px 0 0;text-align:center;font-size:9px;color:var(--text-sub)}
+.metro-ramp-modal .ramp-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+.metro-ramp-modal .ramp-actions .ramp-confirm{grid-column:1/-1;width:100%;margin:0!important}
+.metro-ramp-modal[data-mode="lite"] .ramp-actions .ramp-restore,.metro-ramp-modal[data-mode="lite"] .ramp-actions .ramp-confirm{grid-column:auto;min-height:48px}
+
+/* 手机端也保留最低音／转位标识，避免只剩一排无上下文按钮。 */
+@media(max-width:420px){
+    #chord-bass-label{display:block!important;color:var(--text-sub);font-size:9px;font-weight:750}
+    .sight-mode-filter-grid{grid-template-columns:1fr}
+    .custom-tuning-saved-row{grid-template-columns:minmax(0,1fr) auto}.custom-tuning-saved-row .danger{grid-column:2}
+    .ramp-lite-stepper{grid-template-columns:58px minmax(0,1fr) 58px;gap:7px}
+}
+
+
+/* 音乐工具箱 Ultra v13.5.8：局部补丁样式。 */
+.chord-root-wheel-host{display:block!important;min-width:0}
+.chord-root-ruler{--root-edge:12px;position:relative;width:100%;height:46px;box-sizing:border-box;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,var(--surf),color-mix(in srgb,var(--surf) 91%,var(--prim)));overflow:visible;touch-action:none;user-select:none;-webkit-user-select:none;outline:none}
+.chord-root-ruler:focus-visible{border-color:var(--prim);box-shadow:0 0 0 3px rgba(10,132,255,.15)}
+.chord-root-ruler-caption{position:absolute;left:8px;bottom:2px;color:var(--text-sub);font-size:7px;font-weight:750;z-index:4;pointer-events:none}
+.chord-root-ruler-value{position:absolute;left:calc(var(--root-edge) + var(--root-step) * (100% - 2 * var(--root-edge)) / 12);top:0;min-width:25px;max-width:68px;padding:1px 5px;border-radius:7px;background:var(--prim);color:#fff;font-size:10px;line-height:14px;text-align:center;font-weight:900;z-index:5;pointer-events:none;white-space:nowrap;box-shadow:0 2px 7px rgba(10,132,255,.28);transform:translateX(-50%);transition:left .08s linear,background .12s,color .12s}
+.chord-root-ruler-value::after{content:"";position:absolute;left:50%;top:100%;width:0;height:0;border:4px solid transparent;border-top-color:var(--prim);transform:translateX(-50%)}
+.chord-root-ruler-value.pop{animation:root-value-pop .18s ease-out}
+@keyframes root-value-pop{0%{transform:translateX(-50%) scale(.82);opacity:.45}100%{transform:translateX(-50%) scale(1);opacity:1}}
+.chord-root-ruler-track{position:absolute;left:var(--root-edge);right:var(--root-edge);top:2px;bottom:14px}
+.chord-root-ruler-track::before{content:"";position:absolute;left:0;right:0;top:23px;height:2px;border-radius:99px;background:var(--border)}
+.chord-root-ruler-tick{position:absolute!important;left:calc(var(--root-step) * 100% / 12);top:0!important;width:calc(100% / 12)!important;min-width:20px!important;height:28px!important;min-height:28px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--text-sub)!important;transform:translateX(-50%);z-index:2;touch-action:none}
+.chord-root-ruler-tick::before{content:"";position:absolute;left:50%;top:18px;width:1px;height:8px;background:var(--text-sub);opacity:.55;transform:translateX(-50%)}
+.chord-root-ruler-tick.natural::before{top:15px;height:11px;width:2px;opacity:.82}
+.chord-root-ruler-tick span{position:absolute;left:50%;top:0;transform:translateX(-50%);min-width:18px;padding:0 2px;border-radius:5px;font-size:12px;line-height:15px;font-weight:900;pointer-events:none}
+.chord-root-ruler-tick.selected span{opacity:0}
+.chord-root-ruler-pointer{position:absolute;left:calc(var(--root-step) * 100% / 12);top:24px;width:10px;height:10px;border:2px solid var(--surf);border-radius:50%;background:var(--prim);box-shadow:0 1px 5px rgba(10,132,255,.38);transform:translate(-50%,-50%);z-index:3;pointer-events:none}
+.metro-ramp-modal[data-mode="lite"] .ramp-actions{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)!important}
+.metro-ramp-modal[data-mode="lite"] .ramp-start{grid-column:1/-1;min-height:52px}
+.metro-ramp-modal[data-mode="lite"] .ramp-restore,.metro-ramp-modal[data-mode="lite"] .ramp-confirm{grid-column:auto!important;min-height:48px}
+.sight-settings.modalized>summary::after{content:'↗'!important}
+.sight-settings.modalized>.sight-settings-body{display:none}
+.sight-settings-modal .practice-modal-card{display:flex;flex-direction:column;width:min(560px,calc(100vw - 20px));max-height:min(86dvh,760px);padding:0;overflow:hidden}
+.sight-settings-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;padding:13px 14px 10px;border-bottom:1px solid var(--border)}
+.sight-settings-modal-head span{display:flex;min-width:0;flex-direction:column}.sight-settings-modal-head strong{color:var(--prim);font-size:16px}.sight-settings-modal-head small{margin-top:2px;color:var(--text-sub);font-size:9px}
+.sight-settings-modal-head button{width:38px;height:38px;flex:0 0 38px;border:1px solid var(--border);border-radius:11px;background:var(--bg);color:var(--text-sub);font-size:22px}
+.sight-settings-modal-scroll{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 11px 4px}
+.sight-settings-modal .sight-settings-body{display:block;max-height:none;padding:0;overflow:visible}
+.sight-settings-modal .sight-setup{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sight-settings-modal-actions{flex:0 0 auto;margin:0;padding:9px 11px 11px;border-top:1px solid var(--border);background:var(--surf)}
+.sight-staff-score .sight-key-signature text,.sight-staff-score .notation-accidental{font-family:"Noto Music","Bravura Text","Segoe UI Symbol",serif}
+.chord-controls>.chord-bass-control{display:none!important}
+.chord-nav{display:grid!important;grid-template-columns:minmax(126px,.95fr) minmax(112px,1fr) minmax(84px,.72fr)!important;align-items:stretch!important;gap:7px!important;width:100%;margin-bottom:6px}
+.voicing-step-group{display:grid;grid-template-columns:42px minmax(38px,1fr) 42px;align-items:center;gap:4px;min-width:0}
+.chord-nav .voicing-step-group button{width:42px!important;height:42px!important;min-height:42px;border-radius:12px!important;padding:0!important}
+.voicing-step-group #voicing-indicator{display:flex;align-items:center;justify-content:center;min-width:0;height:42px;border:1px solid var(--border);border-radius:11px;background:var(--bg);color:var(--text-sub);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.chord-nav .chord-bass-nav-button,.chord-nav .voicing-expand-btn{width:100%!important;height:auto!important;min-height:42px!important;border-radius:12px!important;padding:5px 8px!important;white-space:nowrap}
+.chord-bass-nav-button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;background:rgba(10,132,255,.07)!important;color:var(--prim)!important}
+.chord-bass-nav-button small,.chord-bass-nav-button strong{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis}.chord-bass-nav-button small{font-size:8px;color:var(--text-sub);font-weight:700}.chord-bass-nav-button strong{margin-top:1px;font-size:11px}.chord-bass-nav-button.active{border-color:rgba(10,132,255,.42)!important;background:rgba(10,132,255,.13)!important}
+.chord-bass-picker-modal .practice-modal-card{width:min(520px,calc(100vw - 20px));max-height:min(88dvh,760px);overflow:auto}
+.chord-bass-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.chord-bass-choice-grid button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:52px;border:1px solid var(--border);border-radius:11px;background:var(--bg);color:var(--text);padding:6px 9px;text-align:left}.chord-bass-choice-grid button strong{font-size:10px}.chord-bass-choice-grid button small{margin-top:2px;color:var(--text-sub);font-size:8px}.chord-bass-choice-grid button.active{border-color:var(--prim);background:rgba(10,132,255,.13);color:var(--prim)}
+.chord-bass-picker-label{display:block;margin:10px 0 5px;color:var(--text-sub);font-size:9px}
+.chord-bass-pc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.chord-bass-pc-grid button{min-width:0;min-height:42px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:9px;font-weight:800;padding:3px}.chord-bass-pc-grid button.active{border-color:var(--prim);background:var(--prim);color:#fff}
+.performance-string-cells{pointer-events:none}
+.performance-string-cell{pointer-events:none}
+.sight-drum-score .drum-staff-line,.sight-drum-score .drum-barline{shape-rendering:crispEdges}
+.sight-drum-score .drum-notehead,.sight-drum-score .drum-stem,.sight-drum-score .drum-beam,.sight-drum-score .drum-flag{vector-effect:non-scaling-stroke}
+.sight-drum-score .drum-detected-hit{vector-effect:non-scaling-stroke}
+@media(max-width:430px){.chord-root-ruler{--root-edge:10px;height:44px}.chord-root-ruler-tick{min-width:18px!important}.chord-root-ruler-tick span{font-size:11px}.chord-root-ruler-value{font-size:9px}.sight-settings-modal{padding:10px}.sight-settings-modal .practice-modal-card{max-height:90dvh}.sight-settings-modal .sight-setup{grid-template-columns:1fr 1fr}.chord-nav{grid-template-columns:1fr 1fr!important}.voicing-step-group{grid-column:1/-1;grid-template-columns:44px minmax(0,1fr) 44px}.chord-nav .voicing-step-group button{width:44px!important}.chord-nav .chord-bass-nav-button,.chord-nav .voicing-expand-btn{min-height:44px!important}.chord-bass-pc-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+/* 音乐工具箱 Ultra v13.5.8 最终发布布局修复 */
+
+/* 灵动岛/刘海安全区必须始终叠加到顶栏高度，紧凑模式不能将它覆盖。 */
+.top-bar{min-height:calc(50px + var(--safe-t));padding-top:var(--safe-t)!important}
+html[data-layout="compact"] .top-bar{height:calc(42px + var(--safe-t))!important;min-height:calc(42px + var(--safe-t))!important}
+html[data-layout="short"] .top-bar{height:calc(38px + var(--safe-t))!important;min-height:calc(38px + var(--safe-t))!important;padding-top:var(--safe-t)!important}
+html[data-ios-standalone="true"]{--safe-t:max(env(safe-area-inset-top,0px),60px)}
+html[data-ios="true"] .top-bar{padding-bottom:3px!important}
+html[data-ios="true"][data-layout="compact"] .top-bar{height:calc(46px + var(--safe-t))!important;min-height:calc(46px + var(--safe-t))!important}
+html[data-ios="true"][data-layout="short"] .top-bar{height:calc(44px + var(--safe-t))!important;min-height:calc(44px + var(--safe-t))!important}
+@supports(height:100dvh){body{height:100dvh;min-height:100dvh}}
+
+/* 调音器主体均匀利用可用高度，不再将弦按钮强行推到最底。 */
+#page-tuner.active{justify-content:flex-start!important;align-content:start;gap:clamp(4px,1.1dvh,10px)!important}
+#page-tuner .tuner-display{width:min(76vw,calc((var(--viewport-h) - var(--safe-t) - var(--safe-b) - 250px)*.72),360px)!important;max-width:360px;min-width:230px;margin:clamp(2px,.8dvh,8px) auto!important}
+#page-tuner .a4-control{margin-block:0!important}
+#page-tuner .strings-rack{margin-top:auto!important;margin-bottom:clamp(2px,.8dvh,8px)!important}
+@media(max-height:700px){#page-tuner .tuner-display{min-width:190px;width:min(62vw,calc(var(--viewport-h)*.39),270px)!important}#page-tuner .strings-rack{margin-top:0!important}}
+
+/* 谱面布局按钮与多行系统。 */
+.sight-layout-button{align-self:flex-end;min-height:28px;margin:-1px 7px 4px;padding:3px 9px;border:1px solid rgba(10,132,255,.28);border-radius:8px;background:rgba(10,132,255,.07);color:var(--prim);font-size:8px;font-weight:800}
+.sight-layout-button:active{transform:scale(.97);background:rgba(10,132,255,.16)}
+.sight-systems{display:flex;flex-direction:column;gap:7px;width:100%;min-width:0;padding:5px;overflow:visible}
+.sight-system{width:100%;min-width:0;overflow:auto;border:1px solid color-mix(in srgb,var(--border) 76%,transparent);border-radius:10px;background:var(--surf);-webkit-overflow-scrolling:touch}
+.sight-system>svg,.sight-system>.sight-jianpu{display:block;width:100%!important;min-width:100%!important;min-height:142px!important}
+.sight-systems.grid-2,.sight-systems.grid-3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.sight-systems.grid-2 .sight-system,.sight-systems.grid-3 .sight-system{min-width:0}
+.sight-systems.grid-2 svg,.sight-systems.grid-3 svg{min-height:118px!important}
+.sight-layout-choice{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}
+.sight-layout-choice button{display:flex;min-height:66px;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:9px 10px;border:1px solid var(--border);border-radius:11px;background:var(--bg);color:var(--text);text-align:left}
+.sight-layout-choice button.active{border-color:var(--prim);background:rgba(10,132,255,.1);color:var(--prim);box-shadow:inset 0 0 0 1px rgba(10,132,255,.22)}
+.sight-layout-choice strong{font-size:11px}.sight-layout-choice small{color:var(--text-sub);font-size:8px;line-height:1.35}
+@media(max-width:520px){.sight-systems.grid-2,.sight-systems.grid-3{grid-template-columns:1fr}.sight-layout-choice{grid-template-columns:1fr 1fr}.sight-score{min-height:260px!important;max-height:min(46dvh,430px);overflow:auto!important}.sight-system>svg,.sight-system>.sight-jianpu{min-height:154px!important}}
+
+/* 导航栏移出谱窗裁剪层，任何手机高度下都作为独立完整行显示。 */
+#sight-panel>.sight-score-navigation{display:grid!important;flex:0 0 auto;width:100%;grid-template-columns:minmax(44px,1fr) minmax(44px,1fr) minmax(76px,1.25fr) minmax(44px,1fr) minmax(44px,1fr);min-height:46px;border:1px solid var(--border);border-radius:11px;background:var(--surf);overflow:visible;position:relative;z-index:4}
+#sight-panel>.sight-score-navigation button{min-height:38px!important;font-size:8px!important}
+
+/* 精简版 DOM 中不保留高级字段；这里再加一道防回退的显示边界。 */
+.metro-ramp-modal[data-mode="lite"] #ramp-range-fields,.metro-ramp-modal[data-mode="range"] #ramp-lite-fields{display:none!important}
+
+/* 音色准备时保持播放键的稳定尺寸和可见反馈。 */
+#play-btn:disabled{opacity:.72;filter:saturate(.72);cursor:wait}
+
+/* v13.5.8：安装入口、危险重置按钮与桌面宽屏自适应。 */
+#start-mask{padding:calc(24px + var(--safe-t)) max(20px,4vw) calc(24px + var(--safe-b));}
+.start-actions{display:flex;align-items:stretch;justify-content:center;gap:9px;width:min(430px,100%);margin:0 auto;flex-wrap:wrap}
+.start-actions>.start-btn,.start-actions>.start-install-btn{flex:1 1 180px;min-height:48px;padding:11px 18px;white-space:nowrap}
+.start-install-btn{border:1px solid rgba(10,132,255,.38);border-radius:24px;background:rgba(10,132,255,.09);color:var(--prim);font-size:14px;font-weight:750}
+.start-install-btn:active{transform:scale(.97);background:rgba(10,132,255,.17)}
+.start-install-hint{width:min(430px,100%);margin:7px auto 0;color:var(--text-sub);font-size:10px;line-height:1.45;text-align:center}
+.start-reset-row{display:flex;justify-content:flex-end;width:min(430px,100%);margin:8px auto 0}
+.start-reset-btn{min-height:32px;padding:5px 12px;border:1px solid rgba(255,59,48,.42);border-radius:9px;background:rgba(120,120,128,.10);color:var(--text-sub);font-size:10px;font-weight:650;opacity:.78}
+.start-reset-btn:hover,.start-reset-btn:focus-visible{color:var(--red);border-color:rgba(255,59,48,.68);opacity:1}
+.start-reset-btn:disabled{cursor:wait;opacity:.55}
+
+@media(max-width:520px){
+    .start-actions{gap:7px}.start-actions>.start-btn,.start-actions>.start-install-btn{flex-basis:100%;width:100%}
+    .start-reset-row{margin-top:6px}.start-reset-btn{min-height:30px;font-size:9px}
+}
+
+@media(min-width:700px){
+    html[data-adaptive="true"] main{width:100%;}
+    html[data-adaptive="true"] .page{left:0!important;right:0!important;transform:none!important;width:100%!important;margin-inline:auto!important;max-width:min(1120px,calc(100vw - 48px))!important;border-inline:0!important}
+    html[data-adaptive="true"][data-device="desktop"] #page-metro,
+    html[data-adaptive="true"][data-device="desktop"] #page-ear,
+    html[data-adaptive="true"][data-device="desktop"] #page-practice,
+    html[data-adaptive="true"][data-device="desktop"] #page-theory{max-width:min(1080px,calc(100vw - 56px))!important}
+    html[data-adaptive="true"][data-device="wide-desktop"] .page{max-width:min(1440px,calc(100vw - 72px))!important}
+    html[data-adaptive="true"][data-device="wide-desktop"] #page-metro,
+    html[data-adaptive="true"][data-device="wide-desktop"] #page-ear,
+    html[data-adaptive="true"][data-device="wide-desktop"] #page-practice,
+    html[data-adaptive="true"][data-device="wide-desktop"] #page-theory{max-width:min(1280px,calc(100vw - 96px))!important}
+    html[data-adaptive="true"][data-device="wide-desktop"] #page-instrument{max-width:min(1600px,calc(100vw - 72px))!important}
+    html[data-adaptive="true"] #page-metro .metro-hero{grid-template-columns:minmax(230px,.75fr) minmax(340px,1.25fr);gap:18px}
+    html[data-adaptive="true"] #page-metro .metro-hero .bpm-wrapper{height:clamp(142px,18vh,220px)!important}
+    html[data-adaptive="true"] #page-metro .bpm-val{font-size:clamp(48px,5vw,72px)!important}
+    html[data-adaptive="true"] #page-instrument #instrument-stage{width:100%;min-height:clamp(360px,62vh,720px)!important}
+    html[data-adaptive="true"] #page-instrument .virtual-fret-wrap.is-horizontal{grid-template-columns:minmax(0,1fr) clamp(78px,8vw,116px)!important}
+    html[data-adaptive="true"] #page-instrument .virtual-board-scroll{min-width:0;width:100%}
+    html[data-adaptive="true"] #page-instrument .virtual-board-scroll svg{width:100%;height:auto;max-width:none}
+    html[data-adaptive="true"] #page-ear .ear-display{min-height:clamp(130px,18vh,210px);padding:clamp(18px,2vw,30px)}
+    html[data-adaptive="true"] #page-ear .ear-play-btn{width:clamp(56px,5vw,78px);height:clamp(56px,5vw,78px)}
+    html[data-adaptive="true"] #page-theory .theory-categories{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    html[data-adaptive="true"] #page-theory .theory-cat-btn{min-height:clamp(96px,11vh,132px)}
+    html[data-adaptive="true"] #page-practice .sight-score svg{width:100%!important;min-width:100%!important}
+}
+
+@media(min-width:1200px){
+    html[data-adaptive="true"] #page-metro .metro-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    html[data-adaptive="true"] #page-ear .ear-choices{grid-template-columns:repeat(8,minmax(72px,1fr))}
+}

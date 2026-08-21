@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="音乐工具箱 Ultra 图标">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="32" x2="448" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a84ff"/>
+      <stop offset="1" stop-color="#5856d6"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="150" y1="120" x2="350" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#bdeeff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="174" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="10"/>
+  <path d="M150 154v202M192 132v248M234 116v280M278 116v280M320 132v248M362 154v202" stroke="url(#glow)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M114 256h284" stroke="#ffffff" stroke-opacity=".65" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="278" cy="256" r="31" fill="#ffffff"/>
+  <path d="M278 225l31-50" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="150" cy="154" r="11" fill="#64d8ff"/>
+  <circle cx="362" cy="356" r="11" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,18 @@
+音乐工具箱 Ultra · 重拍音色扩展包
+
+许可：CC0 1.0（公共领域贡献）
+用途：节拍器 01–26 号重拍音色；应用内离线使用。
+
+01–20 来源：Versilian Community Sample Library（VCSL）
+项目：https://github.com/sgossner/VCSL
+许可：https://creativecommons.org/publicdomain/zero/1.0/
+
+21–26 来源：Sonic Pi sample library
+项目：https://github.com/sonic-pi-net/sonic-pi
+许可：CC0 1.0（对应 sample library 素材）
+
+本应用对素材只做了以下发布处理：裁去起音前静音、限制为不超过 280 ms、
+统一为 48 kHz 单声道 PCM WAV，并进行安全峰值归一化。处理不改变原许可。
+
+用户选定的默认第一拍重音：02 · 木块强击·圆润
+原始文件：VCSL / Woodblock / wood_click_f_rr1.wav

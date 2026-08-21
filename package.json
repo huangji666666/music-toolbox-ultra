@@ -1,0 +1,15 @@
+{
+  "name": "music-toolbox-ultra",
+  "version": "13.5.8",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:standalone": "node tools/build_standalone.mjs",
+    "build:release": "node tools/build_release.mjs",
+    "check:release": "node tools/build_release.mjs --check",
+    "qa": "node tools/qa_final.mjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.12"
+  }
+}

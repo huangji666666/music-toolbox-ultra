@@ -1,0 +1,14 @@
+OpenScore Lieder corpus excerpts
+
+Source project: https://github.com/OpenScore/Lieder
+Source score pages are recorded per exercise in sight-library-v2.js.
+Score data license: Creative Commons Zero v1.0 Universal (CC0-1.0)
+License text: https://creativecommons.org/publicdomain/zero/1.0/
+
+This application stores short, two-measure sight-singing excerpts generated
+from the corpus score data. Stable source IDs and content fingerprints are
+included so the local library can be updated without duplicate exercises.
+
+The OpenScore project asks downstream users to credit OpenScore and link to
+the project even though CC0 does not legally require attribution. This app
+keeps that credit in the local library information and in this notice.
