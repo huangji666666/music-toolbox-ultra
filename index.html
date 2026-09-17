@@ -680,7 +680,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             </ul>
         </div>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.8</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.13</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
@@ -745,11 +745,12 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <div class="tuning-panel" id="tuning-panel"></div>
         </div><button type="button" class="special-tuning-open" onclick="SpecialTuningSearch.open()" aria-label="搜索特殊调弦曲目" title="搜索特殊调弦曲目">⌕</button><button type="button" class="compact-capo-button" id="tuner-capo-button" onclick="GlobalCapo.open('tuner')" aria-label="调音器变调夹设置">无夹</button></div>
         <select id="preset-sel" style="display:none" onchange="Tuner.setPreset(this.value)"></select>
+        <div class="tuner-workspace">
         <div class="tuner-display">
             <svg id="tuner-gauge-svg" class="tuner-svg" viewBox="0 0 260 260"></svg>
             <div class="warning-mask" id="snap-warning">
                 <svg viewBox="0 0 24 24" style="width:36px;height:36px;fill:none;stroke:#ff3b30;stroke-width:2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <div style="font-weight:800;font-size:16px;color:#ff3b30;margin-top:5px">张力过大<br>小心断弦</div>
+                <div style="font-weight:800;font-size:14px;color:var(--red);margin-top:5px">明显高于锁定目标<br>请先核对琴弦与八度</div>
             </div>
             <div class="note-center">
                 <div class="main-note" id="note-display">--</div>
@@ -767,6 +768,15 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <button class="btn-round" onclick="Tuner.adjustA4(1)">+</button>
         </div>
         <div class="strings-rack" id="strings-container"></div>
+        <details class="tuner-diagnostics" id="tuner-diagnostics">
+            <summary>检测方式与设备 <span id="tuner-detection-badge">自动 · YIN + HPS</span></summary>
+            <p id="tuner-device-info"></p>
+            <label>音高算法<select id="tuner-algorithm" onchange="TunerAssist.setMode(this.value)"><option value="auto">自动选择</option><option value="hybrid">YIN + HPS（原有）</option><option value="yin">YIN（宽音域）</option></select></label>
+            <label>麦克风采集<select id="tuner-capture" onchange="Settings.setMicProfile(this.value)"><option value="standard">标准原声</option><option value="iphone">iPhone 延音增强</option><option value="system">系统语音增强</option></select></label>
+            <button type="button" onclick="TunerAssist.reconnect()">重新连接麦克风</button>
+            <p>设备类型是能力推断，不保证具体型号。检测设置不改变音色。没有声音时不会反复切换算法。</p>
+        </details>
+        </div>
     </section>
 
     <!-- ========== Page 2: 练习与分析 ========== -->
@@ -1165,7 +1175,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.8</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.13</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>
@@ -1625,12 +1635,20 @@ const AudioEngine = {
     },
 
     async ensureMicrophone() {
+        if(this._micPromise)return this._micPromise;
+        this._micPromise=this._openMicrophone();
+        try{return await this._micPromise;}finally{this._micPromise=null;}
+    },
+    async _openMicrophone() {
+        const initialEpoch=this._micEpoch||0;
         try { await this.init(); }
         catch (error) { console.warn('音频引擎初始化失败',error); toast('音频初始化失败，请重新进入页面'); return false; }
+        if(initialEpoch!==(this._micEpoch||0))return false;
         if(!this.ctx||!this.analyser||!this.inputGainNode)return false;
         const live=this.micStream?.getAudioTracks?.().some(track=>track.readyState==='live'&&!track.muted);
         if(live&&this.micSourceNode)return true;
         this.releaseMicrophone(false);
+        const requestEpoch=this._micEpoch;
         if(!navigator.mediaDevices?.getUserMedia){toast('当前浏览器不支持麦克风录音');return false;}
         try {
             if(navigator.audioSession&&'type' in navigator.audioSession){try{navigator.audioSession.type='play-and-record';}catch(error){}}
@@ -1640,17 +1658,24 @@ const AudioEngine = {
             if(supported.autoGainControl)audio.autoGainControl=profile.autoGainControl;
             if(supported.channelCount)audio.channelCount={ideal:1};
             if(supported.latency)audio.latency={ideal:.01};
-            const stream=await navigator.mediaDevices.getUserMedia({audio});
+            let stream;this.micError='';this.captureBackend='音乐约束';
+            try{stream=await navigator.mediaDevices.getUserMedia({audio});}
+            catch(error){
+                if(!['OverconstrainedError','NotReadableError'].includes(error.name)||requestEpoch!==this._micEpoch)throw error;
+                stream=await navigator.mediaDevices.getUserMedia({audio:true});this.captureBackend='浏览器兼容默认';
+            }
+            if(requestEpoch!==this._micEpoch){stream.getTracks().forEach(track=>track.stop());return false;}
             this.micStream=stream;this.micSourceNode=this.ctx.createMediaStreamSource(stream);this.micSourceNode.connect(this.inputGainNode);stream.getAudioTracks().forEach(track=>{try{track.contentHint='music';}catch(error){}});this.applyCaptureProfile();
-            const recover=()=>{if(document.visibilityState==='visible'&&typeof App!=='undefined'&&(App.currentPage==='tuner'||Practice?.isRecording||SightSinging?.recording))setTimeout(()=>this.ensureMicrophone(),120);};
+            const recover=()=>{if(this.micStream!==stream||performance.now()-(this._lastMicRecovery||-Infinity)<15000||(this._micRecoveries||0)>=3)return;if(document.visibilityState==='visible'&&typeof App!=='undefined'&&(App.currentPage==='tuner'||Practice?.isRecording||SightSinging?.recording)){this._lastMicRecovery=performance.now();this._micRecoveries=(this._micRecoveries||0)+1;setTimeout(()=>{if(this.micStream===stream)this.ensureMicrophone();},120);}};
             stream.getAudioTracks().forEach(track=>{track.addEventListener('ended',recover,{once:true});track.addEventListener('mute',()=>setTimeout(()=>{if(track.muted)recover();},380));});
             this.cachedPitch=null;this.lastDetectionAt=0;this.updateDeviceStatus();return true;
         } catch (error) {
-            console.warn('麦克风访问不可用',error);this.releaseMicrophone(false);toast('请允许麦克风权限后再试');return false;
+            this.micError=error.name||'Error';console.warn('麦克风访问不可用',error);this.releaseMicrophone(false);toast(error.name==='NotAllowedError'?'麦克风权限未开启，请在浏览器中允许':error.name==='NotFoundError'?'未找到麦克风，请连接输入设备':'麦克风连接失败，请检查占用或重新连接');return false;
         }
     },
 
     releaseMicrophone(restorePlayback=true) {
+        this._micEpoch=(this._micEpoch||0)+1;
         try{this.micSourceNode?.disconnect();}catch(error){}
         this.micSourceNode=null;
         this.micStream?.getTracks?.().forEach(track=>{try{track.stop();}catch(error){}});
@@ -3809,7 +3834,7 @@ const CapoEngine={
         if(capoMode==='full'&&n>0){if(f===0)return openMidi+n;if(f<=n)return null;return openMidi+f;}
         if(capoMode==='spider'){
             const cfg=spider?.[stringIndex]||{mode:'off',fret:12},sf=Math.max(1,parseInt(cfg.fret)||12);
-            if(cfg.mode==='press'){if(f===0)return openMidi+sf;if(f<=sf)return null;return openMidi+f;}
+            if(cfg.mode==='press'){if(f===0||f===sf)return openMidi+sf;if(f<sf)return null;return openMidi+f;}
             if(cfg.mode==='harmonic'){if(f===0)return openMidi+(this.harmonicOffsets[sf]||12);return openMidi+f;}
         }
         return openMidi+f;
@@ -4163,7 +4188,7 @@ const ChordLib = {
         const margin = 25;
         const stringSpacing = (w - margin * 2) / (numStrings - 1);
         const fretSpacing = (h - margin * 2 - 15) / numFrets;
-        let html = `<svg viewBox="0 0 ${w} ${h}" style="max-width:160px">`;
+        let html = `<svg class="chord-voicing-svg" viewBox="0 0 ${w} ${h}" style="max-width:160px">`;
         // 品位号
         if (showFretNum) {
             html += `<text x="${margin - 8}" y="${margin + fretSpacing * 0.7}" text-anchor="end" font-size="10" fill="var(--text-sub)" font-weight="600">${startFret}fr</text>`;
@@ -5770,7 +5795,7 @@ const Settings = {
                 const s = JSON.parse(saved);
                 const adaptive=s.adaptiveLayout!==false,adaptiveToggle=document.getElementById('set-adaptive-layout');
                 if(adaptiveToggle)adaptiveToggle.checked=adaptive;LayoutEngine.setEnabled(adaptive);
-                this.setMicProfile(s.micProfile || 'standard', false);
+                this.setMicProfile(s.micProfile || 'auto', false);
                 if (s.inputGain !== undefined) this.setInputGain(s.inputGain * 10);
                 if (s.masterVol !== undefined) this.setMasterVol(s.masterVol);
                 if (s.tunerGate !== undefined) this.setTunerGate(s.tunerGate);
@@ -5796,7 +5821,7 @@ const Settings = {
             if (document.getElementById('set-reverb-decay')) this.setReverbDecay(2.0);
             AudioEngine.setBufferQuality('high');
             AudioEngine.setBufferSize(110);
-            this.setMicProfile('standard', false);
+            this.setMicProfile('auto', false);
             this.setAudioEngine('sample');
             this.setMasterVol(115);
             this.setVoiceConfig('guitar',{});
@@ -5815,7 +5840,7 @@ const Settings = {
         const profile=AudioEngine.setCaptureProfile(value),select=document.getElementById('set-mic-profile'),note=document.getElementById('set-mic-profile-note');if(typeof Tuner!=='undefined'){Tuner.noiseFloor=profile.rmsFloor;Tuner.lastValidAt=0;Tuner.freqBuffer=[];}
         if(select)select.value=AudioEngine.captureProfile;
         if(note)note.textContent=AudioEngine.captureProfile==='iphone'?'延音优先':AudioEngine.captureProfile==='system'?'系统 AGC':'原始采集';
-        if(reconnect){const active=!!AudioEngine.micStream?.active;AudioEngine.releaseMicrophone(false);if(active||App.currentPage==='tuner')await AudioEngine.ensureMicrophone();toast(`麦克风已切换：${profile.label}`);this.save();}
+        if(reconnect){const active=!!AudioEngine.micStream?.active;AudioEngine.releaseMicrophone(false);if(AudioEngine._micPromise)await AudioEngine._micPromise;if(active||App.currentPage==='tuner')await AudioEngine.ensureMicrophone();window.TunerAssist?.sync();toast(`麦克风已切换：${profile.label}`);this.save();}
     },
 
     setMasterVol(v) {
@@ -5953,7 +5978,7 @@ const Settings = {
         const s = {
             settingsVersion: 13,
             inputGain: AudioEngine.inputGain,
-            micProfile: AudioEngine.captureProfile,
+            micProfile: AudioEngine.capturePreference || AudioEngine.captureProfile,
             masterVol: parseInt(document.getElementById('set-master-vol').value),
             tunerGate: parseInt(document.getElementById('set-tuner-gate').value),
             practiceGate: parseInt(document.getElementById('set-practice-gate').value),
@@ -6139,6 +6164,7 @@ function toast(msg, dur = 1800) {
 <script src="./sight-library-v2.js"></script>
 <script src="./special-tunings-v1.js"></script>
 <script src="./app-final.js"></script>
+<script src="./drum-workshop.js"></script>
 <div class="pwa-update" id="pwa-update"><span><strong>发现新版本</strong><br>已在后台下载，可以安全更新。</span><button onclick="PWAUpdate.dismiss()">稍后</button><button class="update-now" onclick="PWAUpdate.apply()">立即更新</button></div>
 </body>
 </html>

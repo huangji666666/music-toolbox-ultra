@@ -1,19 +1,19 @@
 {
   "schema": 1,
-  "version": "13.5.8",
-  "build": "2026.08.22.1",
-  "cache": "music-toolbox-ultra-v13.5.8-20260822-1",
-  "generatedAt": "2026-08-22T00:00:00.000Z",
+  "version": "13.5.13",
+  "build": "2026.09.17.1",
+  "cache": "music-toolbox-ultra-v13.5.13-20260917-1",
+  "generatedAt": "2026-09-17T00:00:00.000Z",
   "assets": [
     {
       "url": "./app-final.css",
-      "bytes": 42590,
-      "sha256": "3230457163408c509deedc3c1b5ac8ce9f8648c33f0fcc8258829bc359797e5d"
+      "bytes": 57636,
+      "sha256": "b149775584fe054cdc61c09daef90e21ff527f8b2d375c6e4869efc4a0ffc731"
     },
     {
       "url": "./app-final.js",
-      "bytes": 337279,
-      "sha256": "b1f3f731f96c2b11cb400a6892711daa75dce501496d1ff348d4629aadbd9c9b"
+      "bytes": 375276,
+      "sha256": "5320ef224aae873e134c866010fb9482a1936581b5443df16ca04030544d9c0a"
     },
     {
       "url": "./assets/contact-douyin.jpg",
@@ -21,134 +21,484 @@
       "sha256": "9e47c23fcb68858c96fd4233862b8ddb98b278130fd9fa168330c2ff1d116f5e"
     },
     {
+      "url": "./assets/drums/bright-bass.wav",
+      "bytes": 48776,
+      "sha256": "726f6747f6333b4b990b86bcc9188355268d60abbd7eb304aa9a8056ba9b487e"
+    },
+    {
+      "url": "./assets/drums/bright-clap.wav",
+      "bytes": 18788,
+      "sha256": "e8f540ccc56392abd79e70d1345fa84a8f3da84072d3424d390e7f01dda4eedb"
+    },
+    {
+      "url": "./assets/drums/bright-crash.wav",
+      "bytes": 52524,
+      "sha256": "694311c958bc5142b8ed8c9c646f476413681039bf451b71e773809a98b06e71"
+    },
+    {
+      "url": "./assets/drums/bright-hat.wav",
+      "bytes": 7168,
+      "sha256": "3d48f011b1369247d20ccf0bd0c6c499ebe0769b1293fb5a74dd98845b43450d"
+    },
+    {
+      "url": "./assets/drums/bright-kick.wav",
+      "bytes": 28534,
+      "sha256": "7d83703e5bcb39e563541c3022552fa49de5421a48dd95c1b603005f7a6f3be8"
+    },
+    {
+      "url": "./assets/drums/bright-openhat.wav",
+      "bytes": 34532,
+      "sha256": "aa559e133f5e21db676b1ebc159b802cc7675bb345b93a6743561a9637d06898"
+    },
+    {
+      "url": "./assets/drums/bright-rim.wav",
+      "bytes": 7542,
+      "sha256": "7b370d91ade0cd1bc2bbcab4f77cc027107a2d2a7cceff2e33024c5b3e94c3f7"
+    },
+    {
+      "url": "./assets/drums/bright-snare.wav",
+      "bytes": 20286,
+      "sha256": "cb2c57acaf4dbd4ba6e6a4df7a315c438d8ca3caa343fc1d9b9d3c1c0150e951"
+    },
+    {
+      "url": "./assets/drums/classic-bass.wav",
+      "bytes": 57374,
+      "sha256": "587d64f9500dab1a9ef175a0cf1a7d5870835842eed0c2580ecf60a90e87160c"
+    },
+    {
+      "url": "./assets/drums/classic-clap.wav",
+      "bytes": 22094,
+      "sha256": "a8ebd134545e272474080961fe1f387da14cee3a5f769f5c1571933c097e64ab"
+    },
+    {
+      "url": "./assets/drums/classic-crash.wav",
+      "bytes": 61784,
+      "sha256": "80d18cd8dfb3b668c2e7605de5c71c639b9f087da33da694d0c85c911912ee55"
+    },
+    {
+      "url": "./assets/drums/classic-hat.wav",
+      "bytes": 8424,
+      "sha256": "5bdeeec1fc4ffb4d5fcab2adffe9ca4fea469e5d62ae7ee7eaf5133eaec65b09"
+    },
+    {
+      "url": "./assets/drums/classic-kick.wav",
+      "bytes": 33560,
+      "sha256": "d760fa8e2e5c2c7a637224f1036c8fc65063e195b305292761f0348da4fc3ff6"
+    },
+    {
+      "url": "./assets/drums/classic-openhat.wav",
+      "bytes": 40616,
+      "sha256": "fd6cb200140fad04619972f03b3da9be47ee147e965fde8d7b11efe46dbbb5c1"
+    },
+    {
+      "url": "./assets/drums/classic-rim.wav",
+      "bytes": 8864,
+      "sha256": "3b37581b4dff7a23203aae82b56aa75cc4bb5cad271c4d1933003b7b7e4cbfd5"
+    },
+    {
+      "url": "./assets/drums/classic-snare.wav",
+      "bytes": 23858,
+      "sha256": "0e7430b564cac02b76f7b4f1aa8860e9f732d186549eea07df04bc0e4b75abf4"
+    },
+    {
+      "url": "./assets/drums/house-bass.wav",
+      "bytes": 51642,
+      "sha256": "ca5d4c906ff86f8a5f5e743a72b266e12c9635875131a2ae8a380c2792ef2d31"
+    },
+    {
+      "url": "./assets/drums/house-clap.wav",
+      "bytes": 19890,
+      "sha256": "0e290a0056f48d6bcd09dcc6bb1c6ac1d3813d1f548bc6b4470abec417d5f1d8"
+    },
+    {
+      "url": "./assets/drums/house-crash.wav",
+      "bytes": 55610,
+      "sha256": "444925c4399c5160d56fc5da4f760b1d68b306b25569b6f806ae614910d993b9"
+    },
+    {
+      "url": "./assets/drums/house-hat.wav",
+      "bytes": 7586,
+      "sha256": "f6bea39d13ccf7a2b1dc87b290942d0ddc460feda52b80b6591566a74f7a986f"
+    },
+    {
+      "url": "./assets/drums/house-kick.wav",
+      "bytes": 30210,
+      "sha256": "d4d50012af058a6aef2da723d44ba21baa2d7384919af3d08226a6f46aef0db0"
+    },
+    {
+      "url": "./assets/drums/house-openhat.wav",
+      "bytes": 36560,
+      "sha256": "26890ddbbe151e36299f89d247d634c81297616f5c918098a0d1dde1c3196e3f"
+    },
+    {
+      "url": "./assets/drums/house-rim.wav",
+      "bytes": 7984,
+      "sha256": "f12251a5919a05ebf8254414090665ec62f363cdaaf9fd76ee13e5d2367209e2"
+    },
+    {
+      "url": "./assets/drums/house-snare.wav",
+      "bytes": 21478,
+      "sha256": "915f6933cdbd7dbab90818adc986724f28ba4cffc682e22673944b8af3480105"
+    },
+    {
+      "url": "./assets/drums/t04-hat.wav",
+      "bytes": 8424,
+      "sha256": "32afd192a0392190449b57fc1a139353d3e4225a2504d660e470c8ef30212e4e"
+    },
+    {
+      "url": "./assets/drums/t04-openhat.wav",
+      "bytes": 35324,
+      "sha256": "92050fee53c474faf596420df07b3d38bf4b2a2a066a75ebefe31a14621153d7"
+    },
+    {
+      "url": "./assets/drums/t05-hat.wav",
+      "bytes": 12834,
+      "sha256": "2cff4e98550c6cdddf309081e3cbb6aa746a6afc4f8b52e62ec85c3230de6d4f"
+    },
+    {
+      "url": "./assets/drums/t05-openhat.wav",
+      "bytes": 49436,
+      "sha256": "1181cddf75c8c87ed0c70e6d00be84ff08d0f2e23fe00bb657b778d6c5031e10"
+    },
+    {
+      "url": "./assets/drums/t06-hat.wav",
+      "bytes": 9746,
+      "sha256": "202540ae3821f58f12fbd0ee476e41a4793e71030d94fde2768668bfb202f37b"
+    },
+    {
+      "url": "./assets/drums/t06-openhat.wav",
+      "bytes": 44144,
+      "sha256": "940cd7f2a2349ba2947a8b3f7a1eac8b446c2a697144c40bcc712f01de4a8d5b"
+    },
+    {
+      "url": "./assets/drums/techno-bass.wav",
+      "bytes": 43042,
+      "sha256": "427ff882766a2eccbe756c558cf1cba97f35f0d5106ed44e27b2f3ca6000ea19"
+    },
+    {
+      "url": "./assets/drums/techno-clap.wav",
+      "bytes": 16582,
+      "sha256": "900e93c34411a400ae66defb40645c9cb3e634ca212f921e0694466d6fd1c983"
+    },
+    {
+      "url": "./assets/drums/techno-crash.wav",
+      "bytes": 46350,
+      "sha256": "baaf11d852c65850c75b90de26ff6be3cd1908786c5be2fed924b396f7d8f08a"
+    },
+    {
+      "url": "./assets/drums/techno-hat.wav",
+      "bytes": 6330,
+      "sha256": "739cd9303a7db90d5e7b2c04504a47277581abad369fd5249c8d35338073ee2c"
+    },
+    {
+      "url": "./assets/drums/techno-kick.wav",
+      "bytes": 25182,
+      "sha256": "1d84107a979d605824aa24bb6d60abbd25f4f8befc6dd5fea531923ef25bdbc5"
+    },
+    {
+      "url": "./assets/drums/techno-openhat.wav",
+      "bytes": 30474,
+      "sha256": "80014e54acad1981698d5cf27e7c8f9fd7a87e7b9099d126861f4a0de5921b6e"
+    },
+    {
+      "url": "./assets/drums/techno-rim.wav",
+      "bytes": 6660,
+      "sha256": "9799c8eac15faf9e7cbd7e26dccc77bd2e785bcde0e97202b6e1f94f4cfffb58"
+    },
+    {
+      "url": "./assets/drums/techno-snare.wav",
+      "bytes": 17906,
+      "sha256": "5980f758e10e0bb67873f2a8b222385f03bb03a4e21e0d61291072913f5316e4"
+    },
+    {
+      "url": "./assets/drums/tight-bass.wav",
+      "bytes": 39030,
+      "sha256": "5a8ba414fa29c367ec36ead4598992ec06526d76b58d18f65fed5280ecc39b1b"
+    },
+    {
+      "url": "./assets/drums/tight-clap.wav",
+      "bytes": 15040,
+      "sha256": "88e6ae8f6b4e51014e122135976cda916f0b6793414933c6bf94c07dba01c2da"
+    },
+    {
+      "url": "./assets/drums/tight-crash.wav",
+      "bytes": 42028,
+      "sha256": "97db1cae9579265106083f3e921c370ac9f8f77c4675f580c5c5551de4f4f4e1"
+    },
+    {
+      "url": "./assets/drums/tight-hat.wav",
+      "bytes": 5742,
+      "sha256": "04fee86113463bc890740499b27fe583bcb90f86f3426dd807d3220e9840219c"
+    },
+    {
+      "url": "./assets/drums/tight-kick.wav",
+      "bytes": 22836,
+      "sha256": "6d5285935d7f3fc380b04605bd88ddb4b39b1ded1a48a4214d08f9c1c8360e27"
+    },
+    {
+      "url": "./assets/drums/tight-openhat.wav",
+      "bytes": 27634,
+      "sha256": "dca2c3ff8bc29a5d0c3a4d719b7d344cd98f14cca7e25296d70dc4c0ee45da23"
+    },
+    {
+      "url": "./assets/drums/tight-rim.wav",
+      "bytes": 6042,
+      "sha256": "433b48afd7033d751ab0f719125820a52a249f024e628dd94d755317ec59047d"
+    },
+    {
+      "url": "./assets/drums/tight-snare.wav",
+      "bytes": 16238,
+      "sha256": "0868fdebd39511836650e0a6c1063fb4ae19ae19eb0fb465a4c45869b3c543a3"
+    },
+    {
       "url": "./assets/metronome-accent-cc0/01.wav",
-      "bytes": 25608,
-      "sha256": "f86a99820565e1a3c72565e993c4b84f834eb7c30b480c36b0e4af5cb36beb15"
+      "bytes": 88944,
+      "sha256": "7846605f7b861e8ca8172fde2a5536310db3a8b5afdcebc95e15ca5b0c3f78b9"
     },
     {
       "url": "./assets/metronome-accent-cc0/02.wav",
-      "bytes": 25214,
-      "sha256": "541b393f7a29ba09d447f6da17f9bcedcda7a12ac38ddc642fd6ba13ece051ca"
+      "bytes": 23168,
+      "sha256": "9bf900b9863f9cbd5f25f917f805a02d350c614c67553d97889d560f07467c62"
     },
     {
       "url": "./assets/metronome-accent-cc0/03.wav",
-      "bytes": 24772,
-      "sha256": "0de14b8a9dfd9e12feb00f4485e8d0bdb991458823383a659998fb82ae042ca1"
+      "bytes": 55828,
+      "sha256": "c644bc49483f001d783febcc43a63aeed390ec1bc86b5587a6c55292062a2cef"
     },
     {
       "url": "./assets/metronome-accent-cc0/04.wav",
-      "bytes": 26924,
-      "sha256": "34e799812f8fc5e7260b4f702e03b971831075c5d69619b5f11f0c4dbe343d8f"
+      "bytes": 42720,
+      "sha256": "7708cdfb7918bfe585ae982c870cc2f5a205966f8c25a6eaa0a5123555eee56a"
     },
     {
       "url": "./assets/metronome-accent-cc0/05.wav",
-      "bytes": 26924,
-      "sha256": "0df5de55b7743aacf0561e6f52a47e2c4b0f48eac57d0d1316eec5fc8ead3968"
+      "bytes": 87984,
+      "sha256": "6442f46c90b75051e31bab96a49b4add76c2b5107309c78b4e2642c2ff06765d"
     },
     {
       "url": "./assets/metronome-accent-cc0/06.wav",
-      "bytes": 21664,
-      "sha256": "34e15b0859e71aa690e7136b542762291873ef5789e7075415605452c18e6e14"
+      "bytes": 126740,
+      "sha256": "fe915f6472c50de237b34ee6e8509fa2424cdbb1be61f68217de9e3a9115eb70"
     },
     {
       "url": "./assets/metronome-accent-cc0/07.wav",
-      "bytes": 16734,
-      "sha256": "84b2b38b5a9716302adff86ecdb06c831c1f9c740887bb3193386ea22dfa5e8d"
+      "bytes": 199788,
+      "sha256": "019a7b93b52f6d5fef40791ba94a4def347121a049e1c4cb68275d94b535a9fe"
     },
     {
       "url": "./assets/metronome-accent-cc0/08.wav",
-      "bytes": 26924,
-      "sha256": "90b05123d68358ab24e17d96db5d5b30ca77ca28115246e6fd413cce03776aa1"
+      "bytes": 199508,
+      "sha256": "585e5bb99d44cbbbc2a783454e3fa4c6dbd1be983c1becbfbea1f51e98554bf4"
     },
     {
       "url": "./assets/metronome-accent-cc0/09.wav",
-      "bytes": 24812,
-      "sha256": "0d9ac30ce3bd50fe96839e4ab23d55d8730f92aadab80b368dff2d504be4dfd7"
+      "bytes": 186732,
+      "sha256": "3cfbe7bee831d3340429445d121006b5f1a24bb73aaddfe0cdcbb58fdb52b97f"
     },
     {
       "url": "./assets/metronome-accent-cc0/10.wav",
-      "bytes": 26924,
-      "sha256": "c922853c5cf22bf0e64cd7f282b7bf5c7b7e0282d7fa53a2970c5e002b13f62c"
+      "bytes": 338436,
+      "sha256": "9d883fc510a5479c61bc1daf4a54a7513917b7fa64207406c0a4f4ad3eb1490c"
     },
     {
       "url": "./assets/metronome-accent-cc0/11.wav",
-      "bytes": 7402,
-      "sha256": "e964f9c2c26b63f99a4c92d155079cc6459cbba31d8bd36f9a3638276fd15089"
+      "bytes": 201428,
+      "sha256": "f0240efbb39f133b353d1cd3b069d75802bbd9292c8339039f20ab7c1513640a"
     },
     {
       "url": "./assets/metronome-accent-cc0/12.wav",
-      "bytes": 9490,
-      "sha256": "93b63af69be675e0dd7a0ccf096a663970ea014c3796f7a071a4c661bab06426"
+      "bytes": 770256,
+      "sha256": "cb5728e2053371c49dea23e139bd40706bb155d98f338a0df4cfa78f2134ebac"
     },
     {
       "url": "./assets/metronome-accent-cc0/13.wav",
-      "bytes": 21910,
-      "sha256": "e7e22f33d0a5515a91e07f304841b7d5bcef5a9c4eb534d0aa935b2f137f6cab"
+      "bytes": 196224,
+      "sha256": "8cf248c08b401b3acdfb48322bbcacfba76c95070422ec9474875162dd2f40c1"
     },
     {
       "url": "./assets/metronome-accent-cc0/14.wav",
-      "bytes": 17360,
-      "sha256": "fee806aeaf74df394a2bdec59d9d3cbfe96a7c52703dee299cbe6b4b7da45ff6"
+      "bytes": 349688,
+      "sha256": "42ece742fd4b29af92dcc02dd9e8b2e2cb117bcc078f638876d501bcb7ade5a2"
     },
     {
       "url": "./assets/metronome-accent-cc0/15.wav",
-      "bytes": 26924,
-      "sha256": "65e699b4c765c5cda8ed192ab6fca1cdacbf5dcbeaec732c5e00c9e3a0d74619"
+      "bytes": 301684,
+      "sha256": "7f76e84edf07d7cbb9171bc608a5c1572eab3a779328b8f445af2fefc5e1c9e2"
     },
     {
       "url": "./assets/metronome-accent-cc0/16.wav",
-      "bytes": 26924,
-      "sha256": "23bae7f012896d1627244ddd5508d7e64295d52d9c875530b6eb9ed71a40e916"
+      "bytes": 143252,
+      "sha256": "2d66d01e1c2a9ab86aca6141c6b15d874ed408e98b990e17ec4ac13abf1561f4"
     },
     {
       "url": "./assets/metronome-accent-cc0/17.wav",
-      "bytes": 26924,
-      "sha256": "acf86781bae750bcf2513b4f664f1b3f29438e24903237e202344f4983643da8"
+      "bytes": 130440,
+      "sha256": "e95ff7384b7f06fd482d08f46362d358a7dbf087b5dc3f68c55e4a6eeddab8fb"
     },
     {
       "url": "./assets/metronome-accent-cc0/18.wav",
-      "bytes": 26924,
-      "sha256": "60793f49d4fe7663267a384f4ed039aaac3c4b5411e8b2eab392ad744e877e50"
+      "bytes": 191752,
+      "sha256": "0f3e6fedb5cf1c24bf34f2a9997d57caaaf0e567cc420970596a3a90aed1cb80"
     },
     {
       "url": "./assets/metronome-accent-cc0/19.wav",
-      "bytes": 26924,
-      "sha256": "80b1dfa6dfb1432467db1a1eaf14429cd6278b47fb59065c9527df0aaf24586c"
+      "bytes": 174908,
+      "sha256": "153f4ec3abecdd138c0d7e5ba01360f05c677ba445765685df87dca67c036047"
     },
     {
       "url": "./assets/metronome-accent-cc0/20.wav",
-      "bytes": 26924,
-      "sha256": "0fa480790896996e48e8bac6a35f4d3c9411889659016c548306dc7721fba00e"
+      "bytes": 1118916,
+      "sha256": "34d670e6f1fa9c826a63d1cdc9efedd0f746d33ff4871c7baa7914f15357d060"
     },
     {
       "url": "./assets/metronome-accent-cc0/21.wav",
-      "bytes": 9130,
-      "sha256": "b60a9b3204921f3b585e0e30ab78c5b2b3f34e6aa5629e349ad4a94bb22f72ea"
+      "bytes": 236760,
+      "sha256": "6c8a10083b76dd787386cbcf8d1f78f6358c17451fd78e50e93ec0d7c4c2f87a"
     },
     {
       "url": "./assets/metronome-accent-cc0/22.wav",
-      "bytes": 18992,
-      "sha256": "dcac456caaca30986e3ed6518d1429a1d8e1f68a6f55162f08e56def0a5e5b7e"
+      "bytes": 210648,
+      "sha256": "905c557564957aa8a732725360c2cc99fef0c609e4be66313ce095ccb189c20c"
     },
     {
       "url": "./assets/metronome-accent-cc0/23.wav",
-      "bytes": 26924,
-      "sha256": "0cf3782888c49b631c54947de5aff79554601671f714be220e41c9a5d133d6a1"
+      "bytes": 1026552,
+      "sha256": "d5be59255f518e30b399b7693f154f2b98cd39119d9449bb9a8f18702abc2742"
     },
     {
       "url": "./assets/metronome-accent-cc0/24.wav",
-      "bytes": 26744,
-      "sha256": "47f1d3f335da5e0c475cfe653e5ab3346cee25c2e3d4eea3cd3b847ddffb0a4d"
+      "bytes": 144404,
+      "sha256": "6d453fa19184fa3ca3cd818856bafce6c0a61085c985e7422b11f6689ca75ae6"
     },
     {
       "url": "./assets/metronome-accent-cc0/25.wav",
-      "bytes": 9046,
-      "sha256": "d8adae3454b1cdae2df0d46cc731b9eb1fa48294508fbd7e70b74cfb26ff8b74"
+      "bytes": 133752,
+      "sha256": "e72f19a65dd3cf960a135df43ce49613b5e722215ff0ab80702cd27197f778f1"
     },
     {
       "url": "./assets/metronome-accent-cc0/26.wav",
-      "bytes": 26924,
-      "sha256": "f9a32b149473329908478d4e8b2941f6c12774a75ce4377ba79939f0a86a9e36"
+      "bytes": 58132,
+      "sha256": "04fdf7e904c8c21125756c80a935b0e20be309071a3b429ccc74a3c18bc77dcc"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/27.wav",
+      "bytes": 258888,
+      "sha256": "ad86a74f652a0916aac3ed80db78d435b1fdaf6e955afcc6e69204e95e8cb581"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/28.wav",
+      "bytes": 191180,
+      "sha256": "487889e39de4aaffad35edeb2c2287f600c5900c07ca120e5c1668d50d222026"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/29.wav",
+      "bytes": 54956,
+      "sha256": "1afd59472a715302935928ee657e01467466131055e9a68b8f148f0ebddfed6e"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/30.wav",
+      "bytes": 204468,
+      "sha256": "46c182b8f38e71532b2e1fd58bc2fbc163f53824948bba4c119ade3f5f7a28ac"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/31.wav",
+      "bytes": 528948,
+      "sha256": "ff7da7bc48e4eaab430435f2ab203495ebf2c10899a09b367994e525da1f440d"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/32.wav",
+      "bytes": 488020,
+      "sha256": "d2225909514d6e403e4cc811e7c218191251db4ea3b9ffc6c9e4c3d6269cdbf1"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/33.wav",
+      "bytes": 230616,
+      "sha256": "5a3c5c5545b4169ca4dad175e09b323d84af16afe260566113c991f9220b70b1"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/34.wav",
+      "bytes": 252416,
+      "sha256": "f083271ed81860ab60635719821e7a48d9fc3270cf51d229a171ee1a215f5d5a"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/35.wav",
+      "bytes": 46840,
+      "sha256": "b5948e4c0628c5c92d2faa76984b118e9df5703d3589559c4d1462a49ac53604"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/36.wav",
+      "bytes": 120312,
+      "sha256": "0da7bd43a179d7d3df95c8d709f5ec976c71604c7398664f08ea705185e13394"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/37.wav",
+      "bytes": 206456,
+      "sha256": "8abfd06d3538362fdf01cabc04f2e176c26c129a160c96abdf08781cc257eff5"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/38.wav",
+      "bytes": 186744,
+      "sha256": "b44addbdfc7cd4dbaaeec79078e0cb116b3e8f1af463ea96414a3e38cb836d48"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/39.wav",
+      "bytes": 47668,
+      "sha256": "6bd0fb5cc1b6bb2a7efea7557d63dc8c3fa562572e79aa2efe3d5b24084f8dff"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/40.wav",
+      "bytes": 262448,
+      "sha256": "0643ee8c018efa70ae800ef40fc0e7da98af88d49e94901e6f0e595251ce77a2"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/41.wav",
+      "bytes": 331572,
+      "sha256": "1082edbd8b5c46ce0d938406e172a1c5f16e9efb54e36e90b2367c0d7d25ee00"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/42.wav",
+      "bytes": 146636,
+      "sha256": "b97699232fcbc946a1eb0e2762c284e60a1ac053ed9a3c45900f21fdcafc004c"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/43.wav",
+      "bytes": 175388,
+      "sha256": "01cccbd813ce1a26fc54360ed163087376d759a79177e0c0d1174c7b1a88d518"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/44.wav",
+      "bytes": 118956,
+      "sha256": "2389215d5cb96f468ace0d17f7118063ec7b9b9cbd404e4ca03033e901aaac9d"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/45.wav",
+      "bytes": 188296,
+      "sha256": "35ecff2fcce1434ee3154a01d85768e1db78a45ef8c307a5c508dd729ed1ac60"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/46.wav",
+      "bytes": 113984,
+      "sha256": "cf7cd86c88a119099dc45b5d86b377720db6d2a639349eb68d35e32c4b08776f"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/47.wav",
+      "bytes": 90752,
+      "sha256": "cafcd547b9592a089f3d0f357b17b406d7ce984abcbf6037cead847c3699fe4e"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/48.wav",
+      "bytes": 92532,
+      "sha256": "23c921cec84475e285a67c3c8c8d3cfe14cd8a0958553097636269a403bd821d"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/49.wav",
+      "bytes": 92532,
+      "sha256": "8abe30648612f35cc454f8499bc74128b03e3f5c24b2be64d0e2e7d56cba67df"
+    },
+    {
+      "url": "./assets/metronome-accent-cc0/50.wav",
+      "bytes": 105440,
+      "sha256": "842e06d523ea61371a1369185de17f323a391a6c64cf1f58ff1293251bfdf14b"
     },
     {
       "url": "./assets/muted-strum-c01-cc0.mp3",
@@ -164,6 +514,11 @@
       "url": "./assets/support-wechat.jpg",
       "bytes": 71199,
       "sha256": "701a56ed7e7931b2f968750efc58501ab1772fe5935211a81cebd0e646582eee"
+    },
+    {
+      "url": "./drum-workshop.js",
+      "bytes": 28694,
+      "sha256": "fd01c1983caaa865cccda359790ce2ddc470daaaf297779640786e4bdb91ebe6"
     },
     {
       "url": "./icons/app-icon.svg",
@@ -187,8 +542,8 @@
     },
     {
       "url": "./index.html",
-      "bytes": 4541571,
-      "sha256": "182497c5f1ede6ede130ec68994cdf6d2b2ab7c71e5ca5843d54f5f5a7589b10"
+      "bytes": 4544205,
+      "sha256": "31bab9178d3a9ee0089dfc0b19138ff6510cff45c2b6ca54d9950583a521c414"
     },
     {
       "url": "./licenses/C01-muted-strum-CC0.txt",
@@ -197,8 +552,8 @@
     },
     {
       "url": "./licenses/Metronome-accent-CC0.txt",
-      "bytes": 789,
-      "sha256": "d26ec446a2aaced8469fd2d078aeaca9fefd31d8bc42c6963c38ed49d9edf0f0"
+      "bytes": 1535,
+      "sha256": "9cd1a93859c5e1f5666ff407220301a0b436489cc1d3e374876ebe2e27ef5ed8"
     },
     {
       "url": "./licenses/OpenScore-Lieder-CC0.txt",
@@ -207,8 +562,23 @@
     },
     {
       "url": "./licenses/README.md",
-      "bytes": 698,
-      "sha256": "e4bde581a9a24d3980c8c02ac850f539d2afb93de2847d9034848ff54eed834a"
+      "bytes": 752,
+      "sha256": "58c9bb59421e9973dfdb5fe935867e697b8c138354d1d452f5d762da689c83c4"
+    },
+    {
+      "url": "./licenses/drum-sources.json",
+      "bytes": 28476,
+      "sha256": "44379259448c6881aab72cfdce3d597fde6637aa5df7089375e4173461aff3fc"
+    },
+    {
+      "url": "./licenses/metronome-sources.json",
+      "bytes": 59798,
+      "sha256": "55befcccbab987cea7e1e75a16e7ea92077f74fdab7831471db9f1ec89d7f2fa"
+    },
+    {
+      "url": "./licenses/trap-approved-sources.json",
+      "bytes": 3374,
+      "sha256": "6c8746e476199e8f2ef685a8b41a3132e0fa9fff2f3c3421243a77370b86cbb7"
     },
     {
       "url": "./manifest.webmanifest",
@@ -222,13 +592,13 @@
     },
     {
       "url": "./special-tunings-v1.js",
-      "bytes": 17745,
-      "sha256": "ff6bca63a9e5642df58692d1f83ed112e3914c3b80c0664b84e7fa55a5fbd480"
+      "bytes": 20117,
+      "sha256": "cc1febaff937a51d485042011e1cc9873ee1521f8e02baa4371ca194cab4a05d"
     },
     {
       "url": "./version.json",
-      "bytes": 106,
-      "sha256": "ebcead77e21baa5eba6f97af4832167d8b55c8c1022bc27e30744fb54b1206b9"
+      "bytes": 108,
+      "sha256": "3e48f8df8aca33397e034e5813096044423fe1dd8a2e93a46b0bc0e4655a4428"
     }
   ]
 }

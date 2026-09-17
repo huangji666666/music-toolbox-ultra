@@ -1,18 +1,27 @@
-音乐工具箱 Ultra · 重拍音色扩展包
+音乐工具箱 Ultra · 13.5.11 确认音源
 
-许可：CC0 1.0（公共领域贡献）
-用途：节拍器 01–26 号重拍音色；应用内离线使用。
+13.5.11：N15 去除约 49.6 ms 前导，详见 metronome-sources.json processing。
+另外新增 40 个原创鼓音，来源、CC0 声明与处理记录见 drum-sources.json；
+合成实现见 tools/build_drum_samples.mjs，不使用商业鼓包录音。
 
-01–20 来源：Versilian Community Sample Library（VCSL）
-项目：https://github.com/sgossner/VCSL
+许可：CC0 1.0。50 个确认编号及逐文件来源、作者、许可 URL、
+输入哈希、标准化增益和正式 WAV 哈希均见 metronome-sources.json。
+
+R02 和 N 系列：Versilian Community Sample Library（VCSL）
+https://github.com/sgossner/VCSL
+N 系列固定提交 c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e。
+R02 原素材：Woodblock / wood_click_f_rr1.wav；保留当前默认音色。
+
+K01：https://freesound.org/people/waveplaySFX/sounds/254886/
+K02：https://freesound.org/people/jasonlgeorge/sounds/95075/
+K03：https://freesound.org/people/Mietech/sounds/443922/
+K04：https://freesound.org/people/DWSD/sounds/183093/
+K 系列来自上述 CC0 页面提供的 HQ MP3 试听，并非原始无损 WAV。
 许可：https://creativecommons.org/publicdomain/zero/1.0/
 
-21–26 来源：Sonic Pi sample library
-项目：https://github.com/sonic-pi-net/sonic-pi
-许可：CC0 1.0（对应 sample library 素材）
-
-本应用对素材只做了以下发布处理：裁去起音前静音、限制为不超过 280 ms、
-统一为 48 kHz 单声道 PCM WAV，并进行安全峰值归一化。处理不改变原许可。
-
-用户选定的默认第一拍重音：02 · 木块强击·圆润
-原始文件：VCSL / Woodblock / wood_click_f_rr1.wav
+发布处理：44.1 kHz PCM16，保留源声道和尾音；声道联动峰值
+标准化为 32767/32768，约 -0.000265 dBFS。未对既有音源压缩失真、
+升调或重新合成；未把尚未确认的 H 系列加入正式版本。
+播放前以最大 50 ms RMS 做有限平衡，最多衰减 6.02 dB，不额外放大。
+短击的峰值/RMS 平衡不等于 LUFS 或主观等响；外放听感需真机验收。
+处理不改变原许可。

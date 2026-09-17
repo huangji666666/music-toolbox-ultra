@@ -368,7 +368,7 @@ button:active,[role="button"]:active{filter:brightness(.92)}
 @keyframes root-value-pop{0%{transform:translateX(-50%) scale(.82);opacity:.45}100%{transform:translateX(-50%) scale(1);opacity:1}}
 .chord-root-ruler-track{position:absolute;left:var(--root-edge);right:var(--root-edge);top:2px;bottom:14px}
 .chord-root-ruler-track::before{content:"";position:absolute;left:0;right:0;top:23px;height:2px;border-radius:99px;background:var(--border)}
-.chord-root-ruler-tick{position:absolute!important;left:calc(var(--root-step) * 100% / 12);top:0!important;width:calc(100% / 12)!important;min-width:20px!important;height:28px!important;min-height:28px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--text-sub)!important;transform:translateX(-50%);z-index:2;touch-action:none}
+.chord-root-ruler-tick{position:absolute!important;left:calc(var(--root-step) * 100% / 12);top:0!important;width:min(44px,calc(100% / 12))!important;min-width:20px!important;height:28px!important;min-height:28px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:var(--text-sub)!important;transform:translateX(-50%);z-index:2;touch-action:none}
 .chord-root-ruler-tick::before{content:"";position:absolute;left:50%;top:18px;width:1px;height:8px;background:var(--text-sub);opacity:.55;transform:translateX(-50%)}
 .chord-root-ruler-tick.natural::before{top:15px;height:11px;width:2px;opacity:.82}
 .chord-root-ruler-tick span{position:absolute;left:50%;top:0;transform:translateX(-50%);min-width:18px;padding:0 2px;border-radius:5px;font-size:12px;line-height:15px;font-weight:900;pointer-events:none}
@@ -418,7 +418,7 @@ html[data-ios-standalone="true"]{--safe-t:max(env(safe-area-inset-top,0px),60px)
 html[data-ios="true"] .top-bar{padding-bottom:3px!important}
 html[data-ios="true"][data-layout="compact"] .top-bar{height:calc(46px + var(--safe-t))!important;min-height:calc(46px + var(--safe-t))!important}
 html[data-ios="true"][data-layout="short"] .top-bar{height:calc(44px + var(--safe-t))!important;min-height:calc(44px + var(--safe-t))!important}
-@supports(height:100dvh){body{height:100dvh;min-height:100dvh}}
+@supports(height:100dvh){body{height:var(--viewport-h,100dvh);min-height:0}}
 
 /* 调音器主体均匀利用可用高度，不再将弦按钮强行推到最底。 */
 #page-tuner.active{justify-content:flex-start!important;align-content:start;gap:clamp(4px,1.1dvh,10px)!important}
@@ -500,3 +500,139 @@ html[data-ios="true"][data-layout="short"] .top-bar{height:calc(44px + var(--saf
     html[data-adaptive="true"] #page-metro .metro-control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     html[data-adaptive="true"] #page-ear .ear-choices{grid-template-columns:repeat(8,minmax(72px,1fr))}
 }
+
+/* v13.5.9：沿用蓝色与圆角，先修可读性、可达性和主体比例。 */
+#start-mask{overflow-y:auto!important;padding:max(20px,var(--safe-t)) 22px max(20px,var(--safe-b))!important;justify-content:flex-start}
+#start-mask .start-content{width:min(520px,100%);flex:0 0 auto;margin-block:auto;padding-block:20px}
+.start-title{letter-spacing:.035em;text-shadow:none}
+.start-audio-tag{display:none}
+.start-reset-btn{min-height:44px!important;font-size:12px!important}
+.start-install-hint{font-size:12px}
+.sight-layout-button{min-height:44px;font-size:12px}
+#sight-panel>.sight-score-navigation button{min-height:44px!important;font-size:11px!important;white-space:normal}
+.sight-score-tools label,.sight-score-head>#sight-prep-hint,.sight-score-head>#sight-segment-label{font-size:11px!important}
+.sight-score-tools select{font-size:12px;min-height:40px}
+.sight-layout-choice small{font-size:11px}
+#page-tuner.active{overflow-y:auto!important;align-items:center;gap:10px!important}
+#page-tuner{grid-template-columns:minmax(0,1fr)!important}
+#page-tuner>.compact-tuning-toolbar,.tuner-workspace{flex:0 0 auto;width:100%;min-width:0}
+.tuner-workspace{display:flex;flex-direction:column;align-items:center;gap:10px}
+.tuner-workspace>.a4-control,.tuner-workspace>.strings-rack,.tuner-workspace>.tuner-range,.tuner-workspace>.tuner-diagnostics{flex:0 0 auto;width:100%;min-width:0}
+#page-tuner .strings-rack{margin-top:0!important}
+.tuner-range{padding:12px;border:1px solid var(--border);border-radius:16px;background:var(--surf);text-align:left}
+.tuner-range-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:10px}
+.tuner-range-heading span{color:var(--text-sub);font-size:11px}
+.tuner-range-track{height:52px;position:relative;margin-inline:5px}
+.tuner-range-keys{position:absolute;inset:0;border:1px solid #777;border-radius:4px;overflow:hidden;background:#fff}
+.tuner-range-keys i,.tuner-range-keys button{position:absolute;top:0;height:100%;width:calc(100% / 52);transform:translateX(-50%);box-sizing:border-box;border:0;border-right:1px solid #aaa;background:#fff;padding:0;min-width:0;min-height:0;cursor:pointer;touch-action:manipulation}
+.tuner-range-keys i.black,.tuner-range-keys button.black{background:#141416;border:1px solid #000;height:62%;width:calc(100% / 52 * .64);z-index:1;border-radius:0 0 2px 2px;opacity:1}
+.tuner-range-target,#tuner-range-pointer,#tuner-range-targets{pointer-events:none}
+.tuner-range-keys button.auditioning{box-shadow:inset 0 -5px var(--prim)}
+.tuner-range-keys button:focus-visible{outline:2px solid var(--orange);outline-offset:-2px;z-index:2}
+.range-play-panel summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--prim)}
+#tuner-range-capo{margin:10px 0;padding:10px 12px;border:1px solid var(--prim);border-left:4px solid var(--prim);border-radius:10px;background:rgba(10,132,255,.10);color:var(--text);overflow-wrap:anywhere}
+#tuner-range-capo[hidden]{display:none}#tuner-range-capo strong{color:var(--prim)}#tuner-range-capo p{margin:6px 0;font-size:12px;line-height:1.6}
+#tuner-range-capo button{min-height:44px;border:1px solid var(--prim);border-radius:8px;padding:6px 12px;background:var(--surf);color:var(--prim);font:inherit;cursor:pointer}
+.range-play-panel select{min-height:44px;border:1px solid var(--border);border-radius:8px;background:var(--surf);color:var(--text);padding:5px}
+#range-key-status{font-size:12px;line-height:1.5;color:var(--text-sub)}
+#range-key-octave{display:flex;gap:5px;overflow-x:auto;padding:8px 0}
+#range-key-octave button{flex:0 0 48px;min-height:64px;border:1px solid #888;border-radius:5px;background:#fff;color:#151515}
+#range-key-octave button.black{background:#171717;color:white}#range-key-octave button.auditioning{box-shadow:inset 0 -5px var(--prim)}
+.tuner-range-target,#tuner-range-pointer{z-index:3}
+
+/* 13.5.11: constrained fretboard and two metronome workspaces. */
+#instrument-stage .virtual-fret-wrap{height:auto!important;min-height:0!important;align-self:start}
+#instrument-stage .virtual-fret-wrap.is-horizontal{grid-template-rows:auto auto auto!important;align-items:start!important}
+#instrument-stage .virtual-board-scroll{align-self:start;min-height:0!important}
+#instrument-stage .strum-zone{align-self:start;box-sizing:border-box;touch-action:none}
+html[data-adaptive] #page-instrument #instrument-stage{min-height:0!important;height:auto!important;flex:0 0 auto!important}
+#instrument-stage .strum-zone>span{display:none!important}
+.drum-extra-controls{border:1px solid var(--border);border-radius:10px;padding:0 8px;margin-bottom:4px}
+.drum-extra-controls>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:13px;color:var(--prim)}
+.drum-extra-controls>summary::before{content:'▸';margin-right:7px}.drum-extra-controls[open]>summary::before{content:'▾'}
+.drum-track-details>summary{min-height:44px;display:flex;align-items:center;font-size:10px;cursor:pointer;color:var(--text-sub)}
+.drum-track-details>summary::before{content:'▸';margin-right:4px}
+.capo-voicing-notes{font-size:12px;line-height:1.55;text-align:center;color:var(--text-sub);max-width:100%;padding:8px 3px;pointer-events:none}
+#chord-svg-area{flex-wrap:wrap}
+#chord-svg-area .capo-voicing-notes{flex-basis:100%}
+@media(min-width:1000px){#chord-svg-area>.chord-voicing-svg{max-width:300px!important;width:clamp(220px,23vw,300px)!important;max-height:400px!important}}
+#metro-basic-pane[hidden],#drum-workshop[hidden]{display:none!important}
+.metro-subtabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--surf);width:100%;flex-shrink:0;margin-bottom:10px}
+.metro-subtabs button{flex:1;min-height:46px;border:0;border-radius:11px;background:transparent;color:var(--text);font-size:15px;font-weight:700}
+.metro-subtabs button.active{background:var(--prim);color:white}
+#metro-basic-pane{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;min-width:0}
+#drum-workshop{width:100%;min-width:0;text-align:left;padding-bottom:16px}
+.drum-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0}
+.drum-heading h2{margin:0;font-size:21px}.drum-heading p,.drum-footnote{font-size:12px;line-height:1.6;color:var(--text-sub);margin:6px 0}
+#drum-workshop button,.drum-note-dialog button{min-height:44px;border:1px solid var(--border);border-radius:9px;background:var(--surf);color:var(--text);padding:7px 10px;font:inherit;cursor:pointer}
+#drum-workshop #drum-play{min-width:96px;background:var(--prim);color:#fff;border:0;font-weight:700}
+.drum-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 0}
+.drum-controls label,.drum-note-dialog label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--text-sub);min-width:0}
+.drum-controls input,.drum-controls select,.drum-save input,.drum-save select,.drum-note-dialog input,.drum-note-dialog select{width:100%;min-width:0;box-sizing:border-box;min-height:44px;background:var(--surf);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:6px;font:inherit}
+.drum-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}.drum-actions span{font-size:12px;color:var(--text-sub);flex:1 1 180px}
+.drum-scroll{overflow:auto;max-height:65vh;max-width:100%;border:1px solid var(--border);border-radius:12px;overscroll-behavior:contain;touch-action:pan-x pan-y}
+.drum-scroll table{border-collapse:separate;border-spacing:0;table-layout:fixed;margin:0}
+.drum-scroll th,.drum-scroll td{border-bottom:1px solid var(--border);padding:3px;text-align:center}
+.drum-scroll thead th{position:sticky;top:0;z-index:3;background:var(--surf);font-size:11px;height:32px}
+.drum-scroll th:first-child{position:sticky;left:0;z-index:2;background:var(--surf);min-width:174px;max-width:174px;width:174px;text-align:left;box-sizing:border-box;box-shadow:2px 0 3px #0001}
+.drum-scroll thead th:first-child{z-index:4}
+.drum-track-title{display:flex;gap:3px}.drum-track-title button:first-child{flex:1}
+#drum-workshop .drum-track-title button{padding:3px 5px;font-size:12px}.drum-scroll small{display:block;max-width:162px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;color:var(--text-sub)}
+.drum-track-switches{display:flex;gap:2px;margin-top:3px}#drum-workshop .drum-track-switches button{font-size:11px;flex:1;padding:3px;min-height:44px}
+.drum-scroll input[type=range]{display:block;width:100%;height:30px;accent-color:var(--prim)}
+#drum-workshop button[aria-pressed=true]{border-color:var(--prim);background:color-mix(in srgb,var(--prim) 18%,var(--surf))}
+#drum-workshop .drum-step{width:44px;min-width:44px;height:48px;margin:0;padding:0;background:var(--bg);border-radius:7px;touch-action:pan-x pan-y;user-select:none}
+#drum-workshop .drum-step.on{background:var(--prim);color:#fff}#drum-workshop .drum-step.current{outline:2px solid var(--orange);outline-offset:-2px}
+.drum-scroll .bar{border-left:2px solid var(--prim)}.drum-save{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.drum-save input,.drum-save select{flex:1 1 150px;width:auto}.drum-legacy{padding:12px;border:1px solid var(--border);border-radius:12px}.drum-legacy summary{min-height:44px;cursor:pointer;font-size:13px}
+.drum-note-dialog{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:18px;padding:18px;width:min(460px,90vw);max-height:80dvh;overflow:auto}.drum-note-dialog::backdrop{background:#0007}.drum-note-dialog fieldset{border:1px solid var(--border);border-radius:10px;margin:10px 0;display:grid;gap:8px}.drum-note-dialog p{font-size:12px;line-height:1.6}.drum-note-dialog input[type=checkbox]{width:24px;min-height:24px}
+@media(min-width:1000px){.drum-controls{grid-template-columns:repeat(5,minmax(0,1fr))}#page-metro:has(#drum-workshop:not([hidden])){max-width:1440px!important;width:calc(100% - 32px)!important}}
+@media(max-width:430px){.drum-controls{grid-template-columns:repeat(2,minmax(0,1fr))}.drum-scroll th:first-child{width:145px;min-width:145px;max-width:145px}.drum-scroll small{max-width:136px}.drum-heading h2{font-size:18px}}
+.tuner-range-target{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--prim);box-shadow:0 0 0 2px var(--surf),0 0 7px var(--prim);transform:translateX(-50%)}
+#tuner-range-pointer{position:absolute;top:-5px;bottom:-4px;width:2px;background:var(--orange);transform:translateX(-50%);transition:left .1s linear}
+#tuner-range-pointer::before{content:'';position:absolute;top:0;left:-4px;border:5px solid transparent;border-top-color:var(--orange)}
+.tuner-range-labels{position:relative;height:16px;font-size:10px;color:var(--text-sub);margin:6px 5px 0}
+.tuner-range-labels span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.tuner-range-labels span:first-child{transform:none}
+.tuner-range-labels span:last-child{transform:translateX(-100%)}
+#tuner-range-reading{font-size:13px;font-weight:650;line-height:1.55;margin:10px 0 7px;min-height:40px;font-variant-numeric:tabular-nums}
+#tuner-range-legend{display:flex;gap:5px 10px;flex-wrap:wrap;color:var(--prim);font-size:11px}
+#tuner-range-legend .locked{text-decoration:underline;text-underline-offset:3px;font-weight:800}
+#tuner-detection-status{font-size:11px;color:var(--text-sub);line-height:1.5;margin:7px 0 0;min-height:17px}
+.tuner-diagnostics{border:1px solid var(--border);border-radius:14px;padding:0 12px;text-align:left;background:var(--surf)}
+.tuner-diagnostics summary{min-height:44px;padding-block:12px;cursor:pointer;font-size:12px;font-weight:650}
+#tuner-detection-badge{font-weight:400;color:var(--text-sub);margin-left:6px}
+.tuner-diagnostics p{font-size:12px;line-height:1.5;color:var(--text-sub)}
+.tuner-diagnostics label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-block:8px}
+.tuner-diagnostics select,.tuner-diagnostics button{min-height:44px;font:inherit;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);padding:8px}
+.tuner-diagnostics select{max-width:68%;font-size:12px}
+#page-tuner .tuner-display{flex-shrink:0;height:auto!important;aspect-ratio:1}
+@media(min-width:1000px) and (min-height:650px){
+  html[data-adaptive="true"] .tuner-workspace{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(340px,1.1fr);align-items:start;gap:18px}
+  html[data-adaptive="true"] .tuner-workspace>.tuner-display{grid-column:1;grid-row:1/3;justify-self:center}
+  html[data-adaptive="true"] .tuner-workspace>.a4-control{grid-column:1;grid-row:3}
+  html[data-adaptive="true"] .tuner-workspace>.tuner-range{grid-column:2;grid-row:1}
+  html[data-adaptive="true"] .tuner-workspace>.strings-rack{grid-column:2;grid-row:2}
+  html[data-adaptive="true"] .tuner-workspace>.tuner-diagnostics{grid-column:2;grid-row:3}
+}
+@media(min-width:700px) and (max-height:740px){
+  html[data-adaptive="true"] #page-instrument.active{overflow-y:auto!important}
+  html[data-adaptive="true"] #page-instrument #instrument-stage{min-height:0!important;flex:0 0 auto!important}
+}
+@media(min-width:1000px){
+  html[data-adaptive="true"] #page-theory .theory-cat-btn{min-height:110px!important;padding:18px}
+  html[data-adaptive="true"] #page-ear .ear-display{border-radius:18px}
+}
+/* 13.5.10：仅音色选择器；原生 dialog 负责焦点圈定、Escape 与背景隔离。 */
+.metro-slot-row .metro-sound-choice,.metro-sound-choice{min-width:0;min-height:44px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);padding:8px;text-align:left;font:inherit;overflow-wrap:anywhere}
+#metro-swing-sound[hidden]{display:none!important}
+.metro-sound-dialog{box-sizing:border-box;width:min(620px,calc(100% - 24px));max-height:calc(100dvh - var(--safe-t,0px) - var(--safe-b,0px) - 32px);padding:0;border:1px solid var(--border);border-radius:18px;background:var(--surf);color:var(--text);overflow:hidden}
+.metro-sound-dialog[open]{display:flex;flex-direction:column}
+.metro-sound-dialog::backdrop{background:rgba(0,0,0,.45)}
+.metro-picker-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.metro-picker-scroll{padding:8px 12px 16px;overflow-y:auto;overscroll-behavior:contain}
+.metro-picker-scroll summary{min-height:48px;box-sizing:border-box;padding:14px 8px;cursor:pointer;font-weight:700}
+.metro-picker-row{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px;margin:6px 0}
+.metro-sound-dialog button{min-height:44px;min-width:44px;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font:inherit;overflow-wrap:anywhere}
+.metro-picker-row button:first-child{text-align:left}
+.metro-picker-row button[aria-pressed=true]{border-color:var(--prim);color:var(--prim);background:rgba(10,132,255,.12)}
+.metro-sound-dialog :focus-visible,.metro-sound-choice:focus-visible{outline:2px solid var(--prim);outline-offset:2px}

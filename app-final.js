@@ -3,7 +3,7 @@
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.8';
+const V13_VERSION='13.5.13';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -537,7 +537,7 @@ Metro._scheduler=function(){if(!this.playing)return;const now=AudioEngine.ctx.cu
 Metro._scheduleBeat=function(beatIdx,time){
     const duration=this._beatDuration(beatIdx),level=this._accentPattern()[beatIdx]??.58,strong=this.accentMode==='meter'&&beatIdx===0,secondary=this.accentMode==='meter'&&!strong&&level>=.72;
     if(this.customMode){const steps=this._stepsFor(),count=Math.max(1,steps[beatIdx]||1),stepDur=duration/count,start=steps.slice(0,beatIdx).reduce((sum,n)=>sum+n,0),pattern=this._ensurePattern();for(let row=0;row<4;row++)for(let step=0;step<count;step++){const event=pattern[row]?.[start+step];if(!event)continue;const hits=event.subdivision==='triplet'?3:event.subdivision==='sextuplet'?6:1,volume=(event.velocity==='accent'?1:.76)*(row===2?.64:1);for(let h=0;h<hits;h++)AudioEngine.playClick(time+step*stepDur+h*stepDur/hits,event.velocity==='accent',this.trackSounds[row],volume/Math.sqrt(hits));}}
-    else{if(this.accentMode==='flat')AudioEngine.playClick(time,false,this.slots.beat,.68);else if(strong)AudioEngine.playMetronomeBeat(time,true,this.slots.beat,this.slots.accent,.86);else AudioEngine.playClick(time,false,this.slots.beat,secondary?.78:.58);if(this.sub>1){const subDur=duration/this.sub;for(let s=1;s<this.sub;s++){const swing=this.swingEnabled&&this.sub%2===0&&s%2===1;AudioEngine.playClick(time+this._swingPosition(s,subDur,this.sub),false,swing?this.slots.swing:this.slots.subdivision,swing?.44:.33);}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.slots.swing,.42);}
+    else{this._playMainBeat(beatIdx,time,strong,secondary);if(this.sub>1){const subDur=duration/this.sub;for(let s=1;s<this.sub;s++){const swing=this.swingEnabled&&this.sub%2===0&&s%2===1;AudioEngine.playClick(time+this._swingPosition(s,subDur,this.sub),false,swing?this.slots.swing:this.slots.subdivision,this._subdivisionLevel(swing));}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.slots.swing,this._subdivisionLevel(true));}
     setTimeout(()=>document.querySelectorAll('.v-dot').forEach((dot,index)=>{dot.classList.remove('beat-1','beat-mid','beat-weak');if(index===beatIdx)dot.classList.add(strong?'beat-1':secondary?'beat-mid':'beat-weak');}),Math.max(0,(time-AudioEngine.ctx.currentTime)*1000));
 };
 
@@ -642,6 +642,7 @@ ChordExplore.updateGuess=function(){const display=document.getElementById('chord
 const PWAInstall={
     deferred:null,ios:false,button:null,hint:null,
     init(){
+        if(this.initialized)return;this.initialized=true;
         this.button=document.getElementById('start-install-btn');this.hint=document.getElementById('start-install-hint');
         if(!this.button)return;
         const standalone=!!(navigator.standalone||window.matchMedia?.('(display-mode: standalone)').matches);
@@ -716,7 +717,7 @@ const appGoPageV134=App.goPage.bind(App);
 App.goPage=function(name,navItem){if(name!=='practice')SightMetronome.stop();return appGoPageV134(name,navItem);};
 const appInit=App.init.bind(App);
 App.init=async function(){try{await appInit();}catch(error){console.error('基础模块初始化失败',error);}finally{SightSinging.init();PWAInstall.init();PWAUpdate.init();AudioEngine.prepareMutedC01();document.documentElement.dataset.appVersion=V13_VERSION;document.documentElement.dataset.coreReady='true';}};
-const startUpdateCheck=()=>PWAUpdate.init();
+const startUpdateCheck=()=>{if(/^https?:$/.test(location.protocol)){const url=new URL(location.href);if(url.searchParams.has('reset')){url.searchParams.delete('reset');history.replaceState(null,'',url.href);}}PWAInstall.init();PWAUpdate.init();};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startUpdateCheck,{once:true});else queueMicrotask(startUpdateCheck);
 })();
 
@@ -725,7 +726,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.8';
+const RELEASE_VERSION='13.5.13';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -1165,8 +1166,8 @@ Metro.rampFieldChanged=function(){if(this.ramp.running)return;this._rampReadFiel
 Metro.adjustRampValue=function(id,delta){const input=document.getElementById(id);if(!input)return;input.value=String(clamp((Number(input.value)||5)+(Number(delta)||0),Number(input.min)||1,Number(input.max)||600));this.rampFieldChanged();};
 Metro._rampBeatDuration=function(){return 60/Math.max(30,this.ramp.current);};
 Metro._rampScheduleBeat=function(index,time){
-    const duration=this._rampBeatDuration(index),level=this._accentPattern()[index]??.58,strong=this.accentMode==='meter'&&index===0,secondary=this.accentMode==='meter'&&!strong&&level>=.72;if(this.accentMode==='flat')AudioEngine.playClick(time,false,this.slots.beat,.68);else if(strong)AudioEngine.playMetronomeBeat(time,true,this.slots.beat,this.slots.accent,.86);else AudioEngine.playClick(time,false,this.slots.beat,secondary?.78:.58);
-    if(this.sub>1){const subDur=duration/this.sub;for(let sub=1;sub<this.sub;sub++){const swing=this.swingEnabled&&this.sub%2===0&&sub%2===1;AudioEngine.playClick(time+this._swingPosition(sub,subDur,this.sub),false,swing?this.slots.swing:this.slots.subdivision,swing?.44:.33);}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.slots.swing,.42);
+    const duration=this._rampBeatDuration(index),level=this._accentPattern()[index]??.58,strong=this.accentMode==='meter'&&index===0,secondary=this.accentMode==='meter'&&!strong&&level>=.72;this._playMainBeat(index,time,strong,secondary);
+    if(this.sub>1){const subDur=duration/this.sub;for(let sub=1;sub<this.sub;sub++){const swing=this.swingEnabled&&this.sub%2===0&&sub%2===1;AudioEngine.playClick(time+this._swingPosition(sub,subDur,this.sub),false,swing?this.slots.swing:this.slots.subdivision,this._subdivisionLevel(swing));}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.slots.swing,this._subdivisionLevel(true));
 };
 Metro.toggleRamp=async function(){
     const ramp=this.ramp;if(ramp.running){this.pauseRamp();return;}this._rampReadFields();if(ramp.mode==='range'&&ramp.start===ramp.target){toast('起始 BPM 和目标 BPM 不能相同');return;}if(ramp.completed){ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;ramp.started=false;ramp.completed=false;}if(!ramp.started)ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;
@@ -1381,40 +1382,62 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.8';
+const RELEASE_VERSION='13.5.13';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
 
-/* ---------- 节拍器：26 个本地 CC0 重拍音色 ---------- */
-const ACCENT_SAMPLE_ROWS=[
-    ['accent_cc0_01','01 · 木块强击·极强','木质','VCSL'],
-    ['accent_cc0_02','02 · 木块强击·圆润','木质','VCSL'],
-    ['accent_cc0_03','03 · 木块强击·硬朗','木质','VCSL'],
-    ['accent_cc0_04','04 · 硬木棒·一号','木质','VCSL'],
-    ['accent_cc0_05','05 · 硬木棒·二号','木质','VCSL'],
-    ['accent_cc0_06','06 · 拍板爆点·一号','木质冲击','VCSL'],
-    ['accent_cc0_07','07 · 拍板爆点·二号','木质冲击','VCSL'],
-    ['accent_cc0_08','08 · 制动鼓槌击','金属短击','VCSL'],
-    ['accent_cc0_09','09 · 高阿哥哥铃','金属短击','VCSL'],
-    ['accent_cc0_10','10 · 牛铃正常击','金属短击','VCSL'],
-    ['accent_cc0_11','11 · 单人拍手·三级','拍手','VCSL'],
-    ['accent_cc0_12','12 · 单人拍手·四级','拍手','VCSL'],
-    ['accent_cc0_13','13 · 群拍手','拍手','VCSL'],
-    ['accent_cc0_14','14 · 交叉击','小鼓','VCSL'],
-    ['accent_cc0_15','15 · 小鼓边击·中强','小鼓','VCSL'],
-    ['accent_cc0_16','16 · 小鼓边击·强','小鼓','VCSL'],
-    ['accent_cc0_17','17 · 现代小鼓·亮击','小鼓','VCSL'],
-    ['accent_cc0_18','18 · 现代小鼓·厚亮','小鼓','VCSL'],
-    ['accent_cc0_19','19 · 闷牛铃','金属短击','VCSL'],
-    ['accent_cc0_20','20 · 低阿哥哥铃','金属短击','VCSL'],
-    ['accent_cc0_21','21 · 电子短击','电子','Sonic Pi'],
-    ['accent_cc0_22','22 · 电子高小鼓','电子','Sonic Pi'],
-    ['accent_cc0_23','23 · 冲击层','电子冲击','Sonic Pi'],
-    ['accent_cc0_24','24 · 电子短小鼓','电子','Sonic Pi'],
-    ['accent_cc0_25','25 · 电子弹击','电子','Sonic Pi'],
-    ['accent_cc0_26','26 · 合成厚小鼓','小鼓','Sonic Pi'],
-];
+/* ---------- 节拍器：50 个确认并标准化的本地 CC0 音源 ---------- */
+const ACCENT_SAMPLE_ROWS=[["accent_cc0_01","K01 · 明亮击头 · Synthwave","强击头与短底鼓","Freesound"],
+    ["accent_cc0_02","02 · 木块强击·圆润（R02）","木质与刮奏","VCSL"],
+    ["accent_cc0_03","K02 · 枫木原声底鼓 · Spaun","强击头与短底鼓","Freesound"],
+    ["accent_cc0_04","K03 · Techno · 硬击","强击头与短底鼓","Freesound"],
+    ["accent_cc0_05","K04 · Deep House · MPC 质感","强击头与短底鼓","Freesound"],
+    ["accent_cc0_06","N02 · 响棒 2 · 轻击","木质与刮奏","VCSL"],
+    ["accent_cc0_07","N01 · 响棒 1 · 轻击","木质与刮奏","VCSL"],
+    ["accent_cc0_08","N03 · 牛铃 · 敲击","金属与铃类","VCSL"],
+    ["accent_cc0_09","N04 · 牛铃 · 制音","金属与铃类","VCSL"],
+    ["accent_cc0_10","N05 · 铃鼓 1 · 敲击","手拍与摇奏","VCSL"],
+    ["accent_cc0_11","N07 · 三角铁 · 制音","金属与铃类","VCSL"],
+    ["accent_cc0_12","N08 · 三角铁 · 开放","金属与铃类","VCSL"],
+    ["accent_cc0_13","N09 · 高音牛铃 · 敲击","金属与铃类","VCSL"],
+    ["accent_cc0_14","N10 · 低音牛铃 · 敲击","金属与铃类","VCSL"],
+    ["accent_cc0_15","N11 · 刹车鼓 · 金属槌","金属与铃类","VCSL"],
+    ["accent_cc0_16","N12 · 卡巴萨 · 敲击","手拍与摇奏","VCSL"],
+    ["accent_cc0_17","N14 · 手拍 · 亮","手拍与摇奏","VCSL"],
+    ["accent_cc0_18","N16 · 响棒 1 · 明亮","木质与刮奏","VCSL"],
+    ["accent_cc0_19","N18 · 牛铃 · 开放","金属与铃类","VCSL"],
+    ["accent_cc0_20","N19 · 指钹 · 清脆","金属与铃类","VCSL"],
+    ["accent_cc0_21","N23 · 闭镲 · 短","鼓组核心","VCSL"],
+    ["accent_cc0_22","N24 · 闭镲 · 边缘","鼓组核心","VCSL"],
+    ["accent_cc0_23","N26 · 开镲 · 短","鼓组核心","VCSL"],
+    ["accent_cc0_24","N34 · 三角铁 3 · 制音","金属与铃类","VCSL"],
+    ["accent_cc0_25","N39 · 木鱼 · 强","木质与刮奏","VCSL"],
+    ["accent_cc0_26","N57 · 军鼓 · 强击","鼓组核心","VCSL"],
+    ["accent_cc0_27","N06 · 铃鼓 1 · 摇动","手拍与摇奏","VCSL"],
+    ["accent_cc0_28","N13 · 卡巴萨 · 摩擦","手拍与摇奏","VCSL"],
+    ["accent_cc0_29","N15 · 独拍 · 软","手拍与摇奏","VCSL"],
+    ["accent_cc0_30","N17 · 牛铃 · 明亮","金属与铃类","VCSL"],
+    ["accent_cc0_31","N22 · 尼泊尔手铃","金属与铃类","VCSL"],
+    ["accent_cc0_32","N25 · 松镲 · 轻","鼓组核心","VCSL"],
+    ["accent_cc0_33","N27 · 大摇铃 · 敲击","手拍与摇奏","VCSL"],
+    ["accent_cc0_34","N28 · 大摇铃 · 下摇","手拍与摇奏","VCSL"],
+    ["accent_cc0_35","N29 · 小摇铃 · 双下","手拍与摇奏","VCSL"],
+    ["accent_cc0_36","N30 · 小摇铃 · 拍击","手拍与摇奏","VCSL"],
+    ["accent_cc0_37","N31 · 铃鼓 2 · 敲击","手拍与摇奏","VCSL"],
+    ["accent_cc0_38","N32 · 铃鼓 2 · 摇动","手拍与摇奏","VCSL"],
+    ["accent_cc0_39","N33 · 铃鼓 3 · 上摇","手拍与摇奏","VCSL"],
+    ["accent_cc0_40","N36 · 木缝鼓 · 高","木质与刮奏","VCSL"],
+    ["accent_cc0_41","N38 · 木鱼 · 轻","木质与刮奏","VCSL"],
+    ["accent_cc0_42","N42 · 邦戈高音 · 开放","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_43","N43 · 邦戈高音 · 制音","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_44","N46 · 康加 · 指击","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_45","N50 · 达布卡 1 · 轻","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_46","N51 · 达布卡 2 · 轻","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_47","N52 · 达布卡 3 · 轻","手鼓与民族鼓","VCSL"],
+    ["accent_cc0_48","N58 · 军鼓 · 无响弦","鼓组核心","VCSL"],
+    ["accent_cc0_49","N59 · 军鼓 · 边击","鼓组核心","VCSL"],
+    ["accent_cc0_50","N60 · 军鼓 2 · 强击","鼓组核心","VCSL"]];
 const ACCENT_SAMPLE_META=Object.fromEntries(ACCENT_SAMPLE_ROWS.map(([id,label,family,source],index)=>[
     id,{id,label,family,source,url:window.MTU_ACCENT_INLINE_URLS?.[id]||`./assets/metronome-accent-cc0/${String(index+1).padStart(2,'0')}.wav`}
 ]));
@@ -1422,53 +1445,140 @@ window.MTU_ACCENT_SAMPLE_META=ACCENT_SAMPLE_META;
 
 const clickAssetBeforeV1354=AudioEngine._clickAsset.bind(AudioEngine);
 AudioEngine._clickAsset=function(soundType){return ACCENT_SAMPLE_META[soundType]?soundType:clickAssetBeforeV1354(soundType);};
+// 短击音不用含尾部静音的整段 RMS；只平衡最响 50 ms，最多衰减 6 dB，不追加增益。
+AudioEngine.balanceAccentSample=function(buffer){
+    const channels=Array.from({length:buffer.numberOfChannels},(_,i)=>buffer.getChannelData(i)),windowSize=Math.max(1,Math.round(buffer.sampleRate*.05));
+    let sum=0,maxPower=0;
+    for(let i=0;i<buffer.length;i++){for(const data of channels){sum+=data[i]*data[i]/channels.length;if(i>=windowSize)sum-=data[i-windowSize]*data[i-windowSize]/channels.length;}maxPower=Math.max(maxPower,sum/windowSize);}
+    return Math.max(.5,Math.min(1,.25/Math.max(.0001,Math.sqrt(maxPower))));
+};
 AudioEngine.loadAccentSample=async function(name){
     const meta=ACCENT_SAMPLE_META[name];if(!this.ctx||!meta)return null;
     if(this.sampleBuffers.has(name))return this.sampleBuffers.get(name);
     if(this.samplePromises.has(name))return this.samplePromises.get(name);
     const promise=(async()=>{
         const response=await fetch(meta.url,{cache:'force-cache'});if(!response.ok)throw new Error(`${response.status} ${meta.url}`);
-        const bytes=await response.arrayBuffer(),buffer=await this.ctx.decodeAudioData(bytes.slice(0));this.sampleBuffers.set(name,buffer);return buffer;
+        const bytes=await response.arrayBuffer(),buffer=await this.ctx.decodeAudioData(bytes.slice(0));
+        // 44.1→48 kHz 插值可能产生超过文件峰值的样本；只衰减重采样过冲。
+        let peak=0;for(let channel=0;channel<buffer.numberOfChannels;channel++)for(const value of buffer.getChannelData(channel))peak=Math.max(peak,Math.abs(value));
+        if(peak>1)for(let channel=0;channel<buffer.numberOfChannels;channel++){const data=buffer.getChannelData(channel);for(let i=0;i<data.length;i++)data[i]/=peak;}
+        meta.balance=this.balanceAccentSample(buffer);this.sampleBuffers.set(name,buffer);return buffer;
     })().catch(error=>{console.warn('重拍采样解码失败',name,error);return null;}).finally(()=>this.samplePromises.delete(name));
     this.samplePromises.set(name,promise);return promise;
 };
 const prepareClickSoundsBeforeV1354=AudioEngine.prepareClickSounds.bind(AudioEngine);
 AudioEngine.prepareClickSounds=async function(sounds){
     const flat=(Array.isArray(sounds)?sounds:[sounds]).flat(Infinity).filter(Boolean),accent=[...new Set(flat.filter(sound=>ACCENT_SAMPLE_META[sound]))];
-    const [embedded]=await Promise.all([prepareClickSoundsBeforeV1354(flat),...accent.map(sound=>this.loadAccentSample(sound))]);return embedded;
+    const [embedded,...loaded]=await Promise.all([prepareClickSoundsBeforeV1354(flat),...accent.map(sound=>this.loadAccentSample(sound))]);
+    if(loaded.some(buffer=>!buffer))throw new Error('确认音色未能加载：'+accent.filter((id,i)=>!loaded[i]).join(', '));return embedded;
+};
+const playClickBeforeNormalizedKit=AudioEngine.playClick.bind(AudioEngine);
+AudioEngine.playClick=function(time,accent,sound='digit',volume=null){
+    const meta=ACCENT_SAMPLE_META[sound];
+    if(!meta)return playClickBeforeNormalizedKit(time,accent,sound,volume);
+    const buffer=this.sampleBuffers.get(sound);if(!this.ctx||!this.masterGainNode||!buffer)return false;
+    if(this.ctx.state==='suspended')void this.ctx.resume();
+    const when=Math.max(time??this.ctx.currentTime,this.ctx.currentTime),source=this.ctx.createBufferSource(),gain=this.ctx.createGain();
+    source.buffer=buffer; // 原采样音高：不再对重拍升调，也不额外压低普通拍。
+    const level=Math.max(0,Math.min(1,Number(volume??(accent?.86:.58))||0))*(meta.balance??1);
+    gain.gain.setValueAtTime(level,when);
+    gain.gain.setValueAtTime(level,when+Math.max(0,buffer.duration-.005));
+    gain.gain.linearRampToValueAtTime(0,when+buffer.duration);
+    source.connect(gain);gain.connect(this.masterGainNode);source.onended=()=>{source.disconnect();gain.disconnect();};
+    source.start(when);source.stop(when+buffer.duration+.01);return true;
 };
 const playMetronomeBeatBeforeV1354=AudioEngine.playMetronomeBeat.bind(AudioEngine);
 AudioEngine.playMetronomeBeat=function(time,accent,beatSound,accentSounds,volume=.68){
-    const layers=(Array.isArray(accentSounds)?accentSounds:[accentSounds]).filter(Boolean),local=layers.filter(sound=>ACCENT_SAMPLE_META[sound]);
-    if(!accent||!local.length)return playMetronomeBeatBeforeV1354(time,accent,beatSound,accentSounds,volume);
-    this.playClick(time,false,beatSound,Math.min(.82,volume*.82));
-    local.forEach((sound,index)=>this.playClick(time,true,sound,Math.min(.98,volume*(index===0?1.02:.58))));
+    const layers=[...new Set((Array.isArray(accentSounds)?accentSounds:[accentSounds]).filter(Boolean))];
+    if(!accent||!layers.some(sound=>ACCENT_SAMPLE_META[sound]))return playMetronomeBeatBeforeV1354(time,accent,beatSound,accentSounds,volume);
+    const extra=layers.filter(sound=>sound!==layers[0]&&sound!==beatSound),hasBeat=beatSound&&beatSound!==layers[0];
+    // 同一拍总权重不超过 1；不重复播放相同采样，也不偷偷丢掉旧设置的混合叠层。
+    this.playClick(time,true,layers[0],volume*(1-(hasBeat?.10:0)-(extra.length?.15:0)));
+    if(hasBeat)this.playClick(time,false,beatSound,volume*.10);
+    extra.forEach(sound=>this.playClick(time,true,sound,volume*.15/extra.length));
 };
 
-Object.assign(METRO_KITS.studio,{accent:'accent_cc0_02',beat:'elec_tick',subdivision:'elec_tick',swing:'elec_tick'});
-Object.assign(METRO_KITS.custom,{accent:'accent_cc0_02',beat:'elec_tick',subdivision:'elec_tick',swing:'elec_tick'});
+Metro.levels={strong:.86,secondary:.70,beat:.58,subdivision:.33,swing:.40,flat:.68};
+Metro._subdivisionLevel=function(swing){return this.kitId==='drum_t06'?.49:swing?this.levels.swing:this.levels.subdivision;};
+Metro._playMainBeat=function(index,time,strong,secondary){
+    if(this.kitId==='drum_t06'&&this.signature==='4/4'&&this.accentMode==='meter'){AudioEngine.playClick(time,index===0,index===0?this.slots.accent:index===2?this.trackSounds[1]:this.slots.beat,index===0?this.levels.strong:index===2?.82:this.levels.beat);return;}
+    if(this.accentMode==='flat')AudioEngine.playClick(time,false,this.slots.beat,this.levels.flat);else if(strong)AudioEngine.playMetronomeBeat(time,true,this.slots.beat,this.slots.accent,this.levels.strong);else AudioEngine.playClick(time,false,this.slots.beat,secondary?this.levels.secondary:this.levels.beat);
+};
+const soundForAudition=id=>Object.keys(ACCENT_SAMPLE_META).find(key=>ACCENT_SAMPLE_META[key].label.includes(id));
+const kitRows=[
+    ['studio','默认 · 圆润木块','R02',null,'N23','N14'],
+    ['wood','木质 · 响棒','N02','N01','N16','N39'],
+    ['jazz','爵士 · 边击','K02','N59','N23','N24'],
+    ['acoustic','原声 · 枫木鼓组','K02','N57','N23','N26'],
+    ['soft','轻柔 · 手拍','N15','N12','N29','N14'],
+    ['electronic','电子 · Synthwave','K01','N57','N23','N14'],
+    ['scifi','电子 · Techno','K03','N60','N24','N26'],
+    ['custom','自定义','R02',null,'N23','N14'],
+    ['house','电子 · Deep House','K04','N58','N25','N14'],
+    ['bells','金属 · 牛铃','N03','N04','N07','N08'],
+    ['handdrum','手鼓 · 邦戈','N42','N43','N46','N50']
+];
+for(const [id,name,accent,beat,hat,aux] of kitRows){
+    const base=beat?soundForAudition(beat):'elec_tick';
+    METRO_KITS[id]={name,accent:soundForAudition(accent),beat:base,subdivision:id==='studio'||id==='custom'?base:soundForAudition(hat),swing:id==='studio'||id==='custom'?base:soundForAudition(aux),tracks:[soundForAudition(id==='studio'||id==='custom'?'K02':accent),soundForAudition(beat||'N57'),soundForAudition(hat),soundForAudition(aux)]};
+}
 const metroLabelBeforeV1354=Metro._label.bind(Metro);
 Metro._label=function(sound){return ACCENT_SAMPLE_META[sound]?.label||metroLabelBeforeV1354(sound);};
-const metroAllSoundsBeforeV1354=Metro._allSounds.bind(Metro);
-Metro._allSounds=function(){return [...new Set([...metroAllSoundsBeforeV1354(),...Object.keys(ACCENT_SAMPLE_META)])];};
-const metroOptionsBeforeV1354=Metro._options.bind(Metro);
+Metro._allSounds=function(){return ['elec_tick',...Object.keys(ACCENT_SAMPLE_META)];};
+Metro._soundGroups=function(selected){
+    const groups=new Map([['电子 Click（保留）',[{id:'elec_tick',label:this._label('elec_tick')}]]]);
+    for(const item of Object.values(ACCENT_SAMPLE_META)){const list=groups.get(item.family)||[];list.push(item);groups.set(item.family,list);}
+    if(selected&&!this._allSounds().includes(selected))groups.set('旧设置（仅兼容已保存选择）',[{id:selected,label:this._label(selected)}]);
+    return groups;
+};
 Metro._options=function(selected){
-    const selectedValue=Array.isArray(selected)?selected[0]:selected,groups=new Map();
-    for(const item of Object.values(ACCENT_SAMPLE_META)){const key=`${item.family} · ${item.source}`,list=groups.get(key)||[];list.push(item);groups.set(key,list);}
-    let options=metroOptionsBeforeV1354(selected);for(const [label,items] of groups)options+=`<optgroup label="CC0 重拍 · ${escapeHtml(label)}">${items.map(item=>`<option value="${item.id}" ${item.id===selectedValue?'selected':''}>${escapeHtml(item.label)}</option>`).join('')}</optgroup>`;return options;
+    const value=Array.isArray(selected)?selected[0]:selected;
+    return [...this._soundGroups(value)].map(([family,items])=>`<optgroup label="${escapeHtml(family)}">${items.map(item=>`<option value="${item.id}" ${item.id===value?'selected':''}>${escapeHtml(item.label)}</option>`).join('')}</optgroup>`).join('');
 };
 const metroInitBeforeV1354=Metro.init.bind(Metro);
 Metro.init=function(){
-    let manualDefault=false,migrated=false;try{manualDefault=!!localStorage.getItem('protuner_metro_default');migrated=localStorage.getItem('music_toolbox_metro_default_v1354')==='1';}catch(error){}
+    let manualDefault=false,migrated=false,fresh=false;try{manualDefault=!!localStorage.getItem('protuner_metro_default');migrated=localStorage.getItem('music_toolbox_metro_default_v1354')==='1';fresh=!localStorage.getItem('protuner_metro_v9')&&!manualDefault;}catch(error){}
     metroInitBeforeV1354();
+    // 新安装四轨也用确认音源；已有逐击编排和用户默认设置不覆盖。
+    if(fresh){this.trackSounds=this._clone(METRO_KITS.studio.tracks);this.renderSoundPanel();this.saveCustom();}
     if(!migrated&&!manualDefault){
         const current=Array.isArray(this.slots?.accent)?this.slots.accent[0]:this.slots?.accent,factory=this.kitId==='studio'&&['perc_snap','metro_20','metro_30'].includes(current);
         if(factory){this.slots={...this.slots,accent:'accent_cc0_02',beat:'elec_tick',subdivision:'elec_tick',swing:'elec_tick'};this.renderSoundPanel();this.renderSwingControls();this._prepareCurrentSounds();this.saveCustom();}
         try{localStorage.setItem('music_toolbox_metro_default_v1354','1');}catch(error){}
     }
 };
-const renderSoundPanelBeforeV1354=Metro.renderSoundPanel.bind(Metro);
-Metro.renderSoundPanel=function(preserveOpen=true){const result=renderSoundPanelBeforeV1354(preserveOpen),note=document.querySelector('#metro-sound-panel .metro-kit-note');if(note)note.textContent='默认：第一拍使用“02 · 木块强击·圆润”，普通拍和次强使用电子 Click；次强只提高普通拍音量。26 个 CC0 重拍音色均可离线切换。';return result;};
+Metro.renderSoundPanel=function(preserveOpen=true){
+    const panel=document.getElementById('metro-sound-panel');if(!panel)return;
+    const open=preserveOpen&&panel.classList.contains('open'),accent=Array.isArray(this.slots.accent)?this.slots.accent:[this.slots.accent];
+    const rows=[['accent','重拍',accent[0]],['accentLayer','重拍叠层',accent[1]||accent[0]],['beat','普通拍',this.slots.beat],['subdivision','细分',this.slots.subdivision],...['底鼓轨','军鼓轨','踩镲轨','辅助轨'].map((label,i)=>['track:'+i,label,this.trackSounds[i]])];
+    panel.innerHTML=rows.map(([slot,label,value])=>`<div class="metro-slot-row"><span>${label}</span><button type="button" class="metro-sound-choice" data-sound-slot="${slot}" onclick="Metro.openSoundPicker('${slot}')" aria-label="选择${label}音色">${escapeHtml(this._label(value))} ›</button><button type="button" class="metro-preview" aria-label="试听${label}" onclick="${slot.startsWith('track:')?`Metro.previewTrack(${slot.slice(6)})`:`Metro.previewSlot('${slot}')`}">♪</button></div>`).join('')+
+        '<div class="metro-kit-note">音源按类别展开选择，文件峰值已标准化。'+(this.kitId==='drum_t06'?'T06：4/4 首拍底鼓、第三拍 Clap、二／四拍闭镲；细分闭镲 49%，正拍闭镲 58%。无重音及其他拍号遵守原计拍。':'首套默认 R02 木块＋电子 Click；重拍 86% / 次强 70% / 普通 58% / 细分 33%。')+'旧保存选择仍可使用。</div><button class="metro-save-default" onclick="Metro.saveAsDefault()">保存为以后默认音色</button>';
+    panel.classList.toggle('open',open);
+    const button=document.getElementById('metro-sound-editor-btn');if(button)button.textContent=open?'收起音色':'编辑每个击点 ›';
+};
+Metro.openSoundPicker=function(slot){
+    if(!['accent','accentLayer','beat','subdivision','swing','track:0','track:1','track:2','track:3'].includes(slot))return;
+    const previous=document.getElementById('metro-sound-dialog');if(previous){previous.close();previous.remove();}
+    const getValue=()=>slot.startsWith('track:')?this.trackSounds[Number(slot.slice(6))]:slot==='accentLayer'?(Array.isArray(this.slots.accent)?this.slots.accent[1]:this.slots.accent):this.slots[slot];
+    const raw=getValue(),selected=Array.isArray(raw)?raw[0]:raw,dialog=document.createElement('dialog');dialog.id='metro-sound-dialog';dialog.className='metro-sound-dialog';dialog.setAttribute('aria-labelledby','metro-picker-title');
+    dialog.innerHTML=`<div class="metro-picker-head"><strong id="metro-picker-title">选择音色 · 分类试听</strong><button type="button" data-close>完成</button></div><div class="metro-picker-scroll">${[...this._soundGroups(selected)].map(([family,items])=>`<details><summary>${escapeHtml(family)}（${items.length}）</summary>${items.map(item=>`<div class="metro-picker-row"><button type="button" data-sound="${item.id}" aria-pressed="${item.id===selected}">${escapeHtml(item.label)}</button><button type="button" data-preview="${item.id}" aria-label="仅试听 ${escapeHtml(item.label)}">♪</button></div>`).join('')}</details>`).join('')}</div>`;
+    document.body.appendChild(dialog);
+    dialog.querySelector('[data-close]').onclick=()=>dialog.close();
+    dialog.addEventListener('close',()=>{dialog.remove();document.querySelector(`[data-sound-slot="${slot}"]`)?.focus();},{once:true});
+    dialog.querySelectorAll('[data-preview]').forEach(button=>button.onclick=()=>AudioEngine.previewClick(button.dataset.preview));
+    dialog.querySelectorAll('[data-sound]').forEach(button=>button.onclick=()=>{
+        if(slot.startsWith('track:')){this.setTrackSound(Number(slot.slice(6)),button.dataset.sound);this.renderSoundPanel();}else this.setSlot(slot,button.dataset.sound);
+        dialog.querySelectorAll('[data-sound]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    });
+    dialog.showModal();dialog.querySelector('[data-close]').focus();
+};
+const metroSwingBeforeKit=Metro.renderSwingControls.bind(Metro);
+Metro.renderSwingControls=function(){
+    metroSwingBeforeKit();const select=document.getElementById('metro-swing-sound');if(!select)return;
+    select.hidden=true;let button=document.querySelector('[data-sound-slot="swing"]');
+    if(!button){button=document.createElement('button');button.type='button';button.className='metro-sound-choice';button.dataset.soundSlot='swing';button.onclick=()=>this.openSoundPicker('swing');select.after(button);}
+    button.textContent=this._label(this.slots.swing)+' ›';button.disabled=!this.swingEnabled;button.setAttribute('aria-label','选择 Swing 音色');
+};
 
 /* ---------- 渐速训练：精简版只保留固定 +1、间隔、启停、撤回与完成 ---------- */
 Metro._rampFieldsMarkup=function(){const ramp=this.ramp;if(ramp.mode==='lite')return `<div id="ramp-lite-fields" class="ramp-lite-panel"><input id="ramp-lite-interval" type="hidden" value="${ramp.interval}"><div class="ramp-lite-stepper" aria-label="精简渐速间隔"><button type="button" onclick="Metro.adjustLiteInterval(-1)" aria-label="间隔减一秒">−</button><span><small>每隔</small><strong id="ramp-lite-interval-display">${ramp.interval} 秒</strong><em>固定 +1 BPM</em></span><button type="button" onclick="Metro.adjustLiteInterval(1)" aria-label="间隔加一秒">＋</button></div></div>`;return `<div id="ramp-range-fields" class="ramp-range-grid"><label class="ramp-field">从 BPM<input id="ramp-start" type="number" min="30" max="300" value="${ramp.start}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">到 BPM<input id="ramp-target" type="number" min="30" max="300" value="${ramp.target}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每次变化 BPM<input id="ramp-step" type="number" min="1" max="30" value="${ramp.step}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每隔多少秒<span class="ramp-stepper-field"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',-1)">−</button><input id="ramp-interval" type="number" min="1" max="600" value="${ramp.interval}" oninput="Metro.rampFieldChanged()"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',1)">＋</button></span></label><div class="ramp-derived ramp-field-wide"><span>预计总时长（自动计算）</span><strong id="ramp-duration"></strong></div></div>`;};
@@ -1545,7 +1655,7 @@ InstrumentPage.bindStringMuteGestures=function(){
     stage.addEventListener('pointerup',event=>{
         const direct=event.target?.closest?.('.instrument-string-toggle,.instrument-string-mute-hit,.virtual-note-hit,.performance-string-cell'),zone=event.target?.closest?.('#strum-zone');let string,anchor;
         if(direct&&direct.dataset.string!==undefined){string=Number(direct.dataset.string);anchor=direct.dataset.fret!==undefined?`fret-${direct.dataset.fret}`:direct.classList.contains('performance-string-cell')?'strum':'line';}
-        else if(zone){const rect=zone.getBoundingClientRect(),axis=zone.dataset.axis==='x'?'x':'y',count=this.getTuning().length,ratio=axis==='x'?(event.clientX-rect.left)/Math.max(1,rect.width):(event.clientY-rect.top)/Math.max(1,rect.height),visual=clamp(Math.floor(ratio*count),0,count-1);string=axis==='y'?count-1-visual:visual;anchor='strum';}
+        else if(zone){string=this.strumStringAt(event);anchor='strum';}
         if(Number.isFinite(string))this._registerStringTap(string,anchor,event.clientX,event.clientY,event.pointerId,event);
     },true);
 };
@@ -1686,7 +1796,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.08.22.1';
+const FINAL_BUILD='2026.09.17.1';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -1696,15 +1806,19 @@ if(finalIOS)document.documentElement.dataset.ios='true';if(finalIOS&&finalStanda
 /* 重置缓存是危险操作：先确认，再注销当前源 Service Worker、删除 CacheStorage 和本地数据，最后强制联网重载。 */
 App.resetApplication=async function(){
     if(this._resetting)return;
-    if(!confirm('重置缓存会清除本网页的离线缓存、Service Worker、本地设置和自定义数据，并重新联网载入。建议在联网时操作。确定继续吗？'))return;
+    if(!confirm('重置会清除本应用路径的离线缓存及音乐工具箱的本地设置、自定义调弦和统计。同域其他音乐工具箱副本可能共用这些设置。联网检查成功后才执行。确定继续吗？'))return;
     this._resetting=true;const button=document.getElementById('start-reset-btn');if(button){button.disabled=true;button.textContent='正在重置…';}
     try{
-        if(navigator.serviceWorker?.getRegistrations){const registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.map(registration=>registration.unregister()));}
-        if(globalThis.caches?.keys){const keys=await caches.keys();await Promise.all(keys.map(key=>caches.delete(key)));}
-        try{localStorage.clear();sessionStorage.clear();}catch(error){}
+        if(!/^https?:$/.test(location.protocol)||navigator.onLine===false)throw new Error('请先从联网的正式网址打开');
+        const base=new URL('./',location.href),probe=new URL('version.json',base);probe.searchParams.set('resetProbe',Date.now());
+        const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6000);
+        try{const response=await fetch(probe,{cache:'no-store',signal:controller.signal});if(!response.ok||!(await response.json()).version)throw new Error('无法验证在线版本');}finally{clearTimeout(timer);}
+        if(navigator.serviceWorker?.getRegistrations){const registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.filter(registration=>registration.scope===base.href).map(registration=>registration.unregister()));}
+        if(globalThis.caches?.keys){for(const key of await caches.keys()){if(!/^(music-toolbox-ultra-|xingxian-v13-)/.test(key))continue;const cache=await caches.open(key),requests=await cache.keys(),own=requests.filter(request=>request.url.startsWith(base.href));if(own.length&&own.length===requests.length)await caches.delete(key);else await Promise.all(own.map(request=>cache.delete(request)));}}
+        for(const storage of [localStorage,sessionStorage]){for(let i=storage.length-1;i>=0;i--){const key=storage.key(i);if(/^(protuner_|music[-_]toolbox[-_]ultra|music_toolbox_|xingxian[-_])/.test(key))storage.removeItem(key);}}
         const target=new URL(location.href);target.searchParams.set('reset',String(Date.now()));location.replace(target.href);
     }catch(error){
-        console.error('重置缓存失败',error);this._resetting=false;if(button){button.disabled=false;button.textContent='重置缓存';}toast('重置未完成，请联网后重试');
+        console.error('重置缓存失败',error);this._resetting=false;if(button){button.disabled=false;button.textContent='重置缓存';}PWAInstall.showHint('重置未完成：'+(error.message||'请联网后重试'));
     }
 };
 
@@ -1752,8 +1866,10 @@ Tuner.startLoop=function(){
         if(!result.valid||!result.freq)this.noiseFloor=finalClamp(this.noiseFloor*.965+(result.rms||0)*.035,capture.rmsFloor*.85,.025);
         const sustain=now-this.lastValidAt<this.displayHoldMs,threshold=Math.max(capture.rmsFloor,this.gateThreshold*capture.gateScale*(sustain?capture.sustainGate:1),this.noiseFloor*(sustain?capture.noiseSustain:capture.noiseAttack));
         const valid=result.valid&&result.freq>0&&result.rms>=threshold;
+        window.TunerAssist?.observe({...result,valid},now);
         if(!valid){
             if(sustain){this.updateNeedle(this.displayCents||0,dt);return;}
+            this.hideSnapWarning();
             if(this.displayNote!=='--'){this.displayNote='--';this.displayFreq=0;this.displayCents=0;this.isTuned=false;this.updateDisplay();}
             this.freqBuffer=[];this.updateNeedle(0,dt);
             if(this.confirmedStringIdx!==-1||this.pendingStringIdx!==-1){this.confirmedStringIdx=-1;this.pendingStringIdx=-1;this.renderStrings();}
@@ -1765,7 +1881,7 @@ Tuner.startLoop=function(){
         if(pc!==this.stableNote){if(pc===this.lastNote){this.stableCount++;if(this.stableCount>=2){this.stableNote=pc;this.stableCount=0;}}else this.stableCount=0;this.lastNote=pc;}
         if(this.stableNote>=0){this.displayNote=noteName;this.displayFreq=medianFreq;this.displayCents=cents;this.isTuned=Math.abs(cents)<5;}
         this.updateDisplay();this.updateNeedle(cents,dt);this.detectString(roundedMidi,result.confidence);
-        if(this.lockedString>=0&&this.targetStrings[this.lockedString]){const targetMidi=this.targetStrings[this.lockedString].midi;Math.abs(roundedMidi-targetMidi)>=3?this.showSnapWarning(noteName):this.hideSnapWarning();}else this.hideSnapWarning();
+        if(this.lockedString>=0&&this.targetStrings[this.lockedString]){const targetMidi=this.targetStrings[this.lockedString].midi;midi-targetMidi>=3?this.showSnapWarning(noteName):this.hideSnapWarning();}else this.hideSnapWarning();
     };
     this.lastFrameTime=performance.now();this.animId=requestAnimationFrame(loop);
 };
@@ -1773,6 +1889,7 @@ Tuner.startLoop=function(){
 /* 节拍器：先完成默认重拍采样解码，再调度第一拍。 */
 Metro._finalStartToken=0;Metro._starting=false;
 Metro.start=async function(){
+    window.DrumWorkshop?.stop();
     if(this.playing||this._starting)return;const token=++this._finalStartToken;this._starting=true;
     const button=document.getElementById('play-btn');if(button){button.disabled=true;button.setAttribute('aria-label','正在准备节拍器音色');}
     try{if(!AudioEngine.ctx)await AudioEngine.init();else if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await this._prepareCurrentSounds();}
@@ -1800,13 +1917,13 @@ SightSinging.renderScore=function(){
     const box=document.getElementById('sight-score'),exercise=this.exercise,barsPerSystem=this._layoutBarsPerSystem();if(!box||!exercise||!Number.isFinite(barsPerSystem))return sightRenderBeforeFinal();
     const chunks=this._splitForSystems(exercise,barsPerSystem);if(chunks.length<=1)return sightRenderBeforeFinal();
     const original=exercise,systems=[];this._buildingSystems=true;
-    try{for(let index=0;index<chunks.length;index++){this.exercise=chunks[index];sightRenderBeforeFinal();const markup=box.innerHTML.replace(/id="sight-drum-playhead"/g,`id="sight-drum-playhead-${index}" data-sight-playhead="true"`);systems.push(`<section class="sight-system" aria-label="第 ${index+1} 行谱面">${markup}</section>`);}}
+    try{let offset=0;const total=chunks.reduce((sum,chunk)=>sum+chunk.durations.reduce((a,b)=>a+b,0),0);for(let index=0;index<chunks.length;index++){this.exercise=chunks[index];sightRenderBeforeFinal();const duration=chunks[index].durations.reduce((a,b)=>a+b,0);const markup=box.innerHTML.replace(/id="sight-drum-playhead"/g,`id="sight-drum-playhead-${index}" data-sight-playhead="true" data-progress-start="${offset/total}" data-progress-end="${(offset+duration)/total}"`);systems.push(`<section class="sight-system" aria-label="第 ${index+1} 行谱面">${markup}</section>`);offset+=duration;}}
     finally{this.exercise=original;this._buildingSystems=false;}
     const grid=this.scoreLayout==='grid2'?' grid-2':this.scoreLayout==='grid3'?' grid-3':'';box.innerHTML=`<div class="sight-systems${grid}">${systems.join('')}</div>`;requestAnimationFrame(()=>this.applyScoreZoom());
 };
 const sightZoomBeforeFinal=SightSinging.applyScoreZoom.bind(SightSinging);
 SightSinging.applyScoreZoom=function(){
-    const box=document.getElementById('sight-score'),systems=box?.querySelectorAll('.sight-system');if(!systems?.length)return sightZoomBeforeFinal();
+    const box=document.getElementById('sight-score'),systems=box?.querySelectorAll('.sight-system');if(!systems?.length){if(this.scoreLayout==='horizontal')return sightZoomBeforeFinal();const target=box?.querySelector('svg,.sight-jianpu'),output=document.getElementById('sight-score-zoom-value');if(!target)return;if(output)output.textContent=`${this.scoreZoom}%`;target.style.setProperty('width',`${this.scoreZoom}%`,'important');target.style.setProperty('min-width',`${this.scoreZoom}%`,'important');target.style.setProperty('height','auto','important');return;}
     const output=document.getElementById('sight-score-zoom-value');if(output)output.textContent=`${this.scoreZoom}%`;systems.forEach(system=>{const target=system.querySelector('svg,.sight-jianpu');if(!target)return;target.style.setProperty('width',`${this.scoreZoom}%`,'important');target.style.setProperty('min-width',`${this.scoreZoom}%`,'important');target.style.setProperty('height','auto','important');});
 };
 SightSinging._layoutLabel=function(){return {auto:'自动',horizontal:'横向',one:'1 小节/行',two:'2 小节/行',grid2:'2×2 网格',grid3:'2×3 网格'}[this.scoreLayout]||'自动';};
@@ -1824,7 +1941,7 @@ let sightResizeTimer=0;addEventListener('resize',()=>{if(SightSinging.scoreLayou
 const sightProgressBeforeFinal=SightSinging.setPlaybackProgress.bind(SightSinging);
 SightSinging.setPlaybackProgress=function(ratio,label){
     const result=sightProgressBeforeFinal(ratio,label),value=Math.max(0,Math.min(1,Number(ratio)||0));
-    document.querySelectorAll('[data-sight-playhead="true"]').forEach(playhead=>{const start=Number(playhead.dataset.startX),end=Number(playhead.dataset.endX),x=start+(end-start)*value;playhead.setAttribute('x1',String(x));playhead.setAttribute('x2',String(x));playhead.setAttribute('opacity',value>0&&value<1?'0.92':'0');});
+    document.querySelectorAll('[data-sight-playhead="true"]').forEach(playhead=>{const from=Number(playhead.dataset.progressStart),to=Number(playhead.dataset.progressEnd),local=Math.max(0,Math.min(1,(value-from)/Math.max(.0001,to-from))),start=Number(playhead.dataset.startX),end=Number(playhead.dataset.endX),x=start+(end-start)*local;playhead.setAttribute('x1',String(x));playhead.setAttribute('x2',String(x));playhead.setAttribute('opacity',value>=from&&value<to&&value<1?'0.92':'0');});
     return result;
 };
 
@@ -1834,3 +1951,206 @@ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('messag
 document.querySelector('.start-btn')?.setAttribute('aria-label','进入音乐工具箱 Ultra');
 document.documentElement.dataset.finalBuild=FINAL_BUILD;
 })();
+
+/* v13.5.9：调音器独立增强，不改变录音/视唱的检测策略和现有音色。 */
+(() => {
+const node=id=>document.getElementById(id);
+const note=midi=>midiToName(Math.round(midi));
+const assist={
+    mode:'auto',active:'hybrid',lastGood:0,signalSince:0,lastProbe:0,probeWins:0,lastSwitch:-Infinity,lastUI:0,
+    device(nav=navigator,width=innerWidth,coarse=matchMedia('(pointer:coarse)').matches){
+        const ua=nav.userAgent||'',ipad=/iPad/.test(ua)||(nav.platform==='MacIntel'&&nav.maxTouchPoints>1);
+        const os=ipad||/iPhone|iPod/.test(ua)?'iOS/iPadOS':/Android/.test(ua)?'Android':/Windows/.test(ua)?'Windows':/Mac/.test(ua)?'macOS':/Linux/.test(ua)?'Linux':'未知系统';
+        const kind=ipad?'平板':/iPhone|iPod/.test(ua)?'手机':/Android/.test(ua)?(/Mobile/.test(ua)?'手机':'平板/大屏设备'):coarse&&width<1100?'触控设备':'电脑';
+        return {os,kind,label:`${os} · ${kind}（推断）`};
+    },
+    keyCenter(midi){const m=Math.max(21,Math.min(108,midi));let whites=0;for(let n=21;n<m;n++)if(![1,3,6,8,10].includes(n%12))whites++;return (whites+([1,3,6,8,10].includes(m%12)?0:.5))/52*100;},
+    position(midi){const m=Math.max(21,Math.min(108,midi)),lo=Math.floor(m),hi=Math.ceil(m);return this.keyCenter(lo)+(this.keyCenter(hi)-this.keyCenter(lo))*(m-lo);},
+    init(){
+        if(this.ready)return;this.ready=true;
+        try{const saved=localStorage.getItem('music_toolbox_tuner_algorithm');if(['auto','hybrid','yin'].includes(saved))this.mode=saved;}catch{}
+        this.active=this.mode==='yin'?'yin':'hybrid';this.lastGood=performance.now();
+        const box=document.createElement('section');box.id='tuner-range';box.className='tuner-range';
+        box.innerHTML='<div class="tuner-range-heading"><strong>88 键音域</strong><span>低音 ← A0—C8 → 高音</span></div><div class="tuner-range-track" role="img" aria-label="A0 到 C8，88 个等半音位置；蓝点为调弦目标"><div class="tuner-range-keys"></div><div id="tuner-range-targets"></div><i id="tuner-range-pointer" hidden></i></div><div class="tuner-range-labels"><span>A0</span><span>C2</span><span>C4 中央 C</span><span>C6</span><span>C8</span></div><p id="tuner-range-reading">等待单音输入 · 蓝点是各弦的目标音</p><div id="tuner-range-legend"></div><p id="tuner-detection-status" role="status">请逐根弹奏；未锁定时只推测最接近的琴弦。</p>';
+        node('a4-box').insertAdjacentElement('afterend',box);
+        box.querySelector('.tuner-range-track').setAttribute('aria-label','A0 到 C8，52 个白键与 36 个黑键；蓝点为调弦目标');
+        box.querySelector('.tuner-range-keys').innerHTML=Array.from({length:88},(_,i)=>{const midi=i+21,black=[1,3,6,8,10].includes(midi%12);return `<i class="${black?'black':'white'}" data-midi="${midi}" style="left:${this.keyCenter(midi)}%"></i>`;}).join('');
+        box.querySelectorAll('.tuner-range-labels span').forEach((label,i)=>label.style.left=this.position([21,36,60,84,108][i])+'%');
+        this.renderTargets();this.sync();
+    },
+    setMode(value){
+        this.mode=['auto','hybrid','yin'].includes(value)?value:'auto';this.active=this.mode==='yin'?'yin':'hybrid';
+        this.signalSince=0;this.probeWins=0;this.lastGood=performance.now();this.lastSwitch=-Infinity;
+        AudioEngine.cachedPitch=null;Tuner.freqBuffer=[];Tuner.lastValidAt=0;
+        try{localStorage.setItem('music_toolbox_tuner_algorithm',this.mode);}catch{}
+        this.sync();
+    },
+    sync(){
+        if(node('tuner-algorithm'))node('tuner-algorithm').value=this.mode;
+        if(node('tuner-capture'))node('tuner-capture').value=AudioEngine.captureProfile;
+        const dev=this.device(),track=AudioEngine.micStream?.getAudioTracks?.()[0],settings=track?.getSettings?.()||{};
+        if(node('tuner-device-info'))node('tuner-device-info').textContent=`${dev.label} · ${AudioEngine.ctx?'Web Audio':'等待音频启用'} · ${AudioEngine.captureBackend||'音乐约束'}${settings.sampleRate?' · '+settings.sampleRate+' Hz':''}`;
+        if(node('tuner-detection-badge'))node('tuner-detection-badge').textContent=`${this.mode==='auto'?'自动':'手动'} · ${this.active==='yin'?'YIN 宽音域':'YIN + HPS'}`;
+    },
+    async reconnect(){
+        const button=node('tuner-diagnostics')?.querySelector('button');if(button)button.disabled=true;
+        try{AudioEngine.releaseMicrophone(false);if(AudioEngine._micPromise)await AudioEngine._micPromise;AudioEngine._micRecoveries=0;this.lastGood=performance.now();await AudioEngine.ensureMicrophone();this.sync();}
+        finally{if(button)button.disabled=false;}
+    },
+    renderTargets(){
+        const layer=node('tuner-range-targets'),legend=node('tuner-range-legend');if(!layer)return;
+        layer.replaceChildren();legend.replaceChildren();
+        Tuner.targetStrings.forEach((string,index)=>{
+            const label=`${Tuner.targetStrings.length-index}弦 ${note(string.midi)}`,dot=document.createElement('i');
+            dot.className='tuner-range-target';dot.style.left=this.position(string.midi)+'%';dot.style.top=(12+index%3*9)+'px';dot.title=label;
+            const chip=document.createElement('span');chip.textContent=label;chip.className=Tuner.lockedString===index?'locked':'';
+            layer.appendChild(dot);legend.appendChild(chip);
+        });
+        this.renderCapoNotice();this.renderReading();
+    },
+    renderCapoNotice(){
+        const layer=node('tuner-range-targets');if(!layer)return;
+        let notice=node('tuner-range-capo');if(!notice){notice=document.createElement('div');notice.id='tuner-range-capo';notice.setAttribute('role','status');node('tuner-range-legend').insertAdjacentElement('beforebegin',notice);}
+        const strings=Tuner.targetStrings,active=GlobalCapo.mode==='full'&&GlobalCapo.fret>0||GlobalCapo.mode==='spider'&&GlobalCapo.spider.slice(0,strings.length).some(s=>s.mode!=='off');
+        notice.hidden=!active;notice.replaceChildren();if(!active)return;
+        const title=document.createElement('strong');title.textContent=GlobalCapo.mode==='spider'?'蜘蛛变调夹生效中':'变调夹生效中 · 第 '+GlobalCapo.fret+' 品';notice.appendChild(title);
+        const details=document.createElement('p');details.textContent=strings.map((s,i)=>{const c=GlobalCapo.spider[i];if(GlobalCapo.mode==='spider'&&(!c||c.mode==='off'))return '';return `${strings.length-i}弦${GlobalCapo.mode==='spider'?' '+c.fret+'品'+(c.mode==='harmonic'?'泛音':'实按'):''}：${s.baseName} → ${note(s.midi)}`;}).filter(Boolean).join('；');notice.appendChild(details);
+        const duplicates=new Map();strings.forEach((s,i)=>{const group=duplicates.get(s.midi)||[];group.push(strings.length-i);duplicates.set(s.midi,group);});
+        const same=[...duplicates].filter(([,numbers])=>numbers.length>1).map(([m,numbers])=>numbers.join('／')+'弦同为 '+note(m));
+        const explanation=document.createElement('p');explanation.textContent='蓝点表示变调夹作用后的目标音高。'+(same.length?same.join('；')+'，同音点上下错开显示。':'');notice.appendChild(explanation);
+        const button=document.createElement('button');button.type='button';button.textContent='查看／调整变调夹';button.onclick=()=>GlobalCapo.open('tuner');notice.appendChild(button);
+    },
+    describe(midi,targets=Tuner.targetStrings,locked=Tuner.lockedString){
+        if(!Number.isFinite(midi))return '等待单音输入 · 蓝点是各弦的目标音';
+        const current=note(midi),outside=midi<21?' · 低于 A0':midi>108?' · 高于 C8':'';
+        if(!targets.length)return `${current}${outside} · 数字表示八度，数字越大音越高`;
+        let index=locked>=0&&locked<targets.length?locked:targets.reduce((best,s,i)=>Math.abs(midi-s.midi)<Math.abs(midi-targets[best].midi)?i:best,0);
+        const diff=(midi-targets[index].midi)*100,number=targets.length-index,which=locked>=0?'锁定':'最接近';
+        const state=Math.abs(diff)<5?'接近目标':`${diff>0?'偏高':'偏低'} ${Math.abs(diff)>=100?(Math.abs(diff)/100).toFixed(1)+' 半音':Math.abs(diff).toFixed(0)+' 音分'}`;
+        const warning=locked>=0&&diff>=300?'；先核对弦与八度，勿继续盲目拧紧':'';
+        return `${current}${outside} · ${which} ${number}弦 ${note(targets[index].midi)} · ${state}${warning}`;
+    },
+    renderReading(){
+        const pointer=node('tuner-range-pointer'),reading=node('tuner-range-reading');if(!pointer)return;
+        const midi=Tuner.displayFreq>0?freqToMidi(Tuner.displayFreq,Tuner.a4):NaN;
+        pointer.hidden=!Number.isFinite(midi);if(!pointer.hidden)pointer.style.left=this.position(midi)+'%';
+        reading.textContent=this.describe(midi);
+    },
+    observe(result,now){
+        const profile=AudioEngine.captureProfiles[AudioEngine.captureProfile]||AudioEngine.captureProfiles.standard;
+        if(result.valid){this.lastGood=now;this.signalSince=0;}else if(result.rms>Math.max(profile.rmsFloor*3,Tuner.gateThreshold*profile.gateScale)){if(!this.signalSince)this.signalSince=now;}else{this.signalSince=0;this.probeWins=0;}
+        if(now-this.lastUI<300)return;this.lastUI=now;this.sync();
+        const status=node('tuner-detection-status');if(!status)return;
+        status.textContent=result.valid?'已识别单音 · 弦号为音高推测，泛音可能造成八度误判。':now-this.lastGood>12000?(this.signalSince?'有输入但音高不稳定，可在下方切换算法或采集方式。':'暂未收到稳定单音，请检查权限、输入设备并逐根弹奏。'):'等待稳定单音；静音不触发算法切换。';
+    },
+    // 固定窗口的 CMNDF；将完整 88 键范围与原有窄音域检测隔离。
+    yin(buffer,sampleRate,minFreq=26,maxFreq=4500){
+        const step=sampleRate>=40000&&maxFreq<2000?2:1,sr=sampleRate/step,n=Math.floor(buffer.length/step);
+        const maxTau=Math.min(Math.ceil(sr/minFreq),Math.floor(n/2)-2),minTau=Math.max(2,Math.floor(sr/maxFreq)),count=Math.min(1024,n-maxTau-2);
+        let power=0;for(let i=0;i<buffer.length;i++)power+=buffer[i]*buffer[i];const rms=Math.sqrt(power/buffer.length);
+        if(count<64||rms<.0001)return {freq:0,confidence:0,rms,valid:false};
+        if(!this.yinValues||this.yinValues.length<maxTau+2)this.yinValues=new Float32Array(maxTau+2);
+        const values=this.yinValues;values[0]=1;let sum=0;
+        for(let tau=1;tau<=maxTau+1;tau++){let diff=0;for(let i=0;i<count;i++){const delta=buffer[i*step]-buffer[(i+tau)*step];diff+=delta*delta;}sum+=diff;values[tau]=sum?diff*tau/sum:1;}
+        let best=minTau;for(let tau=minTau;tau<=maxTau;tau++){if(values[tau]<values[best])best=tau;if(values[tau]<.12){while(tau<maxTau&&values[tau+1]<values[tau])tau++;best=tau;break;}}
+        const confidence=Math.max(0,1-values[best]),denom=values[best-1]-2*values[best]+values[best+1],delta=denom?(values[best-1]-values[best+1])/(2*denom):0;
+        const freq=sr/(best+(Math.abs(delta)<1?delta:0));return {freq,confidence,rms,valid:confidence>.85&&freq>=minFreq*.995&&freq<=maxFreq*1.005};
+    }
+};
+window.TunerAssist=assist;
+const originalDetect=AudioEngine.detectPitch.bind(AudioEngine);
+AudioEngine.detectPitch=function(sr,min,max){
+    if(App.currentPage!=='tuner')return originalDetect(sr,min,max);
+    if(assist.active==='yin')return assist.yin(this.timeBuf,sr,min,max);
+    const result=originalDetect(sr,min,max),now=performance.now();
+    if(assist.mode==='auto'&&!result.valid&&assist.signalSince&&now-assist.signalSince>2500&&now-assist.lastProbe>250&&now-assist.lastSwitch>20000){
+        assist.lastProbe=now;const candidate=assist.yin(this.timeBuf,sr,min,max);
+        assist.probeWins=candidate.valid?assist.probeWins+1:0;
+        if(assist.probeWins>=3){assist.active='yin';assist.lastSwitch=now;assist.probeWins=0;assist.sync();return candidate;}
+    }else if(result.valid)assist.probeWins=0;
+    return result;
+};
+const renderStrings=Tuner.renderStrings.bind(Tuner);Tuner.renderStrings=function(){const result=renderStrings();assist.renderTargets();return result;};
+const updateDisplay=Tuner.updateDisplay.bind(Tuner);Tuner.updateDisplay=function(){const result=updateDisplay();assist.renderReading();return result;};
+const tunerInit=Tuner.init.bind(Tuner);Tuner.init=function(){assist.init();return tunerInit();};
+// 检测边界留出 A4=430–450 和估计误差的余量，音域显示仍严格为 A0–C8。
+const setMode=Tuner.setMode.bind(Tuner);Tuner.setMode=function(...args){const result=setMode(...args);this.minFreq=26;this.maxFreq=4500;return result;};
+Tuner.minFreq=26;Tuner.maxFreq=4500;
+})();
+
+/* 13.5.11: shared physical coordinates, capo validation and automatic capture. */
+AudioEngine.capturePreference='auto';
+AudioEngine.autoCaptureProfile=function(){return /iPhone|iPad|iPod/.test(navigator.userAgent||'')||(/Mac/.test(navigator.userAgent||'')&&navigator.maxTouchPoints>1)?'iphone':'standard';};
+AudioEngine.setCaptureProfile=function(value){this.capturePreference=value==='auto'||!this.captureProfiles[value]?'auto':value;this.captureProfile=this.capturePreference==='auto'?this.autoCaptureProfile():value;return this.applyCaptureProfile();};
+AudioEngine.setCaptureProfile('auto');
+const micSet13511=Settings.setMicProfile.bind(Settings);
+Settings.setMicProfile=async function(value,reconnect=true){await micSet13511(value,reconnect);this.syncAutoCapture();};
+Settings.syncAutoCapture=function(){for(const id of ['set-mic-profile','tuner-capture']){const select=document.getElementById(id);if(!select)continue;if(!select.querySelector('option[value="auto"]'))select.insertAdjacentHTML('afterbegin','<option value="auto">自动（推荐）</option>');select.value=AudioEngine.capturePreference;}const note=document.getElementById('set-mic-profile-note');if(note)note.textContent=`${AudioEngine.capturePreference==='auto'?'自动 → ':''}${AudioEngine.captureProfiles[AudioEngine.captureProfile].label}`;};
+const tunerSync13511=TunerAssist.sync.bind(TunerAssist);
+TunerAssist.sync=function(){tunerSync13511();Settings.syncAutoCapture();};
+const settingsInit13511=Settings.init.bind(Settings);
+Settings.init=function(){const result=settingsInit13511();this.syncAutoCapture();return result;};
+
+InstrumentPage.strumStringAt=function(event){const zone=document.getElementById('strum-zone'),axis=zone?.dataset.axis==='x'?'x':'y',point=axis==='x'?event.clientX:event.clientY,cells=[...(zone?.querySelectorAll('[data-string]')||[])];let distance=Infinity,best=0;for(const cell of cells){const r=cell.getBoundingClientRect(),d=Math.abs(point-(axis==='x'?r.left+r.width/2:r.top+r.height/2));if(d<distance){distance=d;best=Number(cell.dataset.string);}}return best;};
+const syncAxis13511=InstrumentPage.syncStringAxis.bind(InstrumentPage);
+InstrumentPage.syncStringAxis=function(){const wrap=document.querySelector('#instrument-stage .virtual-fret-wrap'),zone=document.getElementById('strum-zone'),svg=wrap?.querySelector('.virtual-board-scroll svg');if(!zone||!svg)return;const r=svg.getBoundingClientRect(),horizontal=wrap.classList.contains('is-horizontal');if(horizontal){zone.style.setProperty('height',`${r.height}px`,'important');zone.style.removeProperty('width');}else{zone.style.setProperty('width',`${Math.min(r.width,wrap.clientWidth)}px`,'important');zone.style.removeProperty('height');}syncAxis13511();};
+InstrumentPage.bindStrum=function(){const zone=document.getElementById('strum-zone');if(!zone)return;
+ const trigger=(s,muted)=>{if(this.mutedStrings.has(s))return;if(muted)AudioEngine.playMutedString(s,null,.34);else this.playInstrumentNote(noteToMidi(this.getTuning()[s])+this.activeFret(s),.76,.20);};
+ zone.onpointerdown=e=>{e.preventDefault();zone.setPointerCapture?.(e.pointerId);this.activePointers.add(e.pointerId);if(!this.strumState){const s=this.strumStringAt(e);this.strumState={pointerId:e.pointerId,lastString:s,muted:false};trigger(s,this.activePointers.size>1);}if(this.activePointers.size>1)this.strumState.muted=true;zone.classList.toggle('muted',this.activePointers.size>1);};
+ zone.onpointermove=e=>{const st=this.strumState;if(!st||st.pointerId!==e.pointerId)return;e.preventDefault();const s=this.strumStringAt(e);if(s===st.lastString)return;const step=s>st.lastString?1:-1;for(let i=st.lastString+step;;i+=step){trigger(i,st.muted||this.activePointers.size>1);if(i===s)break;}st.lastString=s;};
+ const end=e=>{this.activePointers.delete(e.pointerId);if(this.strumState?.pointerId===e.pointerId)this.strumState=null;zone.classList.toggle('muted',this.activePointers.size>1);};zone.onpointerup=end;zone.onpointercancel=end;
+};
+
+ChordLib.handFrets=function(frets){return frets.map((f,i)=>this.capoMode==='spider'&&this.spider[i]?.mode==='press'&&f===this.spider[i].fret?0:f);};
+ChordLib.fingerCount=function(input){const frets=this.handFrets(input),held=frets.map((f,i)=>f>0?i:-1).filter(i=>i>=0);if(!held.length)return 0;
+ // Conservative fret/barre feasibility, not a guarantee for every hand size or technique.
+ const masks=[];for(const f of new Set(held.map(i=>frets[i])))for(let a=0;a<frets.length;a++)for(let b=a;b<frets.length;b++){if(frets[a]!==f||frets[b]!==f)continue;let mask=0,valid=true;for(let s=a;s<=b;s++){if(frets[s]>=0&&frets[s]<f){const floor=this.capoMode==='spider'&&this.spider[s]?.mode==='press'?this.spider[s].fret:this.capoMode==='full'?this.capoFret:0;if(floor<f){valid=false;break;}}if(frets[s]===f)mask|=1<<held.indexOf(s);}if(valid)masks.push(mask);}
+ const size=1<<held.length,dp=new Array(size).fill(99);dp[0]=0;for(let state=0;state<size;state++)for(const mask of masks)dp[state|mask]=Math.min(dp[state|mask],dp[state]+1);return dp[size-1];
+};
+const validVoicing13511=ChordLib._isValidVoicing.bind(ChordLib);
+ChordLib._isValidVoicing=function(frets,open,pcs){if(!Array.isArray(frets)||frets.length!==open.length||frets.some((f,i)=>f>=0&&!Number.isFinite(this.effectiveMidi(open[i],f,i))))return false;return validVoicing13511(this.handFrets(frets),open,pcs)&&this.fingerCount(frets)<=4;};
+const chordSVG13511=ChordLib._renderChordSVG.bind(ChordLib);
+ChordLib._renderChordSVG=function(frets){const normalized=this.handFrets(frets),svg=chordSVG13511(normalized),count=frets.length;
+ const info=this.capoMode==='spider'?this.spider.slice(0,count).map((c,i)=>{if(c.mode==='off')return '';const midi=this.effectiveMidi(noteToMidi(this.getTuningNotes()[i]),0,i),name=NOTE_NAMES[((midi%12)+12)%12]+(Math.floor(midi/12)-1);return `${count-i}弦 ${c.mode==='press'?'实按':'泛音'}${c.fret}品 → 空弦 ${name}${c.mode==='harmonic'?'；按品恢复原调弦':'；夹位为新空弦'}`;}).filter(Boolean):[];
+ return svg+(info.length?`<div class="capo-voicing-notes">${info.map(v=>String(v).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))).join('<br>')}</div>`:'');
+};
+// Recompute selected pitches after capo changes; never retain a stale cached midi.
+const activeExplore13511=ChordExplore.activeNotes.bind(ChordExplore);
+ChordExplore.activeNotes=function(notes=this.selectedNotes,disabled=this.disabledStrings){const open=this.getTuningNotes().map(noteToMidi),fresh=(notes||[]).map(n=>({...n,midi:this.effectiveMidi(open[n.string],n.fret,n.string)})).filter(n=>Number.isFinite(n.midi));return activeExplore13511(fresh,disabled);};
+
+/* 13.5.12: a chord diagram and its audition share one computed voicing. */
+ChordLib.voicingStateKey=function(){return JSON.stringify([this.root,this.type,this.bassMode,this.getTuningNotes(),this.capoMode,this.capoFret,this.spider]);};
+ChordLib.cancelAudition=function(){this._auditionToken=(this._auditionToken||0)+1;(this._auditionTimers||[]).forEach(clearTimeout);this._auditionTimers=[];};
+const generate13512=ChordLib.generate.bind(ChordLib);
+ChordLib.generate=function(){this.cancelAudition();this._voicingStateKey=this.voicingStateKey();return generate13512();};
+ChordLib.ensureVoicingState=function(){if(this._voicingStateKey!==this.voicingStateKey())this.generate();};
+const renderChord13512=ChordLib.renderChord.bind(ChordLib);
+ChordLib.renderChord=function(){if(this._voicingStateKey!==this.voicingStateKey()){this.generate();return;}this.cancelAudition();const shape=this.voicings[this.voicingIdx],opens=this.getTuningNotes().map(noteToMidi);this.voicingSnapshot=shape?{key:this._voicingStateKey,index:this.voicingIdx,frets:[...shape.frets],notes:shape.frets.map((f,string)=>({string,fret:f,midi:f<0?null:this.effectiveMidi(opens[string],f,string)})).filter(n=>Number.isFinite(n.midi))}:null;return renderChord13512();};
+const switchTab13512=ChordLib.switchTab.bind(ChordLib);
+ChordLib.switchTab=function(tab,button){this.cancelAudition();GlobalCapo.apply(false);const result=switchTab13512(tab,button);if(tab==='lookup')this.ensureVoicingState();return result;};
+const goPage13512=App.goPage.bind(App);
+App.goPage=function(page,...args){if(page!=='chord')ChordLib.cancelAudition();const result=goPage13512(page,...args);if(page==='chord'&&document.getElementById('chord-lookup-page')?.classList.contains('active'))ChordLib.ensureVoicingState();return result;};
+ChordLib.playChord=async function(){
+ this.ensureVoicingState();const snapshot=this.voicingSnapshot;if(!snapshot?.notes.length)return;this.cancelAudition();const token=this._auditionToken;
+ try{if(!AudioEngine.ctx)await AudioEngine.init();if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument(snapshot.notes.map(n=>n.midi),'chord');
+ if(token!==this._auditionToken||snapshot.key!==this.voicingStateKey())return;
+ this._auditionTimers=snapshot.notes.map(note=>setTimeout(()=>{if(token===this._auditionToken&&snapshot.key===this.voicingStateKey())AudioEngine.playInstrument(note.midi,.9,.19,'chord');},note.string*38));
+ }catch(error){console.warn('和弦试听未准备完成',error);toast('和弦音色未准备完成，请重试');}
+};
+
+/* Piano-range audition: overview stays compact; an octave panel supplies touch targets. */
+TunerAssist.previewKey=async function(midi){
+ midi=Number(midi);if(!Number.isInteger(midi)||midi<21||midi>108)return;const token=this._keyPreviewToken=(this._keyPreviewToken||0)+1;
+ try{if(!AudioEngine.ctx)await AudioEngine.init();if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument([midi],'piano');if(token!==this._keyPreviewToken)return;
+ AudioEngine.playInstrument(midi,.85,.22,'piano');this.previewMidi=midi;
+ document.querySelectorAll('[data-range-midi]').forEach(key=>key.classList.toggle('auditioning',Number(key.dataset.rangeMidi)===midi));
+ const output=document.getElementById('range-key-status'),name=NOTE_NAMES[midi%12]+(Math.floor(midi/12)-1);if(output)output.textContent=`试听 ${name} · ${midiToFreq(midi,Tuner.a4).toFixed(2)} Hz（A4=${Tuner.a4}）`;
+ }catch(error){console.warn('琴键试听失败',error);toast('琴键音色未准备完成，请重试');}
+};
+TunerAssist.renderKeyOctave=function(octave){this.keyOctave=Math.max(0,Math.min(8,Number(octave)||0));const host=document.getElementById('range-key-octave');if(!host)return;const low=Math.max(21,this.keyOctave*12+12),high=Math.min(108,this.keyOctave*12+23);host.innerHTML=Array.from({length:high-low+1},(_,i)=>{const midi=low+i,name=NOTE_NAMES[midi%12]+this.keyOctave;return `<button type="button" data-range-midi="${midi}" class="${[1,3,6,8,10].includes(midi%12)?'black':'white'}" onclick="TunerAssist.previewKey(${midi})">${name}</button>`;}).join('');};
+const rangeInit13512=TunerAssist.init.bind(TunerAssist);
+TunerAssist.init=function(){rangeInit13512();const box=document.getElementById('tuner-range');if(!box||box.dataset.playable)return;box.dataset.playable='true';
+ box.querySelector('.tuner-range-track').setAttribute('role','group');box.querySelector('.tuner-range-track').setAttribute('aria-label','88 键音域，可点按试听；手机可展开大琴键');
+ box.querySelectorAll('.tuner-range-keys i[data-midi]').forEach(old=>{const key=document.createElement('button'),midi=Number(old.dataset.midi);key.type='button';key.className=old.className;key.style.cssText=old.style.cssText;key.dataset.rangeMidi=String(midi);key.setAttribute('aria-label','试听 '+NOTE_NAMES[midi%12]+(Math.floor(midi/12)-1));key.onclick=()=>this.previewKey(midi);key.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const next=e.key==='Home'?21:e.key==='End'?108:Math.max(21,Math.min(108,midi+(e.key==='ArrowRight'?1:-1)));box.querySelector(`.tuner-range-keys [data-range-midi="${next}"]`)?.focus();};old.replaceWith(key);});
+ box.insertAdjacentHTML('beforeend','<p id="range-key-status" role="status">点击琴键试听，不改变调弦目标或锁定弦。</p><details class="range-play-panel"><summary>展开大琴键 · 手机试听</summary><label>八度 <select id="range-key-octave-select" onchange="TunerAssist.renderKeyOctave(this.value)">'+Array.from({length:9},(_,i)=>`<option value="${i}" ${i===4?'selected':''}>${i===0?'A0–B0':i===8?'C8':'C'+i+'–B'+i}</option>`).join('')+'</select></label><div id="range-key-octave"></div></details>');this.renderKeyOctave(4);
+};

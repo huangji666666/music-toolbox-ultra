@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import vm from 'node:vm';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -42,7 +43,7 @@ const missingIds=requiredIds.filter(id=>!document.getElementById(id));
 check(missingIds.length===0,'本轮关键控件均存在',missingIds.join(', '));
 
 const scriptOrder=[...document.querySelectorAll('script[src]')].map(script=>script.getAttribute('src'));
-check(JSON.stringify(scriptOrder)===JSON.stringify(['./sight-library-v2.js','./special-tunings-v1.js','./app-final.js']),'最终脚本加载顺序固定');
+check(JSON.stringify(scriptOrder)===JSON.stringify(['./sight-library-v2.js','./special-tunings-v1.js','./app-final.js','./drum-workshop.js']),'最终脚本加载顺序固定');
 check(document.querySelector('link[href="./app-final.css"]')!==null,'最终样式已加载');
 check(!scriptOrder.some(source=>/v13\.5\.[14]|v13-extension/.test(source)),'发布页面不再加载旧版增量文件');
 check(!/#page-[\w-]+(?:\.active)?\s*\{[^}]*display\s*:/s.test(releaseCss),'候选样式未用页面 ID 改写 display');
@@ -67,7 +68,7 @@ check(document.querySelector('.sight-score-shell + .sight-score-navigation')!==n
 check(/\.sight-systems/.test(releaseCss)&&/\.sight-layout-choice/.test(releaseCss),'视唱多行与布局选择样式存在');
 check(fs.existsSync(path.join(root,'.github','workflows','pages.yml')),'GitHub Actions 整目录发布配置存在');
 
-for(const file of ['app-final.js','sw.js','tools/build_standalone.mjs','tools/build_release.mjs','tools/build_sight_library.mjs']){
+for(const file of ['app-final.js','drum-workshop.js','sw.js','tools/build_standalone.mjs','tools/build_release.mjs','tools/build_sight_library.mjs','tools/build_drum_samples.mjs']){
     try{execFileSync(process.execPath,['--check',path.join(root,file)],{stdio:'pipe'});check(true,`${file} 语法`);}
     catch(error){check(false,`${file} 语法`,String(error.stderr||error.message));}
 }
@@ -76,11 +77,21 @@ const serviceWorker=read('sw.js'),releaseManifest=JSON.parse(read('release-asset
 const missingShellFiles=appShell.filter(item=>!fs.existsSync(path.join(root,item.replace(/^\.\//,''))));
 check(missingShellFiles.length===0,'离线清单文件全部存在',missingShellFiles.join(', '));
 check(appShell.includes('./app-final.css')&&appShell.includes('./app-final.js'),'最终样式与脚本进入离线缓存');
-check(appShell.filter(item=>/assets\/metronome-accent-cc0\/\d{2}\.wav$/.test(item)).length===26,'26 个重拍音色全部进入离线缓存');
+check(appShell.filter(item=>/assets\/metronome-accent-cc0\/\d{2}\.wav$/.test(item)).length===50,'50 个重拍音色全部进入离线缓存');
 check(serviceWorker.includes(`const CACHE_NAME='${version.cache}'`)&&releaseManifest.cache===version.cache,'version.json、发布清单与缓存名一致');
 check(serviceWorker.includes('STAGING_CACHE')&&serviceWorker.includes("type:'CACHE_ERROR'")&&serviceWorker.includes('failed'),'Service Worker 使用暂存缓存并报告具体缺失资源');
 check(packageMetadata.version===version.version,'package.json 与候选版本号一致');
 check(releaseJs.includes(`const V13_VERSION='${version.version}'`)&&releaseJs.includes(`const FINAL_BUILD='${version.build}'`),'运行时版本与构建号一致');
+
+
+const selectedAudio=JSON.parse(read('licenses/metronome-sources.json')).samples;
+const approvedIds='R02 N01 N02 N03 N04 N05 N06 N07 N08 N09 N10 N11 N12 N13 N14 N15 N16 N17 N18 N19 N22 N23 N24 N25 N26 N27 N28 N29 N30 N31 N32 N33 N34 N36 N38 N39 N42 N43 N46 N50 N51 N52 N57 N58 N59 N60 K01 K02 K03 K04'.split(' ');
+check(selectedAudio.length===50&&new Set(selectedAudio.map(s=>s.id)).size===50&&approvedIds.every(id=>selectedAudio.some(s=>s.auditionId===id)),'50 个用户确认编号全部集成，无 H 系列或遗漏');
+for(const sample of selectedAudio){
+    const bytes=fs.readFileSync(path.join(root,sample.file));
+    let peak=0;for(let i=44;i<bytes.length;i+=2)peak=Math.max(peak,Math.abs(bytes.readInt16LE(i)));
+    check(bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WAVE'&&bytes.readUInt16LE(20)===1&&bytes.readUInt16LE(34)===16&&peak===32767&&bytes.length===sample.bytes&&crypto.createHash('sha256').update(bytes).digest('hex')===sample.sha256&&sample.license==='CC0-1.0',sample.auditionId+' PCM16 峰值、来源许可与 SHA-256');
+}
 
 /* 在轻量 DOM 中执行与浏览器一致的经典脚本顺序。 */
 const createStore=()=>{
@@ -109,6 +120,7 @@ try{
     run(read('sight-library-v2.js'),'sight-library-v2.js');
     run(read('special-tunings-v1.js'),'special-tunings-v1.js');
     run(releaseJs,'app-final.js');
+    run(read('drum-workshop.js'),'drum-workshop.js');
     check(true,'完整脚本链可加载');
 }catch(error){
     check(false,'完整脚本链可加载',error.stack||error.message);
@@ -116,6 +128,30 @@ try{
 
 const evaluate=expression=>run(expression,'qa-expression.js');
 if(!failures.some(item=>item.startsWith('完整脚本链可加载'))){
+
+    check(evaluate("Object.keys(window.MTU_ACCENT_SAMPLE_META).length")===96&&selectedAudio.every(s=>evaluate('window.MTU_ACCENT_SAMPLE_META['+JSON.stringify(s.id)+'].label').includes(s.auditionId)),'原 90 音源保留，加入 T04–T06 六个确认镲音');
+    check(evaluate("Object.values(METRO_KITS).every(k=>[k.accent,k.beat,k.subdivision,k.swing,...k.tracks].flat().every(s=>Metro._allSounds().includes(s)))"),'12 套预设仅使用确认音源及保留的电子 Click');
+    check(evaluate("(()=>{const channels=[new Float32Array(4410).fill(.1),new Float32Array(4410).fill(.1)],b={numberOfChannels:2,length:4410,sampleRate:44100,getChannelData:i=>channels[i]};const quiet=AudioEngine.balanceAccentSample(b);channels.forEach(c=>c.fill(1));return quiet===1&&AudioEngine.balanceAccentSample(b)===.5;})()"),'响度平衡不压低弱素材，强素材衰减最多 6 dB，不追加增益');
+    const dynamics=evaluate(`(()=>{const old={ctx:AudioEngine.ctx,click:AudioEngine.playClick,beat:AudioEngine.playMetronomeBeat,signature:Metro.signature,custom:Metro.customMode,sub:Metro.sub,swing:Metro.swingEnabled,mode:Metro.accentMode};try{AudioEngine.ctx={currentTime:0};const hits=[];AudioEngine.playClick=(t,a,s,v)=>hits.push(v);AudioEngine.playMetronomeBeat=(t,a,b,s,v)=>hits.push(v);Metro.signature='4/4';Metro.customMode=false;Metro.sub=1;Metro.swingEnabled=false;Metro.accentMode='meter';for(let i=0;i<4;i++)Metro._scheduleBeat(i,0);const main=hits.splice(0);for(let i=0;i<4;i++)Metro._rampScheduleBeat(i,0);return {main,ramp:hits};}finally{AudioEngine.ctx=old.ctx;AudioEngine.playClick=old.click;AudioEngine.playMetronomeBeat=old.beat;Metro.signature=old.signature;Metro.customMode=old.custom;Metro.sub=old.sub;Metro.swingEnabled=old.swing;Metro.accentMode=old.mode;}})()`);
+    check(JSON.stringify(dynamics.main)===JSON.stringify([.86,.58,.70,.58])&&JSON.stringify(dynamics.ramp)===JSON.stringify(dynamics.main),'主节拍器与渐速训练共用强弱比例');
+    check(evaluate("Metro._scheduleBeat.toString().includes('this._subdivisionLevel')&&Metro._rampScheduleBeat.toString().includes('this._subdivisionLevel')&&Metro._subdivisionLevel(false)===Metro.levels.subdivision&&Metro._subdivisionLevel(true)===Metro.levels.swing"),'主节拍器与渐速训练细分/Swing 使用同一力度规则');
+    check(evaluate(`(()=>{const old=AudioEngine.playClick,hits=[];try{AudioEngine.playClick=(t,a,s,v)=>hits.push({s,v});AudioEngine.playMetronomeBeat(0,true,'elec_tick',['accent_cc0_02','accent_cc0_02','metro_20'],1);return hits.length===3&&Math.abs(hits.reduce((n,h)=>n+h.v,0)-1)<1e-9&&hits.some(h=>h.s==='metro_20');}finally{AudioEngine.playClick=old;}})()`),'重拍混音权重不超过 1，去重且保留旧设置叠层');
+
+    evaluate('TunerAssist.init()');
+    check(runtimeDocument.querySelectorAll('.tuner-range-keys button').length===88&&runtimeDocument.querySelectorAll('#tuner-algorithm option').length===3,'88 键音域与自动／原有／YIN 三种检测模式完整');
+    const pitch=evaluate(`(()=>{const results=[];for(const sr of [44100,48000])for(const f of [27.5,82.4069,110,440,1046.502,4186.009]){const b=Float32Array.from({length:4096},(_,i)=>.1*Math.sin(2*Math.PI*f*i/sr)),r=TunerAssist.yin(b,sr);results.push({valid:r.valid,error:Math.abs(1200*Math.log2(r.freq/f))});}return results;})()`);
+    check(pitch.every(r=>r.valid&&r.error<5),'YIN：44.1/48kHz 下 A0、E2、A2、A4、C6、C8 合成单音误差小于 5 音分',JSON.stringify(pitch));
+    check(evaluate("!TunerAssist.yin(new Float32Array(4096),48000).valid"),'YIN 静音输入不产生有效音高');
+    check(evaluate(`(()=>{const old={page:App.currentPage,active:TunerAssist.active,ctx:AudioEngine.ctx,analyser:AudioEngine.analyser,timeBuf:AudioEngine.timeBuf,cached:AudioEngine.cachedPitch};try{App.currentPage='tuner';TunerAssist.active='yin';AudioEngine.ctx={sampleRate:48000};AudioEngine.timeBuf=new Float32Array(4096);let f=0;AudioEngine.analyser={getFloatTimeDomainData(buffer){for(let i=0;i<buffer.length;i++)buffer[i]=.1*Math.sin(2*Math.PI*f*i/48000);}};return [27.5*430/440,4186.009*450/440].every(freq=>{f=freq;AudioEngine.cachedPitch=null;return AudioEngine.samplePitch(Tuner.minFreq,Tuner.maxFreq).valid;});}finally{App.currentPage=old.page;TunerAssist.active=old.active;AudioEngine.ctx=old.ctx;AudioEngine.analyser=old.analyser;AudioEngine.timeBuf=old.timeBuf;AudioEngine.cachedPitch=old.cached;}})()`),'检测链在 A4=430–450 时仍覆盖钢琴最低和最高音，不被边界过滤');
+    check(evaluate(`(()=>{TunerAssist.signalSince=100;TunerAssist.probeWins=2;TunerAssist.observe({valid:false,rms:0},15000);return TunerAssist.signalSince===0&&TunerAssist.probeWins===0;})()`),'静音清除自动切换计时与探测次数');
+    check(evaluate(`TunerAssist.describe(43,[{midi:40}],0).includes('核对')&&!TunerAssist.describe(52,[{midi:40}],-1).includes('勿继续')`),'仅锁定目标且高出至少三半音时提示核对弦与八度');
+    check(evaluate(`TunerAssist.device({userAgent:'iPhone',platform:'iPhone',maxTouchPoints:5},390,true).kind==='手机'&&TunerAssist.device({userAgent:'Macintosh',platform:'MacIntel',maxTouchPoints:5},1024,true).kind==='平板'&&TunerAssist.device({userAgent:'Android Mobile'},390,true).os==='Android'`),'设备类别推断覆盖 iPhone、桌面标识 iPad 与 Android');
+    check(/const startUpdateCheck=[^\n]+PWAInstall.init\(\);PWAUpdate.init\(\);/.test(releaseJs)&&releaseJs.includes('if(this.initialized)return;this.initialized=true;'),'首页立即初始化安装入口且重复初始化安全');
+    check(releaseJs.includes("url.searchParams.delete('reset');history.replaceState"),'联网重置后移除一次性网络参数，避免之后离线重开被强制联网');
+    check(serviceWorker.includes('ACTIVE_CACHE=CACHE_NAME+SCOPE_TAG')&&serviceWorker.includes('requests.every(request=>request.url.startsWith(self.registration.scope))')&&serviceWorker.includes("url.searchParams.has('resetProbe')"),'离线缓存按页面作用域隔离且重置探测强制联网');
+    check(evaluate(`(()=>{const source=App.resetApplication.toString();return source.indexOf('await fetch(probe')<source.indexOf('registration.unregister()')&&source.includes('registration.scope===base.href')&&!source.includes('storage.clear()');})()`),'重置先验证网络、精确匹配 SW 作用域且不清空所有同源存储');
+    const multi=evaluate(`(()=>{const box=document.getElementById('sight-score'),old=box.innerHTML;box.innerHTML='<svg><line data-sight-playhead="true" data-progress-start="0" data-progress-end="0.5" data-start-x="10" data-end-x="110"/><line data-sight-playhead="true" data-progress-start="0.5" data-progress-end="1" data-start-x="10" data-end-x="110"/></svg>';const lines=[...box.querySelectorAll('line')];SightSinging.setPlaybackProgress(.25,'QA');const first=lines.map(el=>[Number(el.getAttribute('x1')),el.getAttribute('opacity')]);SightSinging.setPlaybackProgress(.75,'QA');const second=lines.map(el=>[Number(el.getAttribute('x1')),el.getAttribute('opacity')]);box.innerHTML=old;return {first,second};})()`);
+    check(multi.first[0][0]===60&&multi.first[0][1]==='0.92'&&multi.first[1][1]==='0'&&multi.second[0][1]==='0'&&multi.second[1][0]===60&&multi.second[1][1]==='0.92','多行鼓谱按各行局部进度移动，只有活动行显示光标');
     const timing22=evaluate("Metro.releaseTimingSnapshot('2/2',120)");
     const timing44=evaluate("Metro.releaseTimingSnapshot('4/4',120)");
     check(timing22.pulses===2&&timing22.secondsPerPulse===.5&&timing22.clicksPerMinute===120,'2/2：120 BPM 每分钟 120 个主拍');
@@ -141,7 +177,7 @@ if(!failures.some(item=>item.startsWith('完整脚本链可加载'))){
     const metroSounds=evaluate(`(()=>{Metro.renderSoundPanel();const panel=document.getElementById('metro-sound-panel');panel.classList.add('open');Metro.setSlot('beat','elec_tick');Metro.buildBassOptions?.();return {open:panel.classList.contains('open'),button:document.getElementById('metro-sound-editor-btn').textContent,accent:Metro.slots.accent,beat:Metro.slots.beat};})()`);
     check(metroSounds.open&&metroSounds.button==='收起音色','逐击点选完音色后编辑面板保持展开');
     check(metroSounds.accent==='accent_cc0_02'&&metroSounds.beat==='elec_tick','新安装默认重拍为 02 木块强击·圆润、普通拍为电子 Click');
-    check(evaluate("Metro._allSounds().filter(id=>id.startsWith('accent_cc0_')).length")===26,'26 个 CC0 重拍音色均进入节拍器音色库');
+    check(evaluate("Metro._allSounds().filter(id=>id.startsWith('accent_cc0_')).length")===50,'50 个 CC0 重拍音色均进入节拍器音色库');
 
     evaluate('Tuner.closePicker();Tuner.togglePicker()');
     check(runtimeDocument.getElementById('tuning-panel').classList.contains('open')&&runtimeDocument.getElementById('tuning-bar').getAttribute('aria-expanded')==='true','调音器调弦抽屉可单击展开');
@@ -154,7 +190,7 @@ if(!failures.some(item=>item.startsWith('完整脚本链可加载'))){
     }
 
     evaluate('SightSinging.init()');
-    check(evaluate("!AudioEngine.init.toString().includes('getUserMedia')&&AudioEngine.ensureMicrophone.toString().includes('getUserMedia')"),'播放初始化与麦克风申请已分离');
+    check(evaluate("!AudioEngine.init.toString().includes('getUserMedia')&&AudioEngine.ensureMicrophone.toString().includes('_openMicrophone')&&AudioEngine._openMicrophone.toString().includes('getUserMedia')"),'播放初始化与麦克风申请已分离');
     check(evaluate("Metro.start.toString().includes('await this._prepareCurrentSounds()')"),'节拍器等待默认音色后才调度第一拍');
     const metroStartFailure=await evaluate(`(async()=>{const init=AudioEngine.init,ctx=AudioEngine.ctx,scheduler=Metro._scheduler,token=Metro._finalStartToken,playing=Metro.playing;let scheduled=false;AudioEngine.ctx=null;AudioEngine.init=async()=>{throw new Error('qa-audio-init')};Metro.playing=false;Metro._starting=false;Metro._scheduler=()=>{scheduled=true};await Metro.start();const result={playing:Metro.playing,starting:Metro._starting,scheduled};AudioEngine.init=init;AudioEngine.ctx=ctx;Metro._scheduler=scheduler;Metro._finalStartToken=token;Metro.playing=playing;return result;})()`);
     check(!metroStartFailure.playing&&!metroStartFailure.starting&&!metroStartFailure.scheduled,'节拍器音频准备失败时保持停止且不进入调度');
@@ -231,9 +267,9 @@ if(fs.existsSync(standalonePath)){
     const standalone=fs.readFileSync(standalonePath,'utf8'),standaloneDocument=parseHTML(standalone).document;
     check(!standaloneDocument.querySelector('script[src]'),'单文件没有外部核心脚本');
     check(!standaloneDocument.querySelector('link[href="./app-final.css"]'),'单文件已内嵌最终样式');
-    check(standaloneDocument.querySelectorAll('script[data-final-module]').length===3&&standaloneDocument.querySelectorAll('style[data-final-module]').length===1,'单文件内嵌最终脚本与样式模块');
+    check(standaloneDocument.querySelectorAll('script[data-final-module]').length===4&&standaloneDocument.querySelectorAll('style[data-final-module]').length===1,'单文件内嵌最终脚本与样式模块');
     check(standalone.includes('data:audio/mpeg;base64,'),'单文件内嵌 C01 制音素材');
-    check((standalone.match(/data:audio\/wav;base64,/g)||[]).length>=26,'单文件内嵌全部 26 个重拍音色');
+    check((standalone.match(/data:audio\/wav;base64,/g)||[]).length===96,'单文件内嵌全部 96 个正式音源');
     check((standalone.match(/data:image\/jpeg;base64,/g)||[]).length>=3,'单文件内嵌赞助与联系图片');
     const standaloneIds=new Map();for(const element of standaloneDocument.querySelectorAll('[id]'))standaloneIds.set(element.id,(standaloneIds.get(element.id)||0)+1);
     check(![...standaloneIds.values()].some(count=>count>1),'单文件 DOM ID 无重复');
@@ -243,6 +279,36 @@ if(fs.existsSync(standalonePath)){
     check(inlineSyntax,'单文件所有内嵌脚本语法',inlineError);
 }
 
+const drums=JSON.parse(read('licenses/drum-sources.json')).samples;
+check(drums.length===40&&new Set(drums.map(s=>s.id)).size===40,'三套 Trap、两套电子，每套八种原创鼓音');
+for(const s of drums){const b=fs.readFileSync(path.join(root,s.file));let peak=0,finite=true;for(let i=44;i<b.length;i+=2){const v=b.readInt16LE(i);peak=Math.max(peak,Math.abs(v));finite&&=Number.isFinite(v);}check(finite&&peak===32767&&s.bytes===b.length&&crypto.createHash('sha256').update(b).digest('hex')===s.sha256&&s.license==='CC0-1.0'&&appShell.includes('./'+s.file),s.id+' 标准化、许可、哈希与离线清单');}
+check(drums.filter(s=>s.role==='kick'||s.role==='bass').every(s=>s.fundamentalHz>=100&&s.highPassHz===90),'新底鼓／808 主体基频 110–160 Hz，含谐波与低频清理');
+check(JSON.parse(read('licenses/metronome-sources.json')).samples.find(s=>s.auditionId==='N15').processing.trimLeadingMs>45,'N15 手拍已去除约 49.6 ms 前导');
+check(evaluate("document.querySelectorAll('.tuner-range-keys button.white').length===52&&document.querySelectorAll('.tuner-range-keys button.black').length===36"),'真实琴键为 52 白＋36 黑');
+check(evaluate("TunerAssist.position(61)>TunerAssist.position(60)&&TunerAssist.position(61)<TunerAssist.position(62)&&TunerAssist.position(21)>0&&TunerAssist.position(108)<100"),'黑键与指针共用实际琴键中心，首尾不越界');
+check(evaluate("[0,7,8].map(f=>CapoEngine.midi(45,f,0,'spider',0,[{mode:'press',fret:7}])).join(',')==='52,52,53'&&CapoEngine.midi(45,6,0,'spider',0,[{mode:'press',fret:7}])===null"),'实按蜘蛛夹：七品本身等价新空弦，八品正常升高');
+check(evaluate("[0,1,3,7,8].map(f=>CapoEngine.midi(45,f,0,'spider',0,[{mode:'harmonic',fret:7}])).join(',')==='64,46,48,52,53'"),'泛音蜘蛛夹：仅松手泛音，任意按品恢复原调弦');
+check(evaluate(`(()=>{ChordLib.root=0;ChordLib.type='Maj';ChordLib.bassMode='auto';ChordLib.customTuning=null;ChordLib.tuningName='standard';ChordLib.capoMode='spider';ChordLib.spider=Array.from({length:6},(_,i)=>({mode:[1,4].includes(i)?'harmonic':'off',fret:7}));ChordLib.generate();return ChordLib.voicings[0].frets.join(',')==='-1,3,2,0,1,0'&&ChordLib._renderChordSVG(ChordLib.voicings[0].frets).includes('按品恢复原调弦');})()`),'二／五弦七品泛音：C x32010 优先保留，图示空弦规则明确');
+check(evaluate("ChordLib.capoMode='none';ChordLib.fingerCount([1,0,1,0,1,1])===3&&ChordLib.fingerCount([1,0,1,0,1,0])===3&&ChordLib.fingerCount([1,1,1,1,1,1])===1"),'横按不能跨过需要发声的低品／空弦');
+check(evaluate("AudioEngine.setCaptureProfile('auto');AudioEngine.capturePreference==='auto'&&AudioEngine.captureProfile==='standard'"),'麦克风自动偏好与实际配置分离');
+check(evaluate(`(()=>{const old=navigator.userAgent;navigator.userAgent='iPhone';AudioEngine.setCaptureProfile('auto');const a=AudioEngine.captureProfile;AudioEngine.setCaptureProfile('standard');const b=AudioEngine.capturePreference;navigator.userAgent=old;return a==='iphone'&&b==='standard';})()`),'iPhone 自动延音配置，手动选择优先');
+check(evaluate(`(()=>{const w=DrumWorkshop;w.state=w.defaultState();w.state.tracks.forEach(t=>t.notes=[]);w.state.tracks[0].notes=[{t:0,d:1,n:7,v:100,manual:true}];const events=w.events();return events.length===7&&events.every((e,i)=>Math.abs(e.t-i/7)<1e-9);})()`),'七连音严格均分指定时值，不延长一拍');
+check(evaluate(`(()=>{const w=DrumWorkshop,notes=JSON.stringify(w.state.tracks);w.change('grid','32');return notes===JSON.stringify(w.state.tracks);})()`),'更换网格不删改鼓点时值');
+check(evaluate(`(()=>{const w=DrumWorkshop;w.state.tracks[0].locked=true;const notes=JSON.stringify(w.state.tracks[0]);w.generate(true);return notes===JSON.stringify(w.state.tracks[0]);})()`),'风格生成保留锁定轨道');
+check(evaluate("DrumWorkshop.state.signature='2/2';DrumWorkshop.state.bpm=120;DrumWorkshop.quarterSeconds()*2===.5"),'编排 2/2 的 120 BPM 每分钟 120 个二分音符主拍');
+check(evaluate("DrumWorkshop.validState(DrumWorkshop.defaultState())&&!DrumWorkshop.validState({...DrumWorkshop.defaultState(),bpm:Infinity})"),'保存数据有结构与范围校验');
+check(evaluate(`(()=>{const w=DrumWorkshop;w.state=w.defaultState();w.state.style='shuffle';w.generate(true);const times=w.state.tracks[2].notes.map(n=>n.t);return new Set(times).size===times.length&&times.slice(0,4).every((t,i)=>Math.abs(t-[0,2/3,1,1+2/3][i])<1e-8);})()`),'Shuffle 是每拍首击＋后 1/3 拍，不重复触发');
+check(evaluate(`(()=>{const w=DrumWorkshop;w.state=w.defaultState();w.state.signature='7/4';w.state.bars=8;w.generate(true);return w.validState(w.state);})()`),'长拍号八小节方案可保存恢复');
+check(evaluate(`(()=>{SightSinging.scoreLayout='auto';SightSinging.scoreZoom=100;document.getElementById('sight-score').innerHTML='<svg viewBox="0 0 660 180"></svg>';SightSinging.applyScoreZoom();return document.querySelector('#sight-score svg').style.getPropertyValue('min-width')==='100%';})()`),'视唱自动单行不再强制 660px 横向溢出');
+check(evaluate("SPECIAL_TUNINGS_V1.records.filter(r=>r.id.startsWith('sethares-')).length>=15&&SPECIAL_TUNINGS_V1.records.filter(r=>r.id.startsWith('sethares-')).every(r=>r.confidence==='reference'&&r.reviewedAt==='2026-09-16')"),'新增调弦注明核验日期、来源及参考八度');
+check(evaluate(`(()=>{ChordLib.capoMode='spider';ChordLib.spider=Array.from({length:6},(_,i)=>({mode:[1,3].includes(i)?'harmonic':'off',fret:7}));ChordLib.ensureVoicingState();const s=ChordLib.voicingSnapshot;return s.key===ChordLib.voicingStateKey()&&s.frets.join(',')===ChordLib.voicings[ChordLib.voicingIdx].frets.join(',')&&s.notes.length>0&&s.notes.every(n=>[0,4,7].includes(n.midi%12));})()`),'蜘蛛夹改变后指法和试听快照自动同步，五／三弦 H7 不混入 D');
+check(evaluate(`(()=>{TunerAssist.renderKeyOctave(0);const low=document.querySelectorAll('#range-key-octave button').length;TunerAssist.renderKeyOctave(8);const high=document.querySelector('#range-key-octave button').dataset.rangeMidi;TunerAssist.renderKeyOctave(4);return low===3&&high==='108'&&document.querySelectorAll('#range-key-octave button').length===12;})()`),'大琴键八度分组覆盖 A0–C8，无越界音高');
+const trapApproved=JSON.parse(read('licenses/trap-approved-sources.json')).samples;
+check(trapApproved.length===6&&trapApproved.every(s=>{const b=fs.readFileSync(path.join(root,s.file));let peak=0;for(let i=44;i<b.length;i+=2)peak=Math.max(peak,Math.abs(b.readInt16LE(i)));return peak===32767&&b.length===s.bytes&&crypto.createHash('sha256').update(b).digest('hex')===s.sha256&&appShell.includes('./'+s.file);}), 'T04–T06 六个确认样本保持原试听哈希、标准化与完整离线缓存');
+check(evaluate("Object.keys(METRO_KITS)[1]==='drum_t06'&&!Object.hasOwn(METRO_KITS,'shakers')"),'T06 位于普通节拍器第二项，移除摇奏铃鼓预设');
+check(evaluate(`(()=>{const s=DrumWorkshop.defaultState();return s.kit==='t06'&&s.tracks[0].notes.map(e=>e.t).join(',')==='0,4'&&s.tracks[3].notes.map(e=>e.t).join(',')==='2,6'&&s.tracks[2].notes.filter(e=>e.t%1===0).map(e=>e.t).join(',')==='1,3,5,7'&&s.tracks[2].notes.every(e=>e.v===(e.t%1===0?82:70))&&[1,4,5,6,7].every(row=>!s.tracks[row].notes.length);})()`),'T06 默认只有首拍底鼓、第三拍 Clap、二四拍与略弱八分细分闭镲');
+const capoNotice=evaluate(`(()=>{Tuner.presetName='Standard';Tuner.customTuning=null;GlobalCapo.mode='spider';GlobalCapo.spider=Array.from({length:6},(_,i)=>({mode:[1,3].includes(i)?'harmonic':'off',fret:7}));GlobalCapo.apply(false);const el=document.getElementById('tuner-range-capo'),text=el.textContent,shown=!el.hidden;GlobalCapo.setMode('none');return {shown,text,hidden:document.getElementById('tuner-range-capo').hidden};})()`);
+check(capoNotice.shown&&capoNotice.text.includes('蜘蛛变调夹生效中')&&capoNotice.text.includes('5／1弦同为 E4')&&capoNotice.hidden,'蜘蛛夹同音 E4 明示弦号，关闭变调夹后高亮提示消失',JSON.stringify(capoNotice));
 const result={version:version.version,passed:passes.length,failed:failures.length,passes,failures};
 fs.writeFileSync(path.join(root,'release-validation.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result,null,2));

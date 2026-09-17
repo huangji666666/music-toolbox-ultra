@@ -118,5 +118,31 @@ const guides=[
 ].map(([id,title,tuning,meter,bpm,grouping=''])=>R(id,'Tuning Reference','常用特殊调弦',title,titleZh(title),tuning,meter,bpm,{grouping,confidence:'reference',source:src.gtdb,category:tuning.length===12?'十二弦':'调弦方案',aliases:['特殊调弦','开放调弦','Alternate Tuning'],note:'速度为安全、实用的练习区间，不代表某一录音的原速。'}));
 
 function titleZh(value){return value.includes('/')?value.split('/')[1].trim():value;}
-window.SPECIAL_TUNINGS_V1={version:'1.1.0',updated:'2026-08-20',records:[...songs,...guides],sources:src,notice:'调弦资料来自公开艺人页、公开曲谱索引与常见调弦方案。标为“参考”的条目请以作者正式曲谱为准；练习速度区间不是版权曲谱。'};
+// Public index checked 2026-09-16. The HTML source gives pitch classes, not octaves.
+// Octaves below are explicit reference voicings, not a claimed artist transcription.
+src.sethares='https://sethares.engr.wisc.edu/alternatetunings/alternatetunings.html';
+const extraReferences=[
+ ['modal-g','Modal G / Gsus4',['D2','G2','D3','G3','C4','D4']],
+ ['open-g-minor','Open G Minor / 开放 G 小调',['D2','G2','D3','G3','A#3','D4']],
+ ['cittern-one','Cittern 1',['C2','F2','C3','G3','C4','D4']],
+ ['cittern-two','Cittern 2',['C2','G2','C3','G3','C4','G4']],
+ ['overtone','Overtone / 泛音列调弦',['C2','E2','G2','A#2','C3','D3']],
+ ['pentatonic','Pentatonic / 五声音阶调弦',['A2','C3','D3','E3','G3','A3']],
+ ['minor-thirds','Minor Thirds / 全小三度',['C3','D#3','F#3','A3','C4','D#4']],
+ ['major-thirds','Major Thirds / 全大三度',['C2','E2','G#2','C3','E3','G#3']],
+ ['aug-fourths','Augmented Fourths / 全增四度',['C2','F#2','C3','F#3','C4','F#4']],
+ ['admiral','Admiral',['C2','G2','D3','G3','B3','C4']],
+ ['buzzard','Buzzard',['C2','F2','C3','G3','A#3','F4']],
+ ['face','Face',['C2','G2','D3','G3','A3','D4']],
+ ['four-twenty','Four & Twenty',['D2','A2','D3','D3','A3','D4']],
+ ['layover','Layover',['D2','A2','C3','G3','C4','E4']],
+ ['magic-farmer','Magic Farmer',['C2','F2','C3','G3','A3','E4']],
+ ['pelican','Pelican',['D2','A2','D3','E3','A3','D4']],
+ ['processional','Processional',['D2','G2','D3','F3','A3','A#3']],
+ ['slow-motion','Slow Motion',['D2','G2','D3','F3','C4','D4']],
+ ['spirit','Spirit',['C#2','A2','C#3','G#3','A3','E4']],
+ ['tarboulton','Tarboulton',['C2','A#2','C3','F3','A#3','F4']],
+ ['triqueen','Triqueen',['D2','G2','D3','F#3','A3','B3']]
+].filter(([,title,tuning])=>![...songs,...guides].some(r=>r.tuning.join(' ')==tuning.join(' ')&&r.category==='调弦方案')).map(([id,title,tuning])=>R('sethares-'+id,'William A. Sethares','特殊调弦参考',title,title,tuning,'4/4',[60,100],{source:src.sethares,confidence:'reference',category:'调弦方案',reviewedAt:'2026-09-16',verification:'音名顺序核对；八度为本工具参考配置',aliases:['Sethares','特殊调弦','参考调弦',title.split('/')[0].trim()],note:'弦序为六弦到一弦。公开索引只列音名，八度为参考配置；不是特定录音版本，变更弦径／张力前请核对乐器。'}));
+window.SPECIAL_TUNINGS_V1={version:'1.2.0',updated:'2026-09-16',records:[...songs,...guides,...extraReferences],sources:src,notice:'新增参考调弦核对 Sethares 公开索引的音名顺序；八度是工具参考配置，不代表艺人原谱。历史艺人记录保留，未在本轮全部重新核实；速度为练习参考。'};
 })();

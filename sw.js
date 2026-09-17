@@ -1,5 +1,7 @@
-const CACHE_NAME='music-toolbox-ultra-v13.5.8-20260822-1';
-const STAGING_CACHE=`${CACHE_NAME}-staging`;
+const CACHE_NAME='music-toolbox-ultra-v13.5.13-20260917-1';
+const SCOPE_TAG='::'+encodeURIComponent(new URL(self.registration.scope).pathname);
+const ACTIVE_CACHE=CACHE_NAME+SCOPE_TAG;
+const STAGING_CACHE=`${ACTIVE_CACHE}-staging`;
 const OWN_CACHE_PREFIXES=['music-toolbox-ultra-','xingxian-v13-'];
 const MANIFEST_URL='./release-assets.json';
 
@@ -35,7 +37,7 @@ self.addEventListener('install',event=>{
         await stage.put(item.url,response);
         await broadcast({type:'CACHE_PROGRESS',done:index+1,total:assets.length});
       }
-      const target=await caches.open(CACHE_NAME);
+      const target=await caches.open(ACTIVE_CACHE);
       for(const request of await stage.keys()){const response=await stage.match(request);if(response)await target.put(request,response);}
       await caches.delete(STAGING_CACHE);
       await broadcast({type:'CACHE_READY',cache:CACHE_NAME,total:assets.length});
@@ -50,7 +52,11 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
-    await Promise.all(keys.filter(key=>key!==CACHE_NAME&&key!==STAGING_CACHE&&OWN_CACHE_PREFIXES.some(prefix=>key.startsWith(prefix))).map(key=>caches.delete(key)));
+    for(const key of keys){
+      if(key===ACTIVE_CACHE||key===STAGING_CACHE||!OWN_CACHE_PREFIXES.some(prefix=>key.startsWith(prefix)))continue;
+      const cache=await caches.open(key),requests=await cache.keys();
+      if(requests.length&&requests.every(request=>request.url.startsWith(self.registration.scope)))await caches.delete(key);
+    }
     await self.clients.claim();
   })());
 });
@@ -62,11 +68,12 @@ self.addEventListener('message',event=>{
 self.addEventListener('fetch',event=>{
   const request=event.request;if(request.method!=='GET')return;
   const url=new URL(request.url);if(url.origin!==self.location.origin)return;
+  if(url.searchParams.has('reset')||url.searchParams.has('resetProbe')){event.respondWith(fetch(request,{cache:'no-store'}));return;}
   if(url.pathname.endsWith('/version.json')||url.pathname.endsWith('/release-assets.json')){
-    event.respondWith(fetch(request,{cache:'no-store'}).catch(()=>caches.match(request)));return;
+    event.respondWith(fetch(request,{cache:'no-store'}).catch(async()=>{const cache=await caches.open(ACTIVE_CACHE);return cache.match(request,{ignoreSearch:true});}));return;
   }
   if(request.mode==='navigate'){
-    event.respondWith(caches.match('./index.html').then(hit=>hit||fetch(request).catch(()=>caches.match('./index.html'))));return;
+    event.respondWith(caches.open(ACTIVE_CACHE).then(async cache=>(await cache.match('./index.html'))||fetch(request)));return;
   }
-  event.respondWith(caches.match(request).then(hit=>hit||fetch(request)));
+  event.respondWith(caches.open(ACTIVE_CACHE).then(async cache=>(await cache.match(request))||fetch(request)));
 });

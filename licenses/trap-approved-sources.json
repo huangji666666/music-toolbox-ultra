@@ -1,0 +1,84 @@
+{
+  "license": "CC0-1.0",
+  "note": "T04/T05 processed VCSL CC0; T06 original noise/metal synthesis. Other kit roles reuse existing classic samples without duplication.",
+  "samples": [
+    {
+      "id": "drum_t04_hat",
+      "source": "VCSL CC0 / assets/metronome-accent-cc0/21.wav",
+      "processing": "mono; HP 6500 Hz; LP 14500 Hz; trim onset; max 0.095s; edge fades; peak normalize",
+      "license": "CC0-1.0",
+      "bytes": 8424,
+      "sha256": "32afd192a0392190449b57fc1a139353d3e4225a2504d660e470c8ef30212e4e",
+      "auditionId": "T04",
+      "label": "T04 · 锐利真镲 · 闭镲",
+      "role": "hat",
+      "file": "assets/drums/t04-hat.wav",
+      "approved": "2026-09-17"
+    },
+    {
+      "id": "drum_t04_openhat",
+      "source": "VCSL CC0 / assets/metronome-accent-cc0/23.wav",
+      "processing": "mono; HP 4500 Hz; LP 14500 Hz; trim onset; max 0.4s; edge fades; peak normalize",
+      "license": "CC0-1.0",
+      "bytes": 35324,
+      "sha256": "92050fee53c474faf596420df07b3d38bf4b2a2a066a75ebefe31a14621153d7",
+      "auditionId": "T04",
+      "label": "T04 · 锐利真镲 · 开镲",
+      "role": "openhat",
+      "file": "assets/drums/t04-openhat.wav",
+      "approved": "2026-09-17"
+    },
+    {
+      "id": "drum_t05_hat",
+      "source": "VCSL CC0 / assets/metronome-accent-cc0/22.wav",
+      "processing": "mono; HP 4200 Hz; LP 12500 Hz; trim onset; max 0.145s; edge fades; peak normalize",
+      "license": "CC0-1.0",
+      "bytes": 12834,
+      "sha256": "2cff4e98550c6cdddf309081e3cbb6aa746a6afc4f8b52e62ec85c3230de6d4f",
+      "auditionId": "T05",
+      "label": "T05 · 空气感真镲 · 闭镲",
+      "role": "hat",
+      "file": "assets/drums/t05-hat.wav",
+      "approved": "2026-09-17"
+    },
+    {
+      "id": "drum_t05_openhat",
+      "source": "VCSL CC0 / assets/metronome-accent-cc0/23.wav",
+      "processing": "mono; HP 3200 Hz; LP 13500 Hz; trim onset; max 0.56s; edge fades; peak normalize",
+      "license": "CC0-1.0",
+      "bytes": 49436,
+      "sha256": "1181cddf75c8c87ed0c70e6d00be84ff08d0f2e23fe00bb657b778d6c5031e10",
+      "auditionId": "T05",
+      "label": "T05 · 空气感真镲 · 开镲",
+      "role": "openhat",
+      "file": "assets/drums/t05-openhat.wav",
+      "approved": "2026-09-17"
+    },
+    {
+      "id": "drum_t06_hat",
+      "source": "Original noise/metal percussion synthesis in build_trap_comparison.mjs",
+      "processing": "HP 5800 Hz, LP 14500 Hz, short attack, peak normalize; not a hardware 808 recording",
+      "license": "CC0-1.0",
+      "bytes": 9746,
+      "sha256": "202540ae3821f58f12fbd0ee476e41a4793e71030d94fde2768668bfb202f37b",
+      "auditionId": "T06",
+      "label": "T06 · 808 风格细镲 · 闭镲",
+      "role": "hat",
+      "file": "assets/drums/t06-hat.wav",
+      "approved": "2026-09-17"
+    },
+    {
+      "id": "drum_t06_openhat",
+      "source": "Original noise/metal percussion synthesis in build_trap_comparison.mjs",
+      "processing": "HP 5800 Hz, LP 14500 Hz, short attack, peak normalize; not a hardware 808 recording",
+      "license": "CC0-1.0",
+      "bytes": 44144,
+      "sha256": "940cd7f2a2349ba2947a8b3f7a1eac8b446c2a697144c40bcc712f01de4a8d5b",
+      "auditionId": "T06",
+      "label": "T06 · 808 风格细镲 · 开镲",
+      "role": "openhat",
+      "file": "assets/drums/t06-openhat.wav",
+      "approved": "2026-09-17"
+    }
+  ]
+}
