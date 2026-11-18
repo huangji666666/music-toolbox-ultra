@@ -33,7 +33,9 @@ for(const url of urls){
     assets.push({url,bytes:bytes.length,sha256:sha256(bytes)});
 }
 const version=JSON.parse(await fs.readFile(path.join(root,'version.json'),'utf8'));
-const manifest={schema:1,version:version.version,build:version.build,cache:version.cache,generatedAt:'2026-09-17T00:00:00.000Z',assets};
+// Stable timestamp from the build identity keeps --check reproducible.
+const buildDate=version.build.split('.').slice(0,3).join('-');
+const manifest={schema:1,version:version.version,build:version.build,cache:version.cache,generatedAt:`${buildDate}T00:00:00.000Z`,assets};
 const serialized=JSON.stringify(manifest,null,2)+'\n';
 
 if(mode==='check'){

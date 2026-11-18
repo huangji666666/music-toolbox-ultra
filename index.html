@@ -659,16 +659,236 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
 @media(max-width:430px){.special-tuning-modal .practice-modal-card{padding:9px}.special-search-results{max-height:65vh}.special-tuning-card{grid-template-columns:minmax(0,1fr) 66px}.support-grid{gap:6px}.support-pay-card{padding:5px}.settings-community button{min-height:48px;font-size:11px}}
 </style>
 <link rel="stylesheet" href="./app-final.css">
+<link rel="stylesheet" href="./app-shell.css">
 </head>
 <body data-theme="light">
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><symbol id="ui-lightbulb" viewBox="0 0 24 24">
+  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+  <path d="M9 18h6" />
+  <path d="M10 22h4" />
+</symbol>
+<symbol id="ui-search" viewBox="0 0 24 24">
+  <circle cx="11" cy="11" r="8" />
+  <path d="m21 21-4.3-4.3" />
+</symbol>
+<symbol id="ui-list-music" viewBox="0 0 24 24">
+  <path d="M21 15V6" />
+  <path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+  <path d="M12 12H3" />
+  <path d="M16 6H3" />
+  <path d="M12 18H3" />
+</symbol>
+<symbol id="ui-list-plus" viewBox="0 0 24 24">
+  <path d="M11 12H3" />
+  <path d="M16 6H3" />
+  <path d="M16 18H3" />
+  <path d="M18 9v6" />
+  <path d="M21 12h-6" />
+</symbol>
+<symbol id="ui-layers" viewBox="0 0 24 24">
+  <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+  <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+  <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
+</symbol>
+<symbol id="ui-guitar" viewBox="0 0 24 24">
+  <path d="m11.9 12.1 4.514-4.514" />
+  <path d="M20.1 2.3a1 1 0 0 0-1.4 0l-1.114 1.114A2 2 0 0 0 17 4.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 17.828 7h1.344a2 2 0 0 0 1.414-.586L21.7 5.3a1 1 0 0 0 0-1.4z" />
+  <path d="m6 16 2 2" />
+  <path d="M8.2 9.9C8.7 8.8 9.8 8 11 8c2.8 0 5 2.2 5 5 0 1.2-.8 2.3-1.9 2.8l-.9.4A2 2 0 0 0 12 18a4 4 0 0 1-4 4c-3.3 0-6-2.7-6-6a4 4 0 0 1 4-4 2 2 0 0 0 1.8-1.2z" />
+  <circle cx="11.5" cy="12.5" r=".5" fill="currentColor" />
+</symbol>
+<symbol id="ui-audio-lines" viewBox="0 0 24 24">
+  <path d="M2 10v3" />
+  <path d="M6 6v11" />
+  <path d="M10 3v18" />
+  <path d="M14 8v7" />
+  <path d="M18 5v13" />
+  <path d="M22 10v3" />
+</symbol>
+<symbol id="ui-music-2" viewBox="0 0 24 24">
+  <circle cx="8" cy="18" r="4" />
+  <path d="M12 18V2l7 4" />
+</symbol>
+<symbol id="ui-book-open" viewBox="0 0 24 24">
+  <path d="M12 7v14" />
+  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+</symbol>
+<symbol id="ui-ear" viewBox="0 0 24 24">
+  <path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0" />
+  <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4" />
+</symbol>
+<symbol id="ui-mic" viewBox="0 0 24 24">
+  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+  <line x1="12" x2="12" y1="19" y2="22" />
+</symbol>
+<symbol id="ui-piano" viewBox="0 0 24 24">
+  <path d="M18.5 8c-1.4 0-2.6-.8-3.2-2A6.87 6.87 0 0 0 2 9v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8.5C22 9.6 20.4 8 18.5 8" />
+  <path d="M2 14h20" />
+  <path d="M6 14v4" />
+  <path d="M10 14v4" />
+  <path d="M14 14v4" />
+  <path d="M18 14v4" />
+</symbol>
+<symbol id="ui-settings-2" viewBox="0 0 24 24">
+  <path d="M20 7h-9" />
+  <path d="M14 17H5" />
+  <circle cx="17" cy="17" r="3" />
+  <circle cx="7" cy="7" r="3" />
+</symbol>
+<symbol id="ui-circle-fading-plus" viewBox="0 0 24 24">
+  <path d="M12 2a10 10 0 0 1 7.38 16.75" />
+  <path d="M12 8v8" />
+  <path d="M16 12H8" />
+  <path d="M2.5 8.875a10 10 0 0 0-.5 3" />
+  <path d="M2.83 16a10 10 0 0 0 2.43 3.4" />
+  <path d="M4.636 5.235a10 10 0 0 1 .891-.857" />
+  <path d="M8.644 21.42a10 10 0 0 0 7.631-.38" />
+</symbol>
+<symbol id="ui-bookmark" viewBox="0 0 24 24">
+  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+</symbol>
+<symbol id="ui-shuffle" viewBox="0 0 24 24">
+  <path d="m18 14 4 4-4 4" />
+  <path d="m18 2 4 4-4 4" />
+  <path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22" />
+  <path d="M2 6h1.972a4 4 0 0 1 3.6 2.2" />
+  <path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45" />
+</symbol>
+<symbol id="ui-x" viewBox="0 0 24 24">
+  <path d="M18 6 6 18" />
+  <path d="m6 6 12 12" />
+</symbol>
+<symbol id="ui-chevron-left" viewBox="0 0 24 24">
+  <path d="m15 18-6-6 6-6" />
+</symbol>
+<symbol id="ui-chevron-right" viewBox="0 0 24 24">
+  <path d="m9 18 6-6-6-6" />
+</symbol>
+<symbol id="ui-pause" viewBox="0 0 24 24">
+  <rect x="14" y="4" width="4" height="16" rx="1" />
+  <rect x="6" y="4" width="4" height="16" rx="1" />
+</symbol>
+<symbol id="ui-play" viewBox="0 0 24 24">
+  <polygon points="6 3 20 12 6 21 6 3" />
+</symbol>
+<symbol id="ui-repeat" viewBox="0 0 24 24">
+  <path d="m17 2 4 4-4 4" />
+  <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+  <path d="m7 22-4-4 4-4" />
+  <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+</symbol>
+<symbol id="ui-crosshair" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" />
+  <line x1="22" x2="18" y1="12" y2="12" />
+  <line x1="6" x2="2" y1="12" y2="12" />
+  <line x1="12" x2="12" y1="6" y2="2" />
+  <line x1="12" x2="12" y1="22" y2="18" />
+</symbol>
+<symbol id="ui-waves" viewBox="0 0 24 24">
+  <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+  <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+  <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+</symbol>
+<symbol id="ui-activity" viewBox="0 0 24 24">
+  <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+</symbol>
+<symbol id="ui-sliders-horizontal" viewBox="0 0 24 24">
+  <line x1="21" x2="14" y1="4" y2="4" />
+  <line x1="10" x2="3" y1="4" y2="4" />
+  <line x1="21" x2="12" y1="12" y2="12" />
+  <line x1="8" x2="3" y1="12" y2="12" />
+  <line x1="21" x2="16" y1="20" y2="20" />
+  <line x1="12" x2="3" y1="20" y2="20" />
+  <line x1="14" x2="14" y1="2" y2="6" />
+  <line x1="8" x2="8" y1="10" y2="14" />
+  <line x1="16" x2="16" y1="18" y2="22" />
+</symbol>
+<symbol id="ui-grip-horizontal" viewBox="0 0 24 24">
+  <circle cx="12" cy="9" r="1" />
+  <circle cx="19" cy="9" r="1" />
+  <circle cx="5" cy="9" r="1" />
+  <circle cx="12" cy="15" r="1" />
+  <circle cx="19" cy="15" r="1" />
+  <circle cx="5" cy="15" r="1" />
+</symbol>
+<symbol id="ui-list-tree" viewBox="0 0 24 24">
+  <path d="M21 12h-8" />
+  <path d="M21 6H8" />
+  <path d="M21 18h-8" />
+  <path d="M3 6v4c0 1.1.9 2 2 2h3" />
+  <path d="M3 10v6c0 1.1.9 2 2 2h3" />
+</symbol>
+<symbol id="ui-circle-dot" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" />
+  <circle cx="12" cy="12" r="1" />
+</symbol>
+<symbol id="ui-save" viewBox="0 0 24 24">
+  <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+  <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
+  <path d="M7 3v4a1 1 0 0 0 1 1h7" />
+</symbol>
+<symbol id="ui-undo-2" viewBox="0 0 24 24">
+  <path d="M9 14 4 9l5-5" />
+  <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
+</symbol>
+<symbol id="ui-timer" viewBox="0 0 24 24">
+  <line x1="10" x2="14" y1="2" y2="2" />
+  <line x1="12" x2="15" y1="14" y2="11" />
+  <circle cx="12" cy="14" r="8" />
+</symbol>
+<symbol id="ui-volume-2" viewBox="0 0 24 24">
+  <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+  <path d="M16 9a5 5 0 0 1 0 6" />
+  <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+</symbol>
+<symbol id="ui-eye" viewBox="0 0 24 24">
+  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+  <circle cx="12" cy="12" r="3" />
+</symbol>
+<symbol id="ui-plus" viewBox="0 0 24 24">
+  <path d="M5 12h14" />
+  <path d="M12 5v14" />
+</symbol>
+<symbol id="ui-minus" viewBox="0 0 24 24">
+  <path d="M5 12h14" />
+</symbol>
+<symbol id="ui-arrow-up-right" viewBox="0 0 24 24">
+  <path d="M7 7h10v10" />
+  <path d="M7 17 17 7" />
+</symbol>
+<symbol id="ui-disc-3" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M6 12c0-1.7.7-3.2 1.8-4.2" />
+  <circle cx="12" cy="12" r="2" />
+  <path d="M18 12c0 1.7-.7 3.2-1.8 4.2" />
+</symbol>
+<symbol id="ui-panel-top" viewBox="0 0 24 24">
+  <rect width="18" height="18" x="3" y="3" rx="2" />
+  <path d="M3 9h18" />
+</symbol>
+<symbol id="ui-music" viewBox="0 0 24 24">
+  <path d="M9 18V5l12-2v13" />
+  <circle cx="6" cy="18" r="3" />
+  <circle cx="18" cy="16" r="3" />
+</symbol>
+<symbol id="ui-list-ordered" viewBox="0 0 24 24">
+  <path d="M10 12h11" />
+  <path d="M10 18h11" />
+  <path d="M10 6h11" />
+  <path d="M4 10h2" />
+  <path d="M4 6h1v4" />
+  <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
+</symbol></defs></svg>
 
 <div id="start-mask">
     <div class="start-content">
-        <h1 class="start-title">音乐工具箱 <span>ULTRA</span></h1>
-        <p class="start-desc">专业跨端调音与音乐练习工具，内置调音器、练习分析、和弦库、节拍器、五度圈、练耳与乐理学习。</p>
+        <div class="start-eyebrow">离线音乐工作台 · BY 黄鸡</div>
+        <h1 class="start-title">音乐工具箱 <span>Ultra</span></h1>
+        <p class="start-desc">调音 · 节奏 · 和声 · 视唱<br>每一次练习，都更从容。</p>
         <div class="start-audio-tag">SCI-FI FOUR-SINE GLOW · LOW-LOAD AUDIO</div>
         <div class="start-features">
-            <h3>核心功能</h3>
+            <h3>你的音乐工作台</h3>
             <ul>
                 <li><strong>调音器：</strong>支持吉他、贝斯、尤克里里、半音阶，含七弦吉他、六弦贝斯等特调</li>
                 <li><strong>练习：</strong>高精度音高识别，智能降噪防抖，有效/无效音判定</li>
@@ -679,8 +899,88 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
                 <li><strong>乐理：</strong>分类互动教学，SVG 可视化演示</li>
             </ul>
         </div>
+        <section class="release-notice" aria-label="本次更新公告">
+            <div><strong>本次更新</strong><small>v13.5.28</small></div>
+            <p>同排弦号与琴键波纹 · 节奏自动补小节 · 撤销与重做</p>
+            <details><summary>展开全部更新 · 13.5.14 至 13.5.28</summary><div class="release-list">
+                <section><h3>本轮新增 · 13.5.28</h3><ul>
+                    <li>弦号保持同一行，短箭头对准目标琴键。等待时各弦显示波纹，锁弦后只显示所选琴键。</li>
+                    <li>可视化节拍器使用与速度卡等宽的大入口；小节数支持下拉选择 1–32。</li>
+                    <li>改变长度时补齐空白小节，保留手工休止与锁轨；编排可撤销、重做。</li>
+                    <li>竖屏扫弦区两端对齐，统一菜单箭头，移除设置页底部的色块断层。</li>
+                </ul></section>
+                <section><h3>13.5.27</h3><ul>
+                    <li>可视化节拍器移到速度卡下方，沿用正在播放的拍点。</li>
+                    <li>88 键轨道显示弦号，同音合并；选弦时连线与琴键同步亮起。</li>
+                    <li>虚拟乐器顶栏可切换乐器、调弦。训练与游戏各有独立菜单，共用同一演奏区。</li>
+                    <li>设置首页三个入口平分一行，四类设置默认折叠；移除贴士位置重置入口。</li>
+                </ul></section>
+                <section><h3>上轮更新 · 13.5.26</h3><ul>
+                    <li>节拍舞台重绘横纵灯带、圆形声波、前进进度、圆环、立体节奏块、力度图表和鼓轨矩阵。</li>
+                    <li>音频与舞台使用同一拍点；设备支持时可开启分力度振动。</li>
+                    <li>鼓机主栏可选 1–32 小节；扩长只填新增段落，锁定轨道保持原样。</li>
+                    <li>新编排取节拍器速度、拍号和分组，旧作品可在设置中主动同步。</li>
+                    <li>全屏磨砂学习气泡分散走位；可收起、长按关闭或在设置中恢复。</li>
+                    <li>调音器检测与显示合并到互换按钮旁的齿轮。</li>
+                    <li>乐器练习可收起浮窗，保留当前音阶和试听。</li>
+                    <li>设置顶部可检查更新，下载时显示实际离线资源进度。</li>
+                </ul></section>
+                <section><h3>调音器</h3><ul>
+                    <li>新增半圆表盘、可转动的琴头弦钮和 88 键音高横轨。</li>
+                    <li>吉他、贝斯、尤克里里分别显示自己的调弦方案；特殊调弦搜索支持按乐器筛选。</li>
+                    <li>特殊调弦搜索和变调夹改为下拉面板，点空白即可收起。</li>
+                    <li>新增四弦、六弦琴头。点弦号可锁定目标并试听。</li>
+                    <li>钢琴默认在琴头上方；可互换位置并记住选择。</li>
+                    <li>琴弦连到对应琴键，音高横轨随琴头换边；移除琴键上方的重复气泡。</li>
+                    <li>修复从自定义调弦切回预设后，目标音仍沿用旧调弦的问题。</li>
+                    <li>检测速度可调；音名、弦号和设备选项集中到「检测与显示设置」。</li>
+                </ul></section>
+                <section><h3>节拍器与渐速训练</h3><ul>
+                    <li>新增同音色力度、多音色叠加、二四拍重音、重音移位和自定义 16 格。</li>
+                    <li>16 格可分别设力度和叠加音色；首拍可叠加重音，其余拍保持底音。</li>
+                    <li>新增八种可视化拍点，包括灯带、圆环、矩阵和前进节奏块。</li>
+                    <li>舞台画面跟随实际拍点；支持静音，兼容设备可选震动。</li>
+                    <li>修复渐速启动。精简版显示当前速度，高级版显示完成百分比。</li>
+                    <li>渐速菜单不再挤动播放键。点空白继续训练；完成退出恢复原速度。</li>
+                </ul></section>
+                <section><h3>节奏编排与音色</h3><ul>
+                    <li>新增 24 个原创鼓音；T06 改用短尾底鼓。</li>
+                    <li>13 套鼓组可选，28 种风格各有 8 个变体。</li>
+                    <li>支持 1 至 8 小节、自动或手动力度、轨道锁定和编排撤销。</li>
+                    <li>节奏作品可命名保存、载入，或设为节拍器直接播放。</li>
+                    <li>手机网格按轨道和时间分页，可展开编辑。</li>
+                </ul></section>
+                <section><h3>虚拟乐器与指板游戏</h3><ul>
+                    <li>新增 CAGED 五形课程：三和弦、七和弦、扩展和弦、开放和弦与琶音。</li>
+                    <li>指板支持音阶、五声音阶、布鲁斯音阶和即兴短句；示范随音高亮。</li>
+                    <li>新增六类游戏：给音找位置、看位置认音、横纵定位、音程、听音、音级与和弦音。</li>
+                    <li>游戏内可切吉他、贝斯、尤克里里或钢琴；钢琴使用找键题。</li>
+                    <li>范围可选自动、全指板、1 至 12 品或指定把位；本机记录正确率、用时和薄弱位置。</li>
+                    <li>答对自动换题；答错保留答案。手动下一题移到指板旁。</li>
+                </ul></section>
+                <section><h3>和弦、乐理与五度圈</h3><ul>
+                    <li>和弦探索指板铺满可用宽度，可缩放；升降同音并列显示。</li>
+                    <li>放大竖屏和弦图，调整手机按钮和文字比例。</li>
+                    <li>乐理和弦示例可换根音，支持完整和弦与分解试听。</li>
+                    <li>五度圈选调后可将 ii–V–I 送入和弦编排。</li>
+                    <li>新增乐理速记卡，支持轮播、暂停、翻页和跳转练习。</li>
+                </ul></section>
+                <section><h3>练耳与视唱</h3><ul>
+                    <li>和弦听辨新增综合与进行训练，覆盖 28 种和弦性质、64 个进行模板。</li>
+                    <li>音程支持先后听或同时听；各练耳题型可关闭参考调式。</li>
+                    <li>答案区预留 12 个选项位置；「更多练耳」单独下拉，不拉伸其他按钮。</li>
+                    <li>调整视唱谱面的符头、符尾、连梁和移动端操作按钮。</li>
+                </ul></section>
+                <section><h3>学习贴士、外观与离线</h3><ul>
+                    <li>新增 300 条分场景知识与练习，可查看来源、收藏并跳到具体功能。</li>
+                    <li>学习灯泡可拖动和复位；半透明弹幕避开操作区，不占顶部阅读栏。</li>
+                    <li>新增五套皮肤、减少动效选项，以及手机、平板和电脑安装指引。</li>
+                    <li>修复快速更新漏检；清理缓存只作用于当前工具箱。</li>
+                </ul></section>
+            </div></details>
+        </section>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.13</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.28</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
@@ -690,6 +990,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <button class="start-install-btn" id="start-install-btn" type="button" onclick="PWAInstall.open()" hidden>添加到桌面</button>
         </div>
         <div class="start-install-hint" id="start-install-hint" aria-live="polite" hidden></div>
+        <div class="start-community"><button type="button" onclick="ContactSupport.openContact()">联系与反馈</button><button type="button" onclick="ContactSupport.openSponsor()">捐赠支持</button></div>
         <div class="start-reset-row"><button class="start-reset-btn" id="start-reset-btn" type="button" onclick="App.resetApplication()">重置缓存</button></div>
     </div>
     <div class="start-watermark">BY 黄鸡</div>
@@ -773,6 +1074,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <p id="tuner-device-info"></p>
             <label>音高算法<select id="tuner-algorithm" onchange="TunerAssist.setMode(this.value)"><option value="auto">自动选择</option><option value="hybrid">YIN + HPS（原有）</option><option value="yin">YIN（宽音域）</option></select></label>
             <label>麦克风采集<select id="tuner-capture" onchange="Settings.setMicProfile(this.value)"><option value="standard">标准原声</option><option value="iphone">iPhone 延音增强</option><option value="system">系统语音增强</option></select></label>
+            <label>音高更新间隔<select id="tuner-analysis-interval" onchange="TunerAssist.setAnalysisInterval(this.value)"><option value="100">0.1 秒（流畅）</option><option value="250">0.25 秒（推荐）</option><option value="500">0.5 秒（最稳）</option></select></label>
             <button type="button" onclick="TunerAssist.reconnect()">重新连接麦克风</button>
             <p>设备类型是能力推断，不保证具体型号。检测设置不改变音色。没有声音时不会反复切换算法。</p>
         </details>
@@ -987,6 +1289,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <svg id="cof-svg" class="cof-svg" viewBox="0 0 340 340"></svg>
             <div id="cof-info" style="text-align:center;margin-top:6px;font-size:13px;color:var(--text-sub)">点击音名查看关系</div>
         </div>
+        <details class="circle-compose"><summary data-ui="list-music">和弦编排</summary><div class="compose-tools"><button type="button" data-ui="list-plus" onclick="CirclePage.queueHarmony(false)">加入当前和弦</button><button type="button" data-ui="layers" onclick="CirclePage.queueHarmony(true)">加入 ii–V–I</button><button type="button" data-ui="arrow-up-right" onclick="CirclePage.openArrangement()">打开和弦编排</button></div><output id="circle-compose-status" aria-live="polite"></output></details>
         <div class="cof-path-readout" id="cof-path-readout"><strong>升号路径</strong><small>C → G → D → A → E → B → F♯</small></div>
         <div class="cof-detail-panel" id="cof-detail-panel" style="display:none"></div>
         <div class="cof-fretboard-area" id="cof-fretboard-area" style="display:none"></div>
@@ -1050,6 +1353,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
 
     <!-- ========== Page 8: 设置 ========== -->
     <section id="page-instrument" class="page">
+        <div class="board-tabs" aria-label="乐器工作区"><button type="button" data-board-tab="train" data-ui="book-open" aria-controls="study-flyout" aria-expanded="false" aria-pressed="true">训练</button><button type="button" data-board-tab="game" data-ui="guitar" aria-controls="game-flyout" aria-expanded="false" aria-pressed="false">游戏</button></div>
         <div class="instrument-toolbar" role="toolbar" aria-label="虚拟乐器控制"><select id="instrument-type" onchange="InstrumentPage.setInstrument(this.value)"><option value="guitar">吉他</option><option value="piano">钢琴</option><option value="ukulele">尤克里里</option><option value="bass">贝斯</option></select><select class="instrument-mode-select" id="instrument-play-mode" onchange="InstrumentPage.setPlayMode(this.value)"><option value="edit">编排模式</option><option value="performance">演奏模式</option></select><button type="button" id="instrument-tone-open" onclick="InstrumentTone.open()">音色</button><button onclick="InstrumentPage.toggleOrientation()" id="instrument-orientation">方向</button><button onclick="InstrumentPage.clearMapping()">清除</button></div>
         <select id="instrument-tone-mode" hidden onchange="InstrumentPage.setToneMode(this.value)" aria-label="演奏音色"><option value="expressive">演奏音色</option><option value="sample">真实采样</option></select>
         <div class="instrument-tone-note" id="instrument-tone-note">演奏音色支持推弦、揉弦与滑音</div>
@@ -1062,13 +1366,15 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             <button class="instrument-chord-readout" onclick="InstrumentPage.openChordNameEditor()"><strong id="instrument-chord-name">尚未锁定指型</strong><small id="instrument-chord-detail">点击可改名</small></button>
             <div class="instrument-mini-actions"><button onclick="InstrumentPage.shiftOctave(-1)" title="低八度">－8</button><button onclick="InstrumentPage.shiftOctave(1)" title="高八度">＋8</button><button class="remember-primary" onclick="InstrumentPage.rememberChord()" title="记住和弦">记住</button><button onclick="InstrumentPage.clearHeld()" title="清除指型">清除</button></div>
         </div>
+        <div class="study-strip" id="instrument-study" role="group" aria-label="指板学习"><button type="button" id="instrument-caged-open" data-ui="guitar" aria-label="打开 CAGED 指板教材" onclick="CagedLab.open()">CAGED</button><button type="button" data-ui="audio-lines" data-study="scale" aria-expanded="false">音阶</button><button type="button" data-ui="waves" data-study="improv" aria-expanded="false">即兴</button></div>
+        <section id="instrument-study-panel" hidden></section>
         <div id="instrument-stage"></div>
         <div class="instrument-floating-chords" id="instrument-floating-chords" aria-label="可拖动的和弦快捷悬浮条"></div>
     </section>
 
     <!-- ========== Page 9: 设置 ========== -->
     <section id="page-settings" class="page">
-        <div class="settings-community"><button type="button" onclick="ContactSupport.openSponsor()">赞助 · 感谢支持</button><button type="button" onclick="ContactSupport.openContact()">联系与反馈</button></div>
+        <div class="settings-community"><button type="button" onclick="ContactSupport.openSponsor()">赞助支持</button><button type="button" onclick="ContactSupport.openContact()">联系反馈</button></div>
         <div class="settings-section">
             <div class="settings-title">
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>音频控制
@@ -1175,7 +1481,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.13</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.28</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>
@@ -1635,9 +1941,17 @@ const AudioEngine = {
     },
 
     async ensureMicrophone() {
-        if(this._micPromise)return this._micPromise;
-        this._micPromise=this._openMicrophone();
-        try{return await this._micPromise;}finally{this._micPromise=null;}
+        if(this._micPromise){
+            if(this._micRequestEpoch===(this._micEpoch||0))return this._micPromise;
+            const reentryEpoch=this._micEpoch||0;
+            await this._micPromise;
+            if(reentryEpoch!==(this._micEpoch||0))return false;
+            return this.ensureMicrophone();
+        }
+        this._micRequestEpoch=this._micEpoch||0;
+        const pending=this._openMicrophone();
+        this._micPromise=pending;
+        try{return await pending;}finally{if(this._micPromise===pending)this._micPromise=null;}
     },
     async _openMicrophone() {
         const initialEpoch=this._micEpoch||0;
@@ -1649,6 +1963,7 @@ const AudioEngine = {
         if(live&&this.micSourceNode)return true;
         this.releaseMicrophone(false);
         const requestEpoch=this._micEpoch;
+        this._micRequestEpoch=requestEpoch;
         if(!navigator.mediaDevices?.getUserMedia){toast('当前浏览器不支持麦克风录音');return false;}
         try {
             if(navigator.audioSession&&'type' in navigator.audioSession){try{navigator.audioSession.type='play-and-record';}catch(error){}}
@@ -1670,6 +1985,7 @@ const AudioEngine = {
             stream.getAudioTracks().forEach(track=>{track.addEventListener('ended',recover,{once:true});track.addEventListener('mute',()=>setTimeout(()=>{if(track.muted)recover();},380));});
             this.cachedPitch=null;this.lastDetectionAt=0;this.updateDeviceStatus();return true;
         } catch (error) {
+            if(requestEpoch!==this._micEpoch)return false;
             this.micError=error.name||'Error';console.warn('麦克风访问不可用',error);this.releaseMicrophone(false);toast(error.name==='NotAllowedError'?'麦克风权限未开启，请在浏览器中允许':error.name==='NotFoundError'?'未找到麦克风，请连接输入设备':'麦克风连接失败，请检查占用或重新连接');return false;
         }
     },
@@ -1800,7 +2116,8 @@ const AudioEngine = {
     },
 
     async previewClick(sound){
-        if(!this.ctx)await this.init();await this.prepareClickSounds(sound);this.playClick(this.ctx.currentTime+.015,true,sound,.78);
+        try{if(!this.ctx)await this.init();await this.prepareClickSounds(sound);this.playClick(this.ctx.currentTime+.015,true,sound,.78);}
+        catch(error){console.warn('节拍器音色试听失败',error);toast('音色试听失败，请检查本地素材');return false;}
     },
 
     setInputGain(v) { this.inputGain = v; if (this.inputGainNode) this.inputGainNode.gain.value = v*(this.captureProfiles[this.captureProfile]?.inputBoost||1); },
@@ -1813,18 +2130,20 @@ const AudioEngine = {
             this.envelopeAttack = 0.005;
             this.envelopeRelease = 0.01;
             this.detectionInterval = 22;
-            if (this.analyser) { this.analyser.smoothingTimeConstant = 0.04; this.analyser.fftSize = 4096; }
+            if (this.analyser) this.analyser.smoothingTimeConstant = 0.04;
         } else if (mode === 'high') {
             this.envelopeAttack = 0.025;
             this.envelopeRelease = 0.04;
             this.detectionInterval = 55;
-            if (this.analyser) { this.analyser.smoothingTimeConstant = 0.24; this.analyser.fftSize = 4096; }
+            if (this.analyser) this.analyser.smoothingTimeConstant = 0.24;
         } else {
             this.envelopeAttack = 0.015;
             this.envelopeRelease = 0.02;
             this.detectionInterval = 48;
-            if (this.analyser) { this.analyser.smoothingTimeConstant = 0.16; this.analyser.fftSize = 4096; }
+            if (this.analyser) this.analyser.smoothingTimeConstant = 0.16;
         }
+        // 保持约 85ms 的检测窗口，高采样率声卡也能覆盖钢琴最低音。
+        if(this.analyser)this.analyser.fftSize=Math.min(32768,4096*2**Math.max(0,Math.ceil(Math.log2((this.ctx?.sampleRate||48000)/48000))));
         if (this.analyser) this.fftSize = this.analyser.fftSize;
         this.timeBuf = this.analyser ? new Float32Array(this.analyser.fftSize) : this.timeBuf;
         this.freqBuf = this.analyser ? new Uint8Array(this.analyser.frequencyBinCount) : this.freqBuf;
@@ -2041,7 +2360,7 @@ const AudioEngine = {
         if(this.engine==='sample'){
             const midi=Math.round(freqToMidi(freq,Tuner.a4));
             const zone=PIANO_SAMPLE_ZONES.find(z=>midi>=z.lo&&midi<=z.hi)||PIANO_SAMPLE_ZONES.reduce((best,z)=>Math.abs(z.root-midi)<Math.abs(best.root-midi)?z:best,PIANO_SAMPLE_ZONES[0]);
-            const rate=Math.pow(2,(midi-zone.root)/12);
+            const rate=freq/midiToFreq(zone.root);
             if(this.playSample(zone.asset,now,vol,rate,duration))return;
             this.decodeEmbeddedSample(zone.asset).then(buffer=>{if(buffer&&this.engine==='sample')this.playSample(zone.asset,this.ctx.currentTime+.008,vol,rate,duration);});
             return;
@@ -2080,7 +2399,7 @@ const AudioEngine = {
         if(this.engine==='sample'){
             const midi=Math.round(freqToMidi(freq,Tuner.a4));
             const zone=GUITAR_SAMPLE_ROOTS.reduce((best,z)=>Math.abs(z.root-midi)<Math.abs(best.root-midi)?z:best,GUITAR_SAMPLE_ROOTS[0]);
-            const rate=Math.pow(2,(midi-zone.root)/12);
+            const rate=freq/midiToFreq(zone.root);
             if(this.playSample(zone.asset,now,vol*1.08,rate,duration))return true;
             this.decodeEmbeddedSample(zone.asset).then(buffer=>{
                 if(buffer&&this.engine==='sample')this.playSample(zone.asset,this.ctx.currentTime+.006,vol*1.08,rate,duration);
@@ -2412,7 +2731,7 @@ const MusicTheory = {
         'dim':[0,3,6], 'aug':[0,4,8], 'dim7':[0,3,6,9], 'm7b5':[0,3,6,10],
         '9':[0,4,7,10,14], '6':[0,4,7,9], 'm6':[0,3,7,9],
         'Maj9':[0,4,7,11,14], 'Min9':[0,3,7,10,14], 'mMaj7':[0,3,7,11],
-        '7sus4':[0,5,7,10], 'add11':[0,4,7,11,17],
+        '7sus4':[0,5,7,10], 'add11':[0,4,7,17],
         'Maj7#11':[0,4,7,11,18], 'Min7b5':[0,3,6,10],
         '7#9':[0,4,7,10,15], '7b9':[0,4,7,10,13],
         '6/9':[0,4,7,9,14], 'Min11':[0,3,7,10,14,17],
@@ -3748,7 +4067,7 @@ const Metro = {
         const ts=document.getElementById('metro-ts-select');if(ts)ts.value=this.signature;
         const sub=document.getElementById('metro-sub-select');if(sub)sub.value=String(this.sub);
         const grid=document.getElementById('metro-grid-resolution');if(grid)grid.value=String(this.gridResolution);
-        this.renderDots();this.renderGroupingControls();this.renderSoundPanel();this.renderSwingControls();this.renderCustomUI();this._prepareCurrentSounds();
+        this.renderDots();this.renderGroupingControls();this.renderSoundPanel();this.renderSwingControls();this.renderCustomUI();this._prepareCurrentSounds().catch(error=>console.warn('节拍器音色后台预载失败',error));
     },
     _clone(v){return JSON.parse(JSON.stringify(v));},
     _label(sound){return METRO_SAMPLE_META[sound]?.label||METRO_EXTRA_LABELS[sound]||METRO_SOUND_LABELS[sound]||sound;},
@@ -3763,14 +4082,14 @@ const Metro = {
     adjustBpm(delta){this.setBpm(this.bpm+(Number(delta)||0));},
     setKit(id){
         const kit=METRO_KITS[id]||METRO_KITS.studio;this.kitId=id in METRO_KITS?id:'studio';this.slots={accent:this._clone(kit.accent),beat:kit.beat,subdivision:kit.subdivision,swing:kit.swing};this.trackSounds=this._clone(kit.tracks);
-        document.getElementById('metro-kit-select').value=this.kitId;this.renderSoundPanel();this.renderSwingControls();this.renderCustomUI();this._prepareCurrentSounds();this.saveCustom();toast(`已切换：${kit.name}`);
+        document.getElementById('metro-kit-select').value=this.kitId;this.renderSoundPanel();this.renderSwingControls();this.renderCustomUI();this._prepareCurrentSounds().catch(error=>console.warn('节拍器音色后台预载失败',error));this.saveCustom();toast(`已切换：${kit.name}`);
     },
     setSlot(slot,value){
         if(slot==='accentLayer'){const first=Array.isArray(this.slots.accent)?this.slots.accent[0]:this.slots.accent;this.slots.accent=[first,value];}
         else {if(!(slot in this.slots))return;this.slots[slot]=value;}
-        this.kitId='custom';const k=document.getElementById('metro-kit-select');if(k)k.value='custom';AudioEngine.prepareClickSounds(value);this.renderSoundPanel(false);this.renderSwingControls();this.saveCustom();
+        this.kitId='custom';const k=document.getElementById('metro-kit-select');if(k)k.value='custom';AudioEngine.prepareClickSounds(value).catch(error=>console.warn('节拍器音色后台预载失败',error));this.renderSoundPanel(false);this.renderSwingControls();this.saveCustom();
     },
-    setTrackSound(index,value){this.trackSounds[index]=value;this.kitId='custom';const k=document.getElementById('metro-kit-select');if(k)k.value='custom';AudioEngine.prepareClickSounds(value);this.saveCustom();},
+    setTrackSound(index,value){this.trackSounds[index]=value;this.kitId='custom';const k=document.getElementById('metro-kit-select');if(k)k.value='custom';AudioEngine.prepareClickSounds(value).catch(error=>console.warn('节拍器音色后台预载失败',error));this.saveCustom();},
     previewSlot(slot){const value=slot==='accentLayer'?(Array.isArray(this.slots.accent)?this.slots.accent[1]:this.slots.accent):this.slots[slot],sound=Array.isArray(value)?value[0]:value;AudioEngine.previewClick(sound);},
     previewTrack(i){AudioEngine.previewClick(this.trackSounds[i]);},
     toggleSoundPanel(){const p=document.getElementById('metro-sound-panel');if(!p)return;p.classList.toggle('open');const b=document.getElementById('metro-sound-editor-btn');if(b)b.textContent=p.classList.contains('open')?'收起音色':'编辑每个击点 ›';},
@@ -4441,6 +4760,8 @@ const CirclePage = {
 
     updateCounter() {
         const sharpsEl = document.getElementById('sf-sharps');
+        const summary=document.querySelector('.circle-compose summary');
+        if(summary){let label=summary.querySelector('small');if(!label){label=document.createElement('small');summary.append(label);}label.textContent=this.selectedKey<0?'先选调':this.noteName(this.selectedKey)+(this.selectedMinor?' 小调':' 大调');summary.parentNode.querySelectorAll('button').forEach((b,i)=>{if(i<2)b.disabled=this.selectedKey<0;});}
         const flatsEl = document.getElementById('sf-flats');
         const keyEl = document.getElementById('sf-key');
         if (this.selectedKey < 0) {
@@ -5718,7 +6039,7 @@ const InstrumentPage={
         document.getElementById('instrument-tb-badge').textContent=info.badge;document.getElementById('instrument-tb-name').textContent=info.zh;document.getElementById('instrument-tb-en').textContent=info.en;
     },
     toggleTuningPicker(){const p=document.getElementById('instrument-tuning-visual'),b=document.getElementById('instrument-tuning-bar');if(!p||!b)return;const open=!p.classList.contains('open');p.classList.toggle('open',open);b.classList.toggle('open',open);b.setAttribute('aria-expanded',String(open));},
-    closeTuningPicker(){document.getElementById('instrument-tuning-visual')?.classList.remove('open');document.getElementById('instrument-tuning-bar')?.classList.remove('open');},
+    closeTuningPicker(){document.getElementById('instrument-tuning-visual')?.classList.remove('open');const bar=document.getElementById('instrument-tuning-bar');bar?.classList.remove('open');bar?.setAttribute('aria-expanded','false');},
     showCustomTuningDialog(forceCount=null){
         document.getElementById('instrument-custom-tuning-modal')?.remove();const source=this.customTuning||SharedCustomTuning.load(this.getTuning()),chrom=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];this.customStringCount=forceCount?Math.max(4,Math.min(8,parseInt(forceCount))):(source.length||6);let rows='';
         for(let i=0;i<this.customStringCount;i++){const m=(source[i]||'E2').match(/^([A-G]#?)(\d)$/)||['','E','2'];rows+=`<label class="spider-string-row"><strong>${this.customStringCount-i}弦</strong><select id="ict-note-${i}">${chrom.map(n=>`<option ${n===m[1]?'selected':''}>${n}</option>`).join('')}</select><select id="ict-oct-${i}">${[0,1,2,3,4,5,6].map(o=>`<option ${String(o)===m[2]?'selected':''}>${o}</option>`).join('')}</select></label>`;}
@@ -5733,7 +6054,7 @@ const InstrumentPage={
     resetChordLabel(){this.manualChordName=null;this.detectedChord=null;this.activeMemoryIndex=-1;},
     render(){const stage=document.getElementById('instrument-stage');if(!stage)return;const type=document.getElementById('instrument-type');if(type)type.value=this.instrument;stage.classList.toggle('fret-stage',this.instrument!=='piano');if(this.instrument==='piano')this.renderPiano(stage);else this.renderFretboard(stage);this.updateInfo();this.updateChordConsole();this.renderMemories();},
     updateInfo(){const el=document.getElementById('instrument-map-info');if(!el)return;if(!this.targetMidis.length){el.innerHTML='<strong>自由演奏 <span class="instrument-mode-pill">FREE</span></strong><small>短按试听 · 长按锁定 · 点弦名静音 · 扫弦区演奏</small>';return;}const names=this.targetMidis.map(m=>midiToName(m)).join(' · '),mapped=Object.entries(this.assignments).map(([m,p])=>`${midiToName(Number(m))}→${this.getTuning().length-p.string}弦${p.fret}品`).join('，');el.innerHTML=`<strong>练习映射 <span class="instrument-mode-pill">MAP</span> · ${names}</strong><small>${mapped||'发光位置可选择；其他位置仍可试听'}</small>`;},
-    renderPiano(stage){const lo=this.targetMidis.length?Math.min(48,...this.targetMidis)-2:48,hi=this.targetMidis.length?Math.max(84,...this.targetMidis)+2:84;let html='<div class="virtual-piano">';for(let m=Math.max(36,lo);m<=Math.min(96,hi);m++){const pc=((m%12)+12)%12,black=[1,3,6,8,10].includes(pc),target=this.targetMidis.includes(m),assigned=!!this.assignments[m];html+=`<button class="piano-key${black?' black':''}${target?' target':''}${assigned?' assigned':''}" onpointerdown="InstrumentPage.playPiano(${m})">${!black||target?midiToName(m):''}</button>`;}stage.innerHTML=html+'</div>';},
+    renderPiano(stage){const lo=this.targetMidis.length?Math.min(48,...this.targetMidis)-2:48,hi=this.targetMidis.length?Math.max(84,...this.targetMidis)+2:84;let html='<div class="virtual-piano">';for(let m=Math.max(36,lo);m<=Math.min(96,hi);m++){const pc=((m%12)+12)%12,black=[1,3,6,8,10].includes(pc),target=this.targetMidis.includes(m),assigned=!!this.assignments[m];html+=`<button class="piano-key${black?' black':''}${target?' target':''}${assigned?' assigned':''}" data-midi="${m}" aria-label="${midiToName(m)}" onpointerdown="InstrumentPage.playPiano(${m})">${!black||target?midiToName(m):''}</button>`;}stage.innerHTML=html+'</div>';},
     playPiano(midi){AudioEngine.playInstrument(midi,1,.24,'instrument');if(this.targetMidis.includes(midi)){this.assignments[midi]={key:midi};this.updateInfo();}},
     _boardSvg(horizontal=true){
         const tuning=this.getTuning(),opens=tuning.map(noteToMidi),strings=opens.length,frets=this.instrument==='bass'?20:18,left=62,top=46,fg=46,sg=40;
@@ -5743,7 +6064,7 @@ const InstrumentPage={
         for(let s=0;s<strings;s++){const y=top+(strings-1-s)*sg,muted=this.mutedStrings.has(s);svg+=`<g class="instrument-string-toggle" onclick="InstrumentPage.toggleString(${s})"><rect x="2" y="${y-15}" width="54" height="30" rx="10" fill="${muted?'rgba(255,59,48,.12)':'rgba(10,132,255,.08)'}"/><text x="29" y="${y+3}" text-anchor="middle" font-size="9" fill="${muted?'#ff3b30':'var(--text-sub)'}">${strings-s}弦 ${muted?'×':'○'}</text></g><line x1="${left}" y1="${y}" x2="${left+frets*fg}" y2="${y}" stroke="var(--text-sub)" stroke-width="${1+(strings-s)*.18}" opacity=".75"/>`;for(let f=0;f<=frets;f++){const midi=opens[s]+f,x=f===0?left-19:left+(f-.5)*fg;svg+=this._noteSvg(s,f,midi,x,y);}}
         return svg+'</svg>';
     },
-    _noteSvg(s,f,midi,x,y){const target=this.targetMidis.includes(midi),assigned=this.assignments[midi]?.string===s&&this.assignments[midi]?.fret===f,held=this.heldFrets[s]===f,moment=this.momentary?.s===s&&this.momentary?.f===f,fill=assigned?'var(--green)':held?'var(--orange)':target?'var(--prim)':'var(--surf)',stroke=target?'var(--prim)':held?'var(--orange)':'var(--border)',label=target||held||moment?NOTE_NAMES[((midi%12)+12)%12]:'○';return `<g class="virtual-note-hit" data-string="${s}" data-fret="${f}" onpointerdown="InstrumentPage.pointerDown(event,${s},${f},${midi})" onpointerup="InstrumentPage.pointerUp(event,${s},${f},${midi})" onpointercancel="InstrumentPage.pointerCancel(event)"><circle cx="${x}" cy="${y}" r="19" fill="transparent"/><circle cx="${x}" cy="${y}" r="${held||target||moment?12:8}" fill="${fill}" stroke="${stroke}" stroke-width="${held||target?2:1}" ${moment?'filter="drop-shadow(0 0 5px var(--prim))"':''}/><text x="${x}" y="${y+3.5}" text-anchor="middle" font-size="8" fill="${held||target||moment?'#fff':'var(--prim)'}" font-weight="700" pointer-events="none">${label}</text></g>`;},
+    _noteSvg(s,f,midi,x,y){const degree=this.studyNote?.(s,f,midi)||'',target=this.targetMidis.includes(midi),assigned=this.assignments[midi]?.string===s&&this.assignments[midi]?.fret===f,held=this.heldFrets[s]===f,moment=this.momentary?.s===s&&this.momentary?.f===f,fill=assigned?'var(--green)':held?'var(--orange)':target||degree==='1'?'var(--prim)':degree?'var(--teal,var(--prim))':'var(--surf)',stroke=target?'var(--prim)':held?'var(--orange)':'var(--border)',label=target||held||moment?NOTE_NAMES[((midi%12)+12)%12]:degree||'○';return `<g class="virtual-note-hit" data-string="${s}" data-fret="${f}" data-degree="${degree}" onpointerdown="InstrumentPage.pointerDown(event,${s},${f},${midi})" onpointerup="InstrumentPage.pointerUp(event,${s},${f},${midi})" onpointercancel="InstrumentPage.pointerCancel(event)"><circle cx="${x}" cy="${y}" r="19" fill="transparent"/><circle cx="${x}" cy="${y}" r="${held||target||moment||degree?12:8}" fill="${fill}" stroke="${stroke}" stroke-width="${held||target?2:1}" ${moment?'filter="drop-shadow(0 0 5px var(--prim))"':''}/><text x="${x}" y="${y+3.5}" text-anchor="middle" font-size="8" fill="${held||target||moment||degree?'#fff':'var(--prim)'}" font-weight="700" pointer-events="none">${label}</text></g>`;},
     renderFretboard(stage){const vv=window.visualViewport,autoHorizontal=this.orientation==='auto'?((vv?.width||window.innerWidth)>=(vv?.height||window.innerHeight)):this.orientation==='horizontal',axis=autoHorizontal?'y':'x';stage.innerHTML=`<div class="virtual-fret-wrap ${autoHorizontal?'is-horizontal':'vertical'}"><div class="virtual-board-scroll">${this._boardSvg(autoHorizontal)}</div><div class="strum-zone ${autoHorizontal?'strum-vertical':'strum-horizontal'}" id="strum-zone" data-axis="${axis}"><span>扫弦区<br><small>${autoHorizontal?'上高音 · 下低音':'左低音 · 右高音'} · 慢扫＝琶音 · 双指＝制音</small></span></div></div>`;this.bindStrum();},
     pointerDown(e,s,f,midi){e.currentTarget.setPointerCapture?.(e.pointerId);const state={s,f,midi,long:false,timer:null};state.timer=setTimeout(()=>{state.long=true;this.pointerHolds.delete(e.pointerId);this.toggleHeld(s,f);},450);this.pointerHolds.set(e.pointerId,state);},
     pointerUp(e,s,f,midi){const state=this.pointerHolds.get(e.pointerId);if(!state)return;clearTimeout(state.timer);this.pointerHolds.delete(e.pointerId);if(!state.long)this.shortPress(s,f,midi);},
@@ -6165,6 +6486,10 @@ function toast(msg, dur = 1800) {
 <script src="./special-tunings-v1.js"></script>
 <script src="./app-final.js"></script>
 <script src="./drum-workshop.js"></script>
+<script src="./ear-progressions.js"></script>
+<script src="./app-shell.js"></script>
+<script src="./learning-tips.js"></script>
+<script src="./fret-trainer.js"></script>
 <div class="pwa-update" id="pwa-update"><span><strong>发现新版本</strong><br>已在后台下载，可以安全更新。</span><button onclick="PWAUpdate.dismiss()">稍后</button><button class="update-now" onclick="PWAUpdate.apply()">立即更新</button></div>
 </body>
 </html>

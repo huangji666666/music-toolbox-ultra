@@ -43,7 +43,7 @@ const missingIds=requiredIds.filter(id=>!document.getElementById(id));
 check(missingIds.length===0,'本轮关键控件均存在',missingIds.join(', '));
 
 const scriptOrder=[...document.querySelectorAll('script[src]')].map(script=>script.getAttribute('src'));
-check(JSON.stringify(scriptOrder)===JSON.stringify(['./sight-library-v2.js','./special-tunings-v1.js','./app-final.js','./drum-workshop.js']),'最终脚本加载顺序固定');
+check(JSON.stringify(scriptOrder)===JSON.stringify(['./sight-library-v2.js','./special-tunings-v1.js','./app-final.js','./drum-workshop.js','./ear-progressions.js','./app-shell.js','./learning-tips.js','./fret-trainer.js']),'最终脚本加载顺序固定');
 check(document.querySelector('link[href="./app-final.css"]')!==null,'最终样式已加载');
 check(!scriptOrder.some(source=>/v13\.5\.[14]|v13-extension/.test(source)),'发布页面不再加载旧版增量文件');
 check(!/#page-[\w-]+(?:\.active)?\s*\{[^}]*display\s*:/s.test(releaseCss),'候选样式未用页面 ID 改写 display');
@@ -56,7 +56,7 @@ check(/\.virtual-fret-wrap\.is-horizontal[\s\S]*?grid-template-columns[\s\S]*?\.
 check(/\.sight-playback-strip\{display\s*:\s*none\s*!important/.test(releaseCss)&&/\.sight-playback-strip\.active\{display\s*:\s*block\s*!important/.test(releaseCss),'视唱播放进度仅在播放时显示');
 check(/\.jianpu-pitch\.beams-1::after/.test(releaseCss)&&/\.jianpu-extension/.test(releaseCss),'简谱使用下划线与延音横线表达时值');
 check(/\.ramp-lite-stepper[\s\S]*?grid-template-columns/.test(releaseCss)&&/data-mode="lite"/.test(releaseCss),'精简渐速间隔控制布局存在');
-check(document.querySelectorAll('.settings-community button').length===2,'赞助与反馈入口各一项');
+check(['openSponsor','openContact'].every(fn=>document.querySelectorAll(`.settings-community button[onclick="ContactSupport.${fn}()"]`).length===1),'赞助与反馈入口各一项');
 
 check(/\.chord-root-ruler\{[\s\S]*?--root-edge\s*:\s*12px[\s\S]*?height\s*:\s*46px/.test(releaseCss)&&/var\(--root-step\) \* \(100% - 2 \* var\(--root-edge\)\) \/ 12/.test(releaseCss),'根音刻度尺保持紧凑并使用十二等分坐标');
 check(/\.chord-root-ruler-tick span\{[\s\S]*?font-size\s*:\s*12px/.test(releaseCss)&&/\.chord-root-ruler-value\{[\s\S]*?left\s*:\s*calc\(var\(--root-edge\)/.test(releaseCss)&&/transform\s*:\s*translateX\(-50%\)/.test(releaseCss)&&/background\s*:\s*var\(--prim\)/.test(releaseCss),'根音气泡始终以自身中心对齐选中刻度，不在首尾偏移');
@@ -68,7 +68,7 @@ check(document.querySelector('.sight-score-shell + .sight-score-navigation')!==n
 check(/\.sight-systems/.test(releaseCss)&&/\.sight-layout-choice/.test(releaseCss),'视唱多行与布局选择样式存在');
 check(fs.existsSync(path.join(root,'.github','workflows','pages.yml')),'GitHub Actions 整目录发布配置存在');
 
-for(const file of ['app-final.js','drum-workshop.js','sw.js','tools/build_standalone.mjs','tools/build_release.mjs','tools/build_sight_library.mjs','tools/build_drum_samples.mjs']){
+for(const file of ['app-final.js','drum-workshop.js','ear-progressions.js','app-shell.js','tools/build_expanded_drums.mjs','sw.js','tools/build_standalone.mjs','tools/build_release.mjs','tools/build_sight_library.mjs','tools/build_drum_samples.mjs']){
     try{execFileSync(process.execPath,['--check',path.join(root,file)],{stdio:'pipe'});check(true,`${file} 语法`);}
     catch(error){check(false,`${file} 语法`,String(error.stderr||error.message));}
 }
@@ -121,19 +121,36 @@ try{
     run(read('special-tunings-v1.js'),'special-tunings-v1.js');
     run(releaseJs,'app-final.js');
     run(read('drum-workshop.js'),'drum-workshop.js');
+    run(read('ear-progressions.js'),'ear-progressions.js');
+    run(read('app-shell.js'),'app-shell.js');
     check(true,'完整脚本链可加载');
 }catch(error){
     check(false,'完整脚本链可加载',error.stack||error.message);
+    console.error('完整脚本链载入失败',error.stack||error.message);
 }
 
 const evaluate=expression=>run(expression,'qa-expression.js');
 if(!failures.some(item=>item.startsWith('完整脚本链可加载'))){
 
-    check(evaluate("Object.keys(window.MTU_ACCENT_SAMPLE_META).length")===96&&selectedAudio.every(s=>evaluate('window.MTU_ACCENT_SAMPLE_META['+JSON.stringify(s.id)+'].label').includes(s.auditionId)),'原 90 音源保留，加入 T04–T06 六个确认镲音');
+    check(evaluate("Object.keys(window.MTU_ACCENT_SAMPLE_META).length")===120&&selectedAudio.every(s=>evaluate('window.MTU_ACCENT_SAMPLE_META['+JSON.stringify(s.id)+'].label').includes(s.auditionId)),'原 96 音源保留，加入 24 个原创短鼓音');
     check(evaluate("Object.values(METRO_KITS).every(k=>[k.accent,k.beat,k.subdivision,k.swing,...k.tracks].flat().every(s=>Metro._allSounds().includes(s)))"),'12 套预设仅使用确认音源及保留的电子 Click');
     check(evaluate("(()=>{const channels=[new Float32Array(4410).fill(.1),new Float32Array(4410).fill(.1)],b={numberOfChannels:2,length:4410,sampleRate:44100,getChannelData:i=>channels[i]};const quiet=AudioEngine.balanceAccentSample(b);channels.forEach(c=>c.fill(1));return quiet===1&&AudioEngine.balanceAccentSample(b)===.5;})()"),'响度平衡不压低弱素材，强素材衰减最多 6 dB，不追加增益');
-    const dynamics=evaluate(`(()=>{const old={ctx:AudioEngine.ctx,click:AudioEngine.playClick,beat:AudioEngine.playMetronomeBeat,signature:Metro.signature,custom:Metro.customMode,sub:Metro.sub,swing:Metro.swingEnabled,mode:Metro.accentMode};try{AudioEngine.ctx={currentTime:0};const hits=[];AudioEngine.playClick=(t,a,s,v)=>hits.push(v);AudioEngine.playMetronomeBeat=(t,a,b,s,v)=>hits.push(v);Metro.signature='4/4';Metro.customMode=false;Metro.sub=1;Metro.swingEnabled=false;Metro.accentMode='meter';for(let i=0;i<4;i++)Metro._scheduleBeat(i,0);const main=hits.splice(0);for(let i=0;i<4;i++)Metro._rampScheduleBeat(i,0);return {main,ramp:hits};}finally{AudioEngine.ctx=old.ctx;AudioEngine.playClick=old.click;AudioEngine.playMetronomeBeat=old.beat;Metro.signature=old.signature;Metro.customMode=old.custom;Metro.sub=old.sub;Metro.swingEnabled=old.swing;Metro.accentMode=old.mode;}})()`);
-    check(JSON.stringify(dynamics.main)===JSON.stringify([.86,.58,.70,.58])&&JSON.stringify(dynamics.ramp)===JSON.stringify(dynamics.main),'主节拍器与渐速训练共用强弱比例');
+    const dynamics=evaluate(`(()=>{
+      const audio={ctx:AudioEngine.ctx,playClick:AudioEngine.playClick,playMetronomeBeat:AudioEngine.playMetronomeBeat};
+      const metro=Object.fromEntries(['signature','customMode','sub','swingEnabled','accentMode','accentProfile','beatVoiceMode'].map(k=>[k,Metro[k]]));
+      try{
+        AudioEngine.ctx={currentTime:0};const hits=[];
+        AudioEngine.playClick=(t,a,s,v)=>hits.push(v);AudioEngine.playMetronomeBeat=(t,a,b,s,v)=>hits.push(v);
+        Object.assign(Metro,{signature:'4/4',customMode:false,sub:1,swingEnabled:false,accentMode:'meter',accentProfile:'meter',beatVoiceMode:'dynamics'});
+        for(let i=0;i<4;i++)Metro._scheduleBeat(i,0);const main=hits.splice(0);
+        for(let i=0;i<4;i++)Metro._rampScheduleBeat(i,0);const ramp=hits.splice(0);
+        Metro.accentProfile='blend';Metro.beatVoiceMode='kit';const blend=[];
+        AudioEngine.playClick=(t,a,s,v)=>blend.push({t,s,v});for(let i=0;i<4;i++)Metro._scheduleBeat(i,i);
+        return {main,ramp,blend,base:Metro.slots.beat,accent:Metro.slots.accent};
+      }finally{Object.assign(AudioEngine,audio);Object.assign(Metro,metro);}
+    })()`);
+    check(JSON.stringify(dynamics.main)===JSON.stringify([.95,.48,.68,.48])&&JSON.stringify(dynamics.ramp)===JSON.stringify(dynamics.main),'主节拍器与渐速训练共用强弱比例');
+    check(dynamics.blend.length===5&&[0,1,2,3].every(t=>dynamics.blend.some(h=>h.t===t&&h.s===[dynamics.base].flat()[0]))&&dynamics.blend.some(h=>h.t===0&&h.s===[dynamics.accent].flat()[0]),'首拍叠加方案四下都有底音，仅首拍叠加重音音色');
     check(evaluate("Metro._scheduleBeat.toString().includes('this._subdivisionLevel')&&Metro._rampScheduleBeat.toString().includes('this._subdivisionLevel')&&Metro._subdivisionLevel(false)===Metro.levels.subdivision&&Metro._subdivisionLevel(true)===Metro.levels.swing"),'主节拍器与渐速训练细分/Swing 使用同一力度规则');
     check(evaluate(`(()=>{const old=AudioEngine.playClick,hits=[];try{AudioEngine.playClick=(t,a,s,v)=>hits.push({s,v});AudioEngine.playMetronomeBeat(0,true,'elec_tick',['accent_cc0_02','accent_cc0_02','metro_20'],1);return hits.length===3&&Math.abs(hits.reduce((n,h)=>n+h.v,0)-1)<1e-9&&hits.some(h=>h.s==='metro_20');}finally{AudioEngine.playClick=old;}})()`),'重拍混音权重不超过 1，去重且保留旧设置叠层');
 
@@ -191,7 +208,7 @@ if(!failures.some(item=>item.startsWith('完整脚本链可加载'))){
 
     evaluate('SightSinging.init()');
     check(evaluate("!AudioEngine.init.toString().includes('getUserMedia')&&AudioEngine.ensureMicrophone.toString().includes('_openMicrophone')&&AudioEngine._openMicrophone.toString().includes('getUserMedia')"),'播放初始化与麦克风申请已分离');
-    check(evaluate("Metro.start.toString().includes('await this._prepareCurrentSounds()')"),'节拍器等待默认音色后才调度第一拍');
+    check(await evaluate(`(async()=>{const ctx=AudioEngine.ctx,prepare=Metro._prepareCurrentSounds,schedule=Metro._scheduler;let release,count=0;AudioEngine.ctx={state:'running',currentTime:1};Metro._prepareCurrentSounds=()=>new Promise(resolve=>{release=resolve});Metro._scheduler=()=>count++;try{const task=Metro.start();const waiting=!Metro.playing&&count===0;release();await task;return waiting&&Metro.playing&&count===1;}finally{Metro.stop();Metro._prepareCurrentSounds=prepare;Metro._scheduler=schedule;AudioEngine.ctx=ctx;}})()`),'节拍器等待默认音色后才调度第一拍');
     const metroStartFailure=await evaluate(`(async()=>{const init=AudioEngine.init,ctx=AudioEngine.ctx,scheduler=Metro._scheduler,token=Metro._finalStartToken,playing=Metro.playing;let scheduled=false;AudioEngine.ctx=null;AudioEngine.init=async()=>{throw new Error('qa-audio-init')};Metro.playing=false;Metro._starting=false;Metro._scheduler=()=>{scheduled=true};await Metro.start();const result={playing:Metro.playing,starting:Metro._starting,scheduled};AudioEngine.init=init;AudioEngine.ctx=ctx;Metro._scheduler=scheduler;Metro._finalStartToken=token;Metro.playing=playing;return result;})()`);
     check(!metroStartFailure.playing&&!metroStartFailure.starting&&!metroStartFailure.scheduled,'节拍器音频准备失败时保持停止且不进入调度');
     check(evaluate("Tuner.startLoop.toString().includes('displayHoldMs')"),'调音器包含延音保持与自适应门限');
@@ -267,9 +284,9 @@ if(fs.existsSync(standalonePath)){
     const standalone=fs.readFileSync(standalonePath,'utf8'),standaloneDocument=parseHTML(standalone).document;
     check(!standaloneDocument.querySelector('script[src]'),'单文件没有外部核心脚本');
     check(!standaloneDocument.querySelector('link[href="./app-final.css"]'),'单文件已内嵌最终样式');
-    check(standaloneDocument.querySelectorAll('script[data-final-module]').length===4&&standaloneDocument.querySelectorAll('style[data-final-module]').length===1,'单文件内嵌最终脚本与样式模块');
+    check(JSON.stringify([...standaloneDocument.querySelectorAll('script[data-final-module]')].map(el=>el.dataset.finalModule))===JSON.stringify(['sight-library','special-tunings','app-final','drum-workshop','ear-progressions','app-shell','learning-tips','fret-trainer'])&&standaloneDocument.querySelectorAll('style[data-final-module]').length===2,'单文件内嵌最终脚本与样式模块');
     check(standalone.includes('data:audio/mpeg;base64,'),'单文件内嵌 C01 制音素材');
-    check((standalone.match(/data:audio\/wav;base64,/g)||[]).length===96,'单文件内嵌全部 96 个正式音源');
+    check((standalone.match(/data:audio\/wav;base64,/g)||[]).length===120,'单文件内嵌全部 120 个正式音源');
     check((standalone.match(/data:image\/jpeg;base64,/g)||[]).length>=3,'单文件内嵌赞助与联系图片');
     const standaloneIds=new Map();for(const element of standaloneDocument.querySelectorAll('[id]'))standaloneIds.set(element.id,(standaloneIds.get(element.id)||0)+1);
     check(![...standaloneIds.values()].some(count=>count>1),'单文件 DOM ID 无重复');
@@ -302,13 +319,22 @@ check(evaluate(`(()=>{const w=DrumWorkshop;w.state=w.defaultState();w.state.sign
 check(evaluate(`(()=>{SightSinging.scoreLayout='auto';SightSinging.scoreZoom=100;document.getElementById('sight-score').innerHTML='<svg viewBox="0 0 660 180"></svg>';SightSinging.applyScoreZoom();return document.querySelector('#sight-score svg').style.getPropertyValue('min-width')==='100%';})()`),'视唱自动单行不再强制 660px 横向溢出');
 check(evaluate("SPECIAL_TUNINGS_V1.records.filter(r=>r.id.startsWith('sethares-')).length>=15&&SPECIAL_TUNINGS_V1.records.filter(r=>r.id.startsWith('sethares-')).every(r=>r.confidence==='reference'&&r.reviewedAt==='2026-09-16')"),'新增调弦注明核验日期、来源及参考八度');
 check(evaluate(`(()=>{ChordLib.capoMode='spider';ChordLib.spider=Array.from({length:6},(_,i)=>({mode:[1,3].includes(i)?'harmonic':'off',fret:7}));ChordLib.ensureVoicingState();const s=ChordLib.voicingSnapshot;return s.key===ChordLib.voicingStateKey()&&s.frets.join(',')===ChordLib.voicings[ChordLib.voicingIdx].frets.join(',')&&s.notes.length>0&&s.notes.every(n=>[0,4,7].includes(n.midi%12));})()`),'蜘蛛夹改变后指法和试听快照自动同步，五／三弦 H7 不混入 D');
-check(evaluate(`(()=>{TunerAssist.renderKeyOctave(0);const low=document.querySelectorAll('#range-key-octave button').length;TunerAssist.renderKeyOctave(8);const high=document.querySelector('#range-key-octave button').dataset.rangeMidi;TunerAssist.renderKeyOctave(4);return low===3&&high==='108'&&document.querySelectorAll('#range-key-octave button').length===12;})()`),'大琴键八度分组覆盖 A0–C8，无越界音高');
+check(evaluate("!document.querySelector('.range-play-panel,.range-target-label')&&document.querySelectorAll('.tuner-range-keys button').length===88&&[...document.querySelectorAll('.tuner-range-target')].length>0&&[...document.querySelectorAll('.tuner-range-target')].every(dot=>dot.title.includes('弦')&&document.querySelector('[data-range-midi=\"'+dot.dataset.midi+'\"]'))"),'88 键可试听，目标点带弦号并对应真实琴键，不生成重复的音名气泡');
 const trapApproved=JSON.parse(read('licenses/trap-approved-sources.json')).samples;
 check(trapApproved.length===6&&trapApproved.every(s=>{const b=fs.readFileSync(path.join(root,s.file));let peak=0;for(let i=44;i<b.length;i+=2)peak=Math.max(peak,Math.abs(b.readInt16LE(i)));return peak===32767&&b.length===s.bytes&&crypto.createHash('sha256').update(b).digest('hex')===s.sha256&&appShell.includes('./'+s.file);}), 'T04–T06 六个确认样本保持原试听哈希、标准化与完整离线缓存');
 check(evaluate("Object.keys(METRO_KITS)[1]==='drum_t06'&&!Object.hasOwn(METRO_KITS,'shakers')"),'T06 位于普通节拍器第二项，移除摇奏铃鼓预设');
 check(evaluate(`(()=>{const s=DrumWorkshop.defaultState();return s.kit==='t06'&&s.tracks[0].notes.map(e=>e.t).join(',')==='0,4'&&s.tracks[3].notes.map(e=>e.t).join(',')==='2,6'&&s.tracks[2].notes.filter(e=>e.t%1===0).map(e=>e.t).join(',')==='1,3,5,7'&&s.tracks[2].notes.every(e=>e.v===(e.t%1===0?82:70))&&[1,4,5,6,7].every(row=>!s.tracks[row].notes.length);})()`),'T06 默认只有首拍底鼓、第三拍 Clap、二四拍与略弱八分细分闭镲');
 const capoNotice=evaluate(`(()=>{Tuner.presetName='Standard';Tuner.customTuning=null;GlobalCapo.mode='spider';GlobalCapo.spider=Array.from({length:6},(_,i)=>({mode:[1,3].includes(i)?'harmonic':'off',fret:7}));GlobalCapo.apply(false);const el=document.getElementById('tuner-range-capo'),text=el.textContent,shown=!el.hidden;GlobalCapo.setMode('none');return {shown,text,hidden:document.getElementById('tuner-range-capo').hidden};})()`);
 check(capoNotice.shown&&capoNotice.text.includes('蜘蛛变调夹生效中')&&capoNotice.text.includes('5／1弦同为 E4')&&capoNotice.hidden,'蜘蛛夹同音 E4 明示弦号，关闭变调夹后高亮提示消失',JSON.stringify(capoNotice));
+check(evaluate(`(()=>{const w=DrumWorkshop;for(const style of Object.keys(w.styleCatalog)){const variants=new Set();for(let variant=0;variant<8;variant++){w.state={...w.defaultState(),style,variant};w.generate(true);if(!w.validState(w.state))return false;variants.add(JSON.stringify(w.state.tracks));}if(variants.size!==8)return false;}return Object.keys(w.styleCatalog).length===28;})()`),'28 种风格各 8 个实际不同、可保存的节奏');
+check(evaluate(`(()=>{const w=DrumWorkshop;for(const signature of ['2/2','3/4','5/8','7/8','12/8'])for(let variant=0;variant<8;variant++){w.state={...w.defaultState(),signature,variant};w.generate(true);if(!w.validState(w.state))return false;}w.state=w.defaultState();const before=JSON.stringify(w.state);w.chooseVariant(7);w.undo();return JSON.stringify(w.state)===before;})()`),'不规则拍号变体不越界，选择变体一次撤销恢复');
+check(evaluate(`(()=>{const p=ProgressionTraining;p.selection=new Set(p.types.map(t=>t.id));return p.templates.length===64&&new Set(p.templates.map(t=>t.mode+':'+t.steps.join(' '))).size===64&&p.templates.every(t=>{const q=p.build(t,t.mode==='minor'?'Natural Minor':'Major',0);return q&&q.chords.every(c=>c.notes.every(Number.isFinite));});})()`),'64 个独立进行模板均可生成有限音高');
+check(evaluate(`(()=>{const p=ProgressionTraining;p.selection=new Set(['maj','min','dim']);const c=p.build(p.templates[0],'Major',2);return c.chords.map(c=>c.label).join(',')==='I,V,vi,IV'&&c.chords[0].notes.join(',')==='50,54,57'&&c.chords.every(c=>p.selection.has(c.type))&&!p.chord('5:7','Major',0);})()`),'和弦移调、大小罗马数字与勾选范围一致，不替换未选指定类型');
+check(evaluate(`(()=>{const p=ProgressionTraining;p.secondary=false;p.borrowed=false;const ok=!p.chord('V/2','Major',0)&&!p.chord('4m','Major',0);p.secondary=true;p.borrowed=true;return ok&&!p.compatible(p.templates[0],'Lydian');})()`),'副属／借用开关有效，大调模板不冒充其他调式');
+check(await evaluate(`(async()=>{const e=EarTraining,prepare=AudioEngine.prepareInstrument,play=AudioEngine.playInstrument,sleep=e._sleep,ctx=AudioEngine.ctx,calls=[];let clock=0;AudioEngine.ctx={currentTime:1};AudioEngine.prepareInstrument=async()=>{};AudioEngine.playInstrument=(...args)=>calls.push({args,clock});e._sleep=async ms=>{clock+=ms;};try{e.referenceEnabled=false;await e._playReferenceScale({keyRoot:0,scaleType:'Major',bpm:120});if(calls.length)return false;e.referenceEnabled=true;await e._playReferenceScale({keyRoot:0,scaleType:'Major',bpm:120});if(calls.length!==10)return false;calls.length=0;e.intervalPlayback='harmonic';await e._playTarget({level:'interval',targetNotes:[60,67]});if(calls.length!==2||calls[0].args[4]!==calls[1].args[4]||calls[0].clock!==calls[1].clock)return false;calls.length=0;e.intervalPlayback='melodic';await e._playTarget({level:'interval',targetNotes:[60,67]});return calls.length===2&&calls[1].clock-calls[0].clock===550;}finally{AudioEngine.prepareInstrument=prepare;AudioEngine.playInstrument=play;AudioEngine.ctx=ctx;e._sleep=sleep;}})()`),'参考调式可完全关闭；和声音程同步、旋律音程间隔 550ms');
+check(evaluate(`(()=>{const m=Metro,play=AudioEngine.playClick,events=[];AudioEngine.playClick=(...args)=>events.push(args);try{m.beatVoiceMode='dynamics';m.accentMode='meter';m._playMainBeat(0,0,true,false);m._playMainBeat(1,1,false,false);m._playMainBeat(2,2,false,true);return new Set(events.map(e=>e[2])).size===1&&events[0][3]>events[2][3]&&events[2][3]>events[1][3]&&m.subSound(false)===events[0][2];}finally{AudioEngine.playClick=play;}})()`),'普通节拍器强／次强／弱及细分同音色，仅力度变化');
+const expandedDrums=JSON.parse(read('licenses/expanded-drum-sources.json')).samples;
+check(expandedDrums.length===24&&expandedDrums.every(s=>{const b=fs.readFileSync(path.join(root,s.file));let peak=0;for(let i=44;i<b.length;i+=2)peak=Math.max(peak,Math.abs(b.readInt16LE(i)));return peak===32767&&crypto.createHash('sha256').update(b).digest('hex')===s.sha256&&appShell.includes('./'+s.file);})&&expandedDrums.find(s=>s.id==='drum_dry_kick').duration<.14,'24 个新鼓音峰值标准化、来源哈希与离线清单一致，T06 底鼓短于 140ms');
 const result={version:version.version,passed:passes.length,failed:failures.length,passes,failures};
 fs.writeFileSync(path.join(root,'release-validation.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify(result,null,2));

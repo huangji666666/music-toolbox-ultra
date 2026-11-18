@@ -1,0 +1,105 @@
+{
+  "schema": "music-toolbox-learning-source-v1",
+  "policy": "只保存自己的短解释和来源链接，不复制外部文章全文",
+  "sources": [
+    {"id":"berklee-guitar-scales","name":"Berklee Online · Guitar Scales 101","url":"https://online.berklee.edu/courses/guitar-scales-101","topics":["音阶构成","把位","指板熟练度"]},
+    {"id":"berklee-guitar-improv","name":"Berklee Online · Guitar Improvisation Techniques","url":"https://online.berklee.edu/courses/guitar-improvisation-techniques","topics":["即兴短句","动机发展","模进"]},
+    {"id":"berklee-guitar-fundamentals","name":"Berklee Online · Guitar Fundamentals","url":"https://online.berklee.edu/courses/guitar-fundamentals","topics":["指弹","分解和弦","旋律编配"]},
+    {
+      "id": "openstax-math-music",
+      "name": "OpenStax Contemporary Mathematics · Math and Music",
+      "url": "https://openstax.org/books/contemporary-mathematics/pages/13-4-math-and-music",
+      "topics": ["频率", "音高", "半音", "全音", "八度", "A4"]
+    },
+    {
+      "id": "openlearn-music-theory",
+      "name": "OpenLearn · An introduction to music theory",
+      "url": "https://www.open.edu/openlearn/blocks/ocwstatement/statement.php?id=333",
+      "topics": ["记谱", "节奏", "拍号", "音程", "三和弦", "基础耳训"]
+    },
+    {
+      "id": "openlearn-circle-of-fifths",
+      "name": "OpenLearn · Circle of fifths",
+      "url": "https://www.open.edu/openlearn/history-the-arts/music/an-introduction-music-theory/content-section-6.5",
+      "topics": ["纯五度", "调号", "五度圈", "关系小调"]
+    },
+    {
+      "id": "berklee-rhythm-devices",
+      "name": "Berklee · Two Cool Rhythmic Devices",
+      "url": "https://college.berklee.edu/bt/212/lesson.html",
+      "topics": ["切分", "弱起", "节奏位移", "重音"]
+    },
+    {
+      "id": "berklee-rhythmic-ear",
+      "name": "Berklee · Rhythmic Ear Training",
+      "url": "https://college.berklee.edu/courses/et-341",
+      "topics": ["节奏听辨", "复节奏", "切分", "复杂拍号"]
+    },
+    {
+      "id": "berklee-ear-training",
+      "name": "Berklee · Ear Training Courses",
+      "url": "https://college.berklee.edu/ear-training/ear-training-courses",
+      "topics": ["旋律", "音程", "和声", "节奏", "视唱"]
+    },
+    {
+      "id": "fender-caged-major-scales",
+      "name": "Fender · Major Guitar Scales and the CAGED System",
+      "url": "https://www.fender.com/articles/scales/major-guitar-scales",
+      "topics": ["CAGED", "C 型", "A 型", "G 型", "E 型", "D 型", "大调音阶"]
+    },
+    {
+      "id": "yamaha-caged-system",
+      "name": "Yamaha · Using the CAGED System",
+      "url": "https://hub.yamaha.com/guitars/g-how-to/using-the-caged-system/",
+      "topics": ["开放和弦", "根音位置", "和弦音", "把位连接", "变调夹"]
+    },
+    {
+      "id": "justinguitar-caged-shapes",
+      "name": "JustinGuitar · Chord Shape Explorer",
+      "url": "https://www.justinguitar.com/modules/chord-shape-explorer",
+      "topics": ["CAGED 形状", "开放和弦", "移动和弦", "指板练习"]
+    },
+    {
+      "id": "fender-guitar-techniques",
+      "name": "Fender · Arpeggios and Advanced Guitar Techniques",
+      "url": "https://www.fender.com/articles/scales/playing-arpeggios-everything-you-need-to-know",
+      "topics": ["琶音", "扫拨", "经济拨弦", "跳弦", "点弦", "击弦", "勾弦"]
+    },
+    {
+      "id": "mdn-web-audio",
+      "name": "MDN · Web Audio API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API",
+      "topics": ["音频上下文", "节点", "增益", "音频同步"]
+    },
+    {
+      "id": "mdn-page-visibility",
+      "name": "MDN · Page Visibility API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API",
+      "topics": ["后台暂停", "页面可见性", "性能"]
+    },
+    {
+      "id": "mdn-reduced-motion",
+      "name": "MDN · prefers-reduced-motion",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion",
+      "topics": ["减少动效", "动画降级", "无障碍"]
+    },
+    {
+      "id": "mdn-vibration",
+      "name": "MDN · Vibration API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API",
+      "topics": ["震动反馈", "移动设备", "能力检测"]
+    },
+    {
+      "id": "wcag-target-size",
+      "name": "W3C WAI · WCAG 2.2 Target Size",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "topics": ["触控目标", "间距", "可访问性"]
+    },
+    {
+      "id": "mtu-original",
+      "name": "音乐工具箱 Ultra 原创解释",
+      "url": "local://music-toolbox-ultra/original",
+      "topics": ["产品操作", "练习建议", "调弦提示", "本地算法说明"]
+    }
+  ]
+}

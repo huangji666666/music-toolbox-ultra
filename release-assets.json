@@ -1,19 +1,29 @@
 {
   "schema": 1,
-  "version": "13.5.13",
-  "build": "2026.09.17.1",
-  "cache": "music-toolbox-ultra-v13.5.13-20260917-1",
-  "generatedAt": "2026-09-17T00:00:00.000Z",
+  "version": "13.5.28",
+  "build": "2026.11.19.7",
+  "cache": "music-toolbox-ultra-v13.5.28-20261119-7",
+  "generatedAt": "2026-11-19T00:00:00.000Z",
   "assets": [
     {
       "url": "./app-final.css",
-      "bytes": 57636,
-      "sha256": "b149775584fe054cdc61c09daef90e21ff527f8b2d375c6e4869efc4a0ffc731"
+      "bytes": 110795,
+      "sha256": "2ea6209321242e339f2faafcb9260a54232a414484ef80b1196b58859f0db5fb"
     },
     {
       "url": "./app-final.js",
-      "bytes": 375276,
-      "sha256": "5320ef224aae873e134c866010fb9482a1936581b5443df16ca04030544d9c0a"
+      "bytes": 465672,
+      "sha256": "6ce1fa28855d67bf441c29297f98c76641f9e6cfc6703c9a3a7e119df3bd74d0"
+    },
+    {
+      "url": "./app-shell.css",
+      "bytes": 71722,
+      "sha256": "9fa71f7c8c91f35c9688c6c5463f87ba6e51297d9d83d1e0412cd5487e68d217"
+    },
+    {
+      "url": "./app-shell.js",
+      "bytes": 37791,
+      "sha256": "0991fdac5b7266b1b65758cf986f5730280869b9afc31b227a7dae9ec8915406"
     },
     {
       "url": "./assets/contact-douyin.jpg",
@@ -101,6 +111,86 @@
       "sha256": "0e7430b564cac02b76f7b4f1aa8860e9f732d186549eea07df04bc0e4b75abf4"
     },
     {
+      "url": "./assets/drums/dry-bass.wav",
+      "bytes": 29680,
+      "sha256": "9831a2c57135ce08a3ceb2deae408892dd2b32a743d3da7cb808f7de91985ff5"
+    },
+    {
+      "url": "./assets/drums/dry-clap.wav",
+      "bytes": 11334,
+      "sha256": "7c0139936bdc9b45c95a3f3e51f8b794f1844c74c9a1057cfcc317dfcdc15841"
+    },
+    {
+      "url": "./assets/drums/dry-crash.wav",
+      "bytes": 32502,
+      "sha256": "bcccc23451d66ed9a6c95700aff5a26dca925370cfbdd5389edf760ff2de7b72"
+    },
+    {
+      "url": "./assets/drums/dry-hat.wav",
+      "bytes": 4632,
+      "sha256": "e9ddff25b6ee04d2ee1d44d9a7fdc3176f3d188154e2c02a1eee54ef5ed85efa"
+    },
+    {
+      "url": "./assets/drums/dry-kick.wav",
+      "bytes": 12040,
+      "sha256": "f9e80315dd5c6439e12bbd6309e9cfc3507428e23bfd67c3f7e99dba7dbe1182"
+    },
+    {
+      "url": "./assets/drums/dry-openhat.wav",
+      "bytes": 18390,
+      "sha256": "b0523c2d49cf87a492b176b323aec25fc757535ff7629de36c2051f11f0a7d21"
+    },
+    {
+      "url": "./assets/drums/dry-rim.wav",
+      "bytes": 5690,
+      "sha256": "a723c0bbfa4882fc742e9ece568c34bab83c3beddb2d6bc6beaec5dbbe5a9eaf"
+    },
+    {
+      "url": "./assets/drums/dry-snare.wav",
+      "bytes": 13452,
+      "sha256": "be2ef09357835e679be5f930cdf3e677e3198579297fe0f751d18955ad3e8000"
+    },
+    {
+      "url": "./assets/drums/dust-bass.wav",
+      "bytes": 44498,
+      "sha256": "e5e5c43dc8ec0e35fe68df2753afa964d28a544a5c5b29068168bb004130f48b"
+    },
+    {
+      "url": "./assets/drums/dust-clap.wav",
+      "bytes": 16980,
+      "sha256": "56fa6cffef4aadb11d8adc2766661c3dbe01021c677effed0c15c6c5c7bb2f8e"
+    },
+    {
+      "url": "./assets/drums/dust-crash.wav",
+      "bytes": 48732,
+      "sha256": "1f8c53cd27c57f0cfbac3cd5d5857e514190c90e5370eb23a525049436eb4010"
+    },
+    {
+      "url": "./assets/drums/dust-hat.wav",
+      "bytes": 6924,
+      "sha256": "5fa245d48866e4bd97da6dbc9a924fe14873672c619942b9961ecb8320d19a94"
+    },
+    {
+      "url": "./assets/drums/dust-kick.wav",
+      "bytes": 18038,
+      "sha256": "6119377936b2cce288c667c49e4dfdee0a7d11f5f1b1e3438ad4edf30d718046"
+    },
+    {
+      "url": "./assets/drums/dust-openhat.wav",
+      "bytes": 27564,
+      "sha256": "ad9150c4e2152a76dedf3916f4c83f8448e844f1f44855d5990cbe2f2c5320f0"
+    },
+    {
+      "url": "./assets/drums/dust-rim.wav",
+      "bytes": 8512,
+      "sha256": "173703bdc22cac4a2cd428300a2290db2559290773005fb22785a99da18931f9"
+    },
+    {
+      "url": "./assets/drums/dust-snare.wav",
+      "bytes": 20154,
+      "sha256": "e33996cacf8314a94832bcbc1f639bf9e521b9a17e5b0a2f09ad1bc96be37809"
+    },
+    {
       "url": "./assets/drums/house-bass.wav",
       "bytes": 51642,
       "sha256": "ca5d4c906ff86f8a5f5e743a72b266e12c9635875131a2ae8a380c2792ef2d31"
@@ -139,6 +229,46 @@
       "url": "./assets/drums/house-snare.wav",
       "bytes": 21478,
       "sha256": "915f6933cdbd7dbab90818adc986724f28ba4cffc682e22673944b8af3480105"
+    },
+    {
+      "url": "./assets/drums/punch-bass.wav",
+      "bytes": 37088,
+      "sha256": "cebdad67e8b842f01998dc484973566308c7a80186045e6343eee3c677478d52"
+    },
+    {
+      "url": "./assets/drums/punch-clap.wav",
+      "bytes": 14156,
+      "sha256": "9248a3788a16157a9b0af9a4065313c581d8a85e87162b26b65d141b66bd795a"
+    },
+    {
+      "url": "./assets/drums/punch-crash.wav",
+      "bytes": 40616,
+      "sha256": "9deafd379b8343b1e8c0534891477b728c26fecbd788a99bd3aacd2ff8fa6966"
+    },
+    {
+      "url": "./assets/drums/punch-hat.wav",
+      "bytes": 5778,
+      "sha256": "fd901869c83b3d790d718c6233f976e0322c8c1f24021e1226e3d3a9b86e1880"
+    },
+    {
+      "url": "./assets/drums/punch-kick.wav",
+      "bytes": 15040,
+      "sha256": "ac84ab6a0a17666c5549eb2c62072fcb5b98c8f4514440ad8624e65dbe969c67"
+    },
+    {
+      "url": "./assets/drums/punch-openhat.wav",
+      "bytes": 22976,
+      "sha256": "c41e23552f70607130404e22b28bb7598fc631c38c8c53afdb75ffe3c4ad78fe"
+    },
+    {
+      "url": "./assets/drums/punch-rim.wav",
+      "bytes": 7100,
+      "sha256": "12898bd2825c9a8f0db7ff4665f653912d614fb9e722504c25e80830ef9ed894"
+    },
+    {
+      "url": "./assets/drums/punch-snare.wav",
+      "bytes": 16802,
+      "sha256": "8793b0de98dc2a4916a87d355acf60faaf480245cce99ba9524fe4e559850197"
     },
     {
       "url": "./assets/drums/t04-hat.wav",
@@ -517,8 +647,18 @@
     },
     {
       "url": "./drum-workshop.js",
-      "bytes": 28694,
-      "sha256": "fd01c1983caaa865cccda359790ce2ddc470daaaf297779640786e4bdb91ebe6"
+      "bytes": 44236,
+      "sha256": "e69d244daf7520a444e654b55e805ea2ac941c6b6313b44926a2d16820e27d86"
+    },
+    {
+      "url": "./ear-progressions.js",
+      "bytes": 20162,
+      "sha256": "4eaa5d9a5aea4f025ab861a366e5e78bf3754f5ee3896ade53a223327309c214"
+    },
+    {
+      "url": "./fret-trainer.js",
+      "bytes": 13432,
+      "sha256": "edc5c38cc01557cc0d170a02aa2d3300dfe590c81ba81392ab5bcc87b0383445"
     },
     {
       "url": "./icons/app-icon.svg",
@@ -542,8 +682,13 @@
     },
     {
       "url": "./index.html",
-      "bytes": 4544205,
-      "sha256": "31bab9178d3a9ee0089dfc0b19138ff6510cff45c2b6ca54d9950583a521c414"
+      "bytes": 4570244,
+      "sha256": "af64fdd8bf0cbb45856b95718b38a3033e5bec1ca997035166a4dc019feb43b0"
+    },
+    {
+      "url": "./learning-tips.js",
+      "bytes": 44258,
+      "sha256": "e4c8a178bd3256b535371783ce62344b942bcef54546bcfb7ec594b670eb1c77"
     },
     {
       "url": "./licenses/C01-muted-strum-CC0.txt",
@@ -569,6 +714,21 @@
       "url": "./licenses/drum-sources.json",
       "bytes": 28476,
       "sha256": "44379259448c6881aab72cfdce3d597fde6637aa5df7089375e4173461aff3fc"
+    },
+    {
+      "url": "./licenses/expanded-drum-sources.json",
+      "bytes": 13220,
+      "sha256": "fa5a503bf5f0245b7bca790750322765c427fb5c1e392261c17495aa75a7fe3a"
+    },
+    {
+      "url": "./licenses/learning-sources.json",
+      "bytes": 4906,
+      "sha256": "25c351b772094dcb72698f0c92a8fe3fbe84f17be1aa6dedfc0d61f81031078a"
+    },
+    {
+      "url": "./licenses/lucide-0.468.0.txt",
+      "bytes": 880,
+      "sha256": "1e7290b35280a048667bbf0ebabac1c7fd52a75300e8b2946ac165715997f2bc"
     },
     {
       "url": "./licenses/metronome-sources.json",
@@ -598,7 +758,7 @@
     {
       "url": "./version.json",
       "bytes": 108,
-      "sha256": "3e48f8df8aca33397e034e5813096044423fe1dd8a2e93a46b0bc0e4655a4428"
+      "sha256": "a6737f4b8e41e6fc967a41accdf363c5698c2e5db01b2f88521bf77362283427"
     }
   ]
 }

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const version=JSON.parse(await fs.readFile(path.join(root,'version.json'),'utf8'));
 const output=path.join(root,`Music-Toolbox-Ultra-v${version.version}-Standalone.html`);
-const accentSources=[...JSON.parse(await fs.readFile(path.join(root,'licenses','metronome-sources.json'),'utf8')).samples,...JSON.parse(await fs.readFile(path.join(root,'licenses','drum-sources.json'),'utf8')).samples,...JSON.parse(await fs.readFile(path.join(root,'licenses','trap-approved-sources.json'),'utf8')).samples];
+const accentSources=[...JSON.parse(await fs.readFile(path.join(root,'licenses','metronome-sources.json'),'utf8')).samples,...JSON.parse(await fs.readFile(path.join(root,'licenses','drum-sources.json'),'utf8')).samples,...JSON.parse(await fs.readFile(path.join(root,'licenses','trap-approved-sources.json'),'utf8')).samples,...JSON.parse(await fs.readFile(path.join(root,'licenses','expanded-drum-sources.json'),'utf8')).samples];
 const accentPaths=accentSources.map(sample=>path.join(root,sample.file));
 const [html,css,library,tunings,app,audio,alipay,wechat,douyin,icon,accentAudio]=await Promise.all([
   fs.readFile(path.join(root,'index.html'),'utf8'),
@@ -22,6 +22,9 @@ const [html,css,library,tunings,app,audio,alipay,wechat,douyin,icon,accentAudio]
 ]);
 
 const safeInline=source=>source.replaceAll('</script>','<\\/script>');
+const learningTipsSource=await fs.readFile(path.join(root,'learning-tips.js'),'utf8');
+const fretTrainer=await fs.readFile(path.join(root,'fret-trainer.js'),'utf8');
+const iconLicense=await fs.readFile(path.join(root,'licenses','lucide-0.468.0.txt'),'utf8');
 const dataUri=(mime,buffer)=>`data:${mime};base64,${buffer.toString('base64')}`;
 const audioUri=dataUri('audio/mpeg',audio),inlineAccentUrls=Object.fromEntries(accentAudio.map((buffer,index)=>[accentSources[index].id,dataUri('audio/wav',buffer)]));
 const embeddedApp=app
@@ -34,13 +37,18 @@ let standalone=html
   .replace(/\s*<link rel="manifest"[^>]*>/,'')
   .replace(/\s*<link rel="icon"[^>]*>/,`\n<link rel="icon" href="${dataUri('image/svg+xml',icon)}">`)
   .replace('<link rel="stylesheet" href="./app-final.css">',`<style data-final-module="app-final-css">\n${css}\n</style>`)
+  .replace('<link rel="stylesheet" href="./app-shell.css">',`<style data-final-module="app-shell-css">\n${await fs.readFile(path.join(root,'app-shell.css'),'utf8')}\n</style>`)
   .replace('<script src="./sight-library-v2.js"></script>',`<script data-final-module="sight-library">\n${safeInline(library)}\n</script>`)
   .replace('<script src="./special-tunings-v1.js"></script>',`<script data-final-module="special-tunings">\n${safeInline(tunings)}\n</script>`)
   .replace('<script src="./app-final.js"></script>',`<script data-final-module="app-final">\nwindow.MTU_ACCENT_INLINE_URLS=${JSON.stringify(inlineAccentUrls)};\n${safeInline(embeddedApp)}\n</script>`)
   .replace('<script src="./drum-workshop.js"></script>',`<script data-final-module="drum-workshop">\n${safeInline(await fs.readFile(path.join(root,'drum-workshop.js'),'utf8'))}\n</script>`)
-  .replace('<head>',`<head>\n<!-- 音乐工具箱 Ultra v${version.version} 最终单文件版；与 PWA 最终版同源生成。 -->`);
+  .replace('<script src="./ear-progressions.js"></script>',`<script data-final-module="ear-progressions">\n${safeInline(await fs.readFile(path.join(root,'ear-progressions.js'),'utf8'))}\n</script>`)
+  .replace('<script src="./app-shell.js"></script>',`<script data-final-module="app-shell">\n${safeInline(await fs.readFile(path.join(root,'app-shell.js'),'utf8'))}\n</script>`)
+  .replace('<script src="./learning-tips.js"></script>',()=>`<script data-final-module="learning-tips">\n${safeInline(learningTipsSource)}\n</script>`)
+  .replace('<script src="./fret-trainer.js"></script>',()=>`<script data-final-module="fret-trainer">\n${safeInline(fretTrainer)}\n</script>`)
+  .replace('<head>',()=>`<head>\n<!-- 音乐工具箱 Ultra v${version.version} 最终单文件版；与 PWA 最终版同源生成。\nLucide 0.468.0\n${iconLicense}\n-->`);
 
-for(const external of ['./app-final.css','./app-final.js','./sight-library-v2.js','./special-tunings-v1.js','./assets/support-alipay.jpg','./assets/support-wechat.jpg','./assets/contact-douyin.jpg']){
+for(const external of ['./app-final.css','./app-final.js','./app-shell.css','./app-shell.js','./sight-library-v2.js','./special-tunings-v1.js','./assets/support-alipay.jpg','./assets/support-wechat.jpg','./assets/contact-douyin.jpg']){
   if(standalone.includes(`src="${external}"`)||standalone.includes(`href="${external}"`))throw new Error(`仍有外部核心资源：${external}`);
 }
 if(!standalone.includes('data:audio/mpeg;base64,'))throw new Error('C01 音频未内嵌');
@@ -48,4 +56,5 @@ if((standalone.match(/data:audio\/wav;base64,/g)||[]).length<accentSources.lengt
 if((standalone.match(/data:image\/jpeg;base64,/g)||[]).length<3)throw new Error('赞助或联系图片未全部内嵌');
 
 await fs.writeFile(output,standalone);
-console.log(JSON.stringify({output,bytes:Buffer.byteLength(standalone),modules:['index','app-final-css','sight-library','special-tunings','app-final','C01 audio',`${accentSources.length} accent sounds`,'support images']},null,2));
+console.log(JSON.stringify({output,bytes:Buffer.byteLength(standalone),modules:['index','app-final-css','app-shell-css','sight-library','special-tunings','app-final','drum-workshop','ear-progressions','app-shell','learning-tips','C01 audio',`${accentSources.length} accent sounds`,'support images']},null,2));
+import './build_changelog.mjs';

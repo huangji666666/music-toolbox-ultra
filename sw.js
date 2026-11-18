@@ -1,4 +1,4 @@
-const CACHE_NAME='music-toolbox-ultra-v13.5.13-20260917-1';
+const CACHE_NAME='music-toolbox-ultra-v13.5.28-20261119-7';
 const SCOPE_TAG='::'+encodeURIComponent(new URL(self.registration.scope).pathname);
 const ACTIVE_CACHE=CACHE_NAME+SCOPE_TAG;
 const STAGING_CACHE=`${ACTIVE_CACHE}-staging`;
@@ -20,7 +20,7 @@ self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     await caches.delete(STAGING_CACHE);
     const stage=await caches.open(STAGING_CACHE);
-    let failed='release-assets.json';
+    let failed='release-assets.json',createdTarget=false;
     try{
       const manifestResponse=await fetch(new Request(MANIFEST_URL,{cache:'reload'}));
       if(!manifestResponse.ok)throw new Error(`${manifestResponse.status} ${MANIFEST_URL}`);
@@ -37,12 +37,14 @@ self.addEventListener('install',event=>{
         await stage.put(item.url,response);
         await broadcast({type:'CACHE_PROGRESS',done:index+1,total:assets.length});
       }
+      createdTarget=!(await caches.keys()).includes(ACTIVE_CACHE);
       const target=await caches.open(ACTIVE_CACHE);
-      for(const request of await stage.keys()){const response=await stage.match(request);if(response)await target.put(request,response);}
+      for(const request of await stage.keys()){failed=request.url;const response=await stage.match(request);if(response)await target.put(request,response);}
       await caches.delete(STAGING_CACHE);
       await broadcast({type:'CACHE_READY',cache:CACHE_NAME,total:assets.length});
     }catch(error){
       await caches.delete(STAGING_CACHE);
+      if(createdTarget)await caches.delete(ACTIVE_CACHE);
       await broadcast({type:'CACHE_ERROR',cache:CACHE_NAME,failed,message:String(error?.message||error)});
       throw error;
     }
@@ -54,8 +56,12 @@ self.addEventListener('activate',event=>{
     const keys=await caches.keys();
     for(const key of keys){
       if(key===ACTIVE_CACHE||key===STAGING_CACHE||!OWN_CACHE_PREFIXES.some(prefix=>key.startsWith(prefix)))continue;
+      const tag=key.includes('::')?'::'+key.slice(key.lastIndexOf('::')+2).replace(/-staging$/,''):null;
+      const sameScope=key.endsWith(SCOPE_TAG);
+      if(tag!==null&&!sameScope&&tag!==SCOPE_TAG)continue;
       const cache=await caches.open(key),requests=await cache.keys();
-      if(requests.length&&requests.every(request=>request.url.startsWith(self.registration.scope)))await caches.delete(key);
+      if(!sameScope&&tag===null&&!requests.some(request=>request.url===new URL('index.html',self.registration.scope).href))continue;
+      if(sameScope||(requests.length&&requests.every(request=>request.url.startsWith(self.registration.scope))))await caches.delete(key);
     }
     await self.clients.claim();
   })());
