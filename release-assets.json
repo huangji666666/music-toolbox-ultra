@@ -1,24 +1,24 @@
 {
   "schema": 1,
-  "version": "13.5.30",
-  "build": "2026.11.19.9",
-  "cache": "music-toolbox-ultra-v13.5.30-20261119-9",
+  "version": "13.5.31",
+  "build": "2026.11.19.10",
+  "cache": "music-toolbox-ultra-v13.5.31-20261119-10",
   "generatedAt": "2026-11-19T00:00:00.000Z",
   "assets": [
     {
       "url": "./app-final.css",
-      "bytes": 110845,
-      "sha256": "82787be9809f759681a9c3725cc734b8602cb85a34b0dd42652d7a965b2c9721"
+      "bytes": 110888,
+      "sha256": "6cc2a0bba2632f384eade89266fb1bf40d130eee13fc00ebf1b7eb83691d3056"
     },
     {
       "url": "./app-final.js",
-      "bytes": 465876,
-      "sha256": "c5dbf02d0ad3613d4717c616bb3b242236489e527c553ee12053b2fbdfd26c37"
+      "bytes": 465764,
+      "sha256": "9047f320ea2502aad935ca18a9e1b008d2ec9b1fde401ebb79deef53511a573d"
     },
     {
       "url": "./app-shell.css",
-      "bytes": 75768,
-      "sha256": "51cb50dece5bc26ae10a54874e334af7923ca1c2e317722a8238ae42e668ad08"
+      "bytes": 76057,
+      "sha256": "cbc8f34b426f6bd8bfcc80d34afb1b743143d7d20974d3c82df6b196630f9ec7"
     },
     {
       "url": "./app-shell.js",
@@ -702,13 +702,13 @@
     },
     {
       "url": "./index.html",
-      "bytes": 4571159,
-      "sha256": "96785aa91bcffb651027dbe4172ad0d22cb1f022e64b1d89e95dc43bcc3fb744"
+      "bytes": 4571601,
+      "sha256": "515661c31fe066949a4400c30cff31fe46d0e192757ea4b1be201518e0a1afba"
     },
     {
       "url": "./learning-tips.js",
-      "bytes": 44904,
-      "sha256": "0587cc9d9b9e0ac3c1c575a8ef49e2f0c572fb351eb4361c80dc614b844fa2b8"
+      "bytes": 45458,
+      "sha256": "f293bcfa681bafc21f7524079387a125a35ed3f18069f01dadcff748affd5447"
     },
     {
       "url": "./licenses/C01-muted-strum-CC0.txt",
@@ -782,8 +782,8 @@
     },
     {
       "url": "./version.json",
-      "bytes": 108,
-      "sha256": "ed1eae6ca1a40a4208143fc339b28ed9a58781b7e848bc8f9a26b0f097632303"
+      "bytes": 110,
+      "sha256": "494ff70ff49ad49bd6802a60062844d87104022e72aec2a031d5d14381873fc3"
     }
   ]
 }

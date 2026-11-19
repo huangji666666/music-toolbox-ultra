@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<!-- 音乐工具箱 Ultra v13.5.30 最终单文件版；与 PWA 最终版同源生成。
+<!-- 音乐工具箱 Ultra v13.5.31 最终单文件版；与 PWA 最终版同源生成。
 Lucide 0.468.0
 ISC License
 
@@ -1238,9 +1238,9 @@ html[data-ios="true"][data-layout="short"] .top-bar{height:calc(44px + var(--saf
 .tuner-range-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:10px}
 .tuner-range-heading span{color:var(--text-sub);font-size:11px}
 .tuner-range-track{height:52px;position:relative;margin-inline:5px}
-.tuner-range-keys{position:absolute;inset:0;isolation:isolate;border:1px solid #777;border-radius:4px;overflow:hidden;background:#fff}
+.tuner-range-keys{--black-key-height:62%;position:absolute;inset:0;isolation:isolate;border:1px solid #777;border-radius:4px;overflow:hidden;background:#fff}
 .tuner-range-keys i,.tuner-range-keys button{position:absolute;top:0;height:100%;width:calc(100% / 52);transform:translateX(-50%);box-sizing:border-box;border:0;border-right:1px solid #aaa;background:#fff;padding:0;min-width:0;min-height:0;cursor:pointer;touch-action:manipulation}
-.tuner-range-keys i.black,.tuner-range-keys button.black{background:#141416;border:1px solid #000;height:62%;width:calc(100% / 52 * .64);z-index:1;border-radius:0 0 2px 2px;opacity:1}
+.tuner-range-keys i.black,.tuner-range-keys button.black{background:#141416;border:1px solid #000;height:var(--black-key-height);width:calc(100% / 52 * .64);z-index:1;border-radius:0 0 2px 2px;opacity:1}
 .tuner-range-target,#tuner-range-pointer,#tuner-range-targets{pointer-events:none}
 .tuner-range-keys button.auditioning{box-shadow:inset 0 -5px var(--prim)}
 .tuner-range-keys button.white{z-index:0}
@@ -2094,12 +2094,20 @@ html[data-motion=reduced] *,html[data-motion=reduced] *::before,html[data-motion
 /* 13.5.20 tuner mobile order: gauge, A4, headstock, piano rail. */
 .ui-glyph{display:inline-block;width:18px;height:18px;flex:0 0 18px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 [data-ui]>.ui-glyph:not(:last-child){margin-inline-end:5px}
-#music-tip-pill{position:relative;inset:auto;flex:0 0 44px;width:44px;height:44px;z-index:2400}
+#music-tip-pill{position:relative;inset:auto;flex:0 0 44px;width:44px;height:44px;z-index:20}
+#tip-gauge-dock{position:absolute;right:5px;top:3px;width:44px;height:44px;pointer-events:none}
+@media(max-width:699px){#tip-gauge-dock{right:calc(max(82px,28%) + 12px)}}
+#tip-gauge-dock.return-target{border-radius:50%;outline:2px dashed var(--prim);outline-offset:-3px}
+body>#music-tip-pill{z-index:2400}
+#quick-theme .brightness-picks{padding:3px;background:var(--bg);border-radius:14px}
+#quick-theme .brightness-picks button{border-radius:11px;background:transparent}
+#quick-theme .brightness-picks button[aria-pressed=true]{color:var(--prim);background:var(--surf);outline:0;box-shadow:inset 0 0 0 2px var(--prim)}
+#quick-theme .brightness-picks button:focus-visible{outline:2px solid var(--text);outline-offset:1px}
 .top-bar .watermark-top{position:static;transform:none;margin-left:auto;margin-right:6px;white-space:nowrap}.top-bar .mode-group{min-width:0;flex:0 1 auto}.top-bar #music-tip-pill{margin-right:4px}
 nav .nav-icon .ui-glyph{width:22px;height:22px;fill:none!important;stroke:currentColor!important}
 #instrument-study #instrument-caged-open{width:auto;min-height:44px;padding:4px 10px;gap:4px;font-size:12px}#instrument-study #instrument-caged-open svg{margin:0}
 .circle-compose summary small{float:right;color:var(--text-sub);font-weight:500}.compose-tools button:disabled{opacity:.5}
-#music-tip-pill .music-tip-toggle{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;border:1px solid var(--shell-line);background:var(--shell-panel);color:var(--prim);border-radius:50%;box-shadow:0 2px 10px #25385020;touch-action:none;user-select:none;cursor:grab}
+#music-tip-pill .music-tip-toggle{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;border:1px solid var(--shell-line);background:var(--surf);color:var(--prim);border-radius:50%;box-shadow:0 3px 9px #0c203d45,inset 0 1px 0 #ffffff50;touch-action:none;user-select:none;cursor:grab}
 #music-tip-pill .music-tip-toggle:active{cursor:grabbing}
 #music-tip-pill .tool-hint{position:absolute;top:100%;margin-top:4px;width:min(210px,65vw);padding:8px 10px;border-radius:10px;background:var(--shell-panel);border:1px solid var(--shell-line);font-size:12px;line-height:1.45;pointer-events:none}
 #music-tip-card{max-height:calc(100dvh - var(--nav-h,60px) - 62px);overflow-y:auto;box-sizing:border-box}
@@ -2161,7 +2169,7 @@ nav .nav-icon .ui-glyph{width:22px;height:22px;fill:none!important;stroke:curren
 }
 .metro-ramp-open[data-mode=range]{background:linear-gradient(90deg,#156843 var(--progress),#314757 var(--progress));color:white}
 .metro-ramp-open[data-mode=lite][data-running=true]::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:#fff;animation:ramp-breathe 1.7s ease-in-out infinite alternate}@keyframes ramp-breathe{to{opacity:.4}}
-#ramp-actions-pop{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}#ramp-actions-pop button,.board-tabs button,#board-settings summary,#fret-game :is(select,button){min-height:44px;font:inherit;font-size:13px;color:var(--text);background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:4px 7px}
+.board-tabs button,#board-settings summary,#fret-game :is(select,button){min-height:44px;font:inherit;font-size:13px;color:var(--text);background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:4px 7px}
 #tip-reading-lane[data-double=true]:has(button):not([hidden]){height:42px}#tip-reading-lane[data-double=true] .music-tip-danmaku{top:calc(20px * var(--lane,0))!important}
 #page-tuner #tuner-instruments #tuner-headstock:not(.multi-strings) .headstock-frame{height:clamp(158px,23dvh,238px)!important;min-height:0!important;grid-template-rows:repeat(3,minmax(0,1fr))!important;grid-template-columns:minmax(60px,1fr) minmax(90px,1.1fr) minmax(60px,1fr)!important;max-width:430px;margin:auto;width:100%}
 #page-tuner #tuner-instruments #tuner-headstock[data-strings="4"] .headstock-frame{grid-template-rows:repeat(2,minmax(0,1fr))!important}
@@ -2189,7 +2197,13 @@ nav .nav-icon .ui-glyph{width:22px;height:22px;fill:none!important;stroke:curren
 /* Release layout: the pitch labels stay on a single rail; only the keyed light moves. */
 html body #music-tip-stream[data-guide=true]{display:block!important}
 #tuner-range .tuner-range-target{top:var(--rail-y);font-variant-numeric:tabular-nums;transition:none}
-#page-tuner.active #tuner-range .wave-key{overflow:hidden}#page-tuner.active #tuner-range .wave-key::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,transparent 8%,var(--prim) 49%,#a7f8ff 57%,transparent 91%);opacity:var(--wave,.44);animation:key-wave 2s ease-in-out infinite}#page-tuner.active #tuner-instruments[data-first=piano] #tuner-range .wave-key::after{animation-direction:reverse}html[data-motion=reduced] #page-tuner.active #tuner-range .wave-key::after{animation:none;opacity:calc(var(--wave) * .6)}@media(prefers-reduced-motion:reduce){#page-tuner.active #tuner-range .wave-key::after{animation:none;opacity:calc(var(--wave) * .6)}}
+#tuner-range .tuner-range-keys button{appearance:none;-webkit-appearance:none}
+/* Paint the wave as key ink, not a transformed overlay. White key shoulders stay unlit. */
+#page-tuner.active #tuner-range .wave-key{--key-face:white;--shoulder:var(--black-key-height);background-color:var(--key-face);background-image:linear-gradient(to bottom,var(--key-face) var(--shoulder),transparent var(--shoulder)),linear-gradient(0deg,transparent,color-mix(in srgb,var(--prim) calc(var(--wave,.44)*100%),transparent) 55%,transparent);background-repeat:no-repeat;background-size:100% 100%,100% 34%;animation:key-ink 2s ease-in-out infinite}
+#page-tuner.active #tuner-range .black.wave-key{--key-face:#141416;--shoulder:0%}
+#page-tuner.active #tuner-instruments[data-first=piano] .wave-key{animation-direction:reverse}
+@keyframes key-ink{from{background-position:0 0,0 var(--shoulder)}to{background-position:0 0,0 145%}}
+html[data-motion=reduced] #page-tuner.active #tuner-range .wave-key{animation:none;background-position:0 0,0 96%}@media(prefers-reduced-motion:reduce){#page-tuner.active #tuner-range .wave-key{animation:none;background-position:0 0,0 96%}}
 #page-metro .metro-speed-column #metro-visual-open{height:var(--visual-tile-h,142px);flex-direction:column;gap:10px;border-radius:22px;background:linear-gradient(145deg,color-mix(in srgb,var(--prim) 18%,var(--surf)),var(--surf));color:var(--prim);border:1px solid color-mix(in srgb,var(--prim) 45%,var(--border));box-shadow:none}#page-metro #metro-visual-open .ui-glyph{width:36px;height:36px}@media(min-width:1000px){#page-metro .metro-speed-column{--visual-tile-h:clamp(142px,18vh,220px)}}
 #page-instrument .board-tabs button[aria-expanded]::after,#instrument-header #instrument-tuning-bar::after{content:'';display:inline-block;align-self:center;width:12px;height:12px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}#page-instrument .board-tabs [aria-expanded=true]::after,#instrument-header #instrument-tuning-bar[aria-expanded=true]::after{transform:rotate(180deg)}#instrument-header #instrument-tuning-bar{display:inline-flex;align-items:center;gap:4px}#instrument-header #instrument-tuning-bar::before{content:'调弦'}#page-settings .setting-row.settings-actions{background:transparent!important;border:0!important;box-shadow:none!important;padding:0}
 #drum-workshop #drum-undo,#drum-workshop #drum-redo{flex:0 0 44px!important;min-width:44px;min-height:44px;padding:0}#drum-redo .ui-glyph{transform:scaleX(-1)}#drum-workshop .drum-transport:has(#drum-redo){display:flex;flex-wrap:nowrap;gap:4px}#drum-workshop .drum-transport:has(#drum-redo)>button:not(#drum-undo):not(#drum-redo){flex:1 1 0!important;min-width:0}
@@ -2197,7 +2211,7 @@ html body #music-tip-stream[data-guide=true]{display:block!important}
 #page-settings .settings-actions>button{flex:1 1 0!important;width:0;min-width:0;min-height:46px;border-radius:12px;margin:0}html[data-adaptive] #page-instrument.active #instrument-stage{box-sizing:border-box;display:flex;flex-direction:column;height:clamp(170px,calc(100dvh - 322px - var(--safe-t,0px) - var(--safe-b,0px)),760px)!important;overflow:auto}#page-instrument #instrument-stage .virtual-fret-wrap{flex:1 1 0;align-self:stretch;height:100%!important;min-height:0!important}#page-instrument #instrument-stage .virtual-board-scroll{align-self:stretch;overflow:auto}#page-instrument #instrument-stage .virtual-fret-wrap.vertical{grid-template-rows:minmax(0,1fr) auto auto auto!important}#page-instrument #instrument-stage .virtual-board-scroll>svg{flex:none}#page-instrument .virtual-piano{margin-block:auto}#page-instrument .board-answers{flex:none}
 .metro-hero .metro-speed-column{align-self:start;min-width:0;display:grid;gap:8px}.metro-speed-column .bpm-wrapper{transform:none}.metro-speed-column #metro-visual-open{display:flex!important;align-items:center;justify-content:center;gap:5px;width:100%;min-height:44px;margin:0;box-sizing:border-box}
 #page-settings>details.settings-section{box-sizing:border-box;width:100%;flex:none;margin:4px 0;padding:0 12px;border:1px solid var(--border);border-radius:12px;background:var(--surf)}#page-settings>details.settings-section>summary{display:flex;align-items:center;gap:7px;min-height:48px;margin:0;padding:0;font-size:14px;color:var(--text);cursor:pointer;list-style:none}#page-settings>details.settings-section>summary::after{content:'⌄';margin-left:auto;color:var(--text-sub)}#page-settings>details[open].settings-section>summary::after{transform:rotate(180deg)}#page-settings>details[open].settings-section{padding-bottom:10px}#page-settings .settings-actions{width:100%;box-sizing:border-box}#page-settings .settings-community{grid-auto-rows:minmax(56px,auto)}#page-settings .settings-community button{white-space:normal;overflow-wrap:anywhere;line-height:1.2}
-#page-tuner #tuner-instruments #tuner-range .tuner-range-track{--rail-y:calc(12px + var(--badge-extra,0px));height:calc(var(--key-h) + 24px + var(--badge-extra,0px))}#page-tuner #tuner-instruments #tuner-range .tuner-range-keys{top:calc(24px + var(--badge-extra,0px))}#page-tuner #tuner-instruments[data-first=piano] #tuner-range .tuner-range-track{--rail-y:calc(var(--key-h) + 12px)}#page-tuner #tuner-instruments[data-first=piano] #tuner-range .tuner-range-keys{top:0}#tuner-range .tuner-range-target{box-sizing:border-box;display:grid;place-items:center;min-width:18px;width:auto;height:18px;padding:0 3px;border:1px solid var(--surf);border-radius:12px;transform:translate(-50%,-50%);margin:0;box-shadow:none;background:var(--prim);color:white;font:700 11px/1 system-ui;white-space:nowrap;z-index:5}#tuner-range .tuner-range-target.current{background:var(--text);color:var(--surf);outline:2px solid var(--prim)}#tuner-range .linked-key{overflow:hidden}#tuner-range .linked-key::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,transparent,color-mix(in srgb,var(--prim) 75%,transparent),transparent);pointer-events:none;animation:key-wave .56s ease-out both}#tuner-instruments[data-first=piano] .linked-key::after{animation-direction:reverse}@keyframes key-wave{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}html[data-motion=reduced] #tuner-range .linked-key::after{animation:none;opacity:.26}@media(prefers-reduced-motion:reduce){#tuner-range .linked-key::after{animation:none;opacity:.26}}
+#page-tuner #tuner-instruments #tuner-range .tuner-range-track{--rail-y:calc(12px + var(--badge-extra,0px));height:calc(var(--key-h) + 24px + var(--badge-extra,0px))}#page-tuner #tuner-instruments #tuner-range .tuner-range-keys{top:calc(24px + var(--badge-extra,0px))}#page-tuner #tuner-instruments[data-first=piano] #tuner-range .tuner-range-track{--rail-y:calc(var(--key-h) + 12px)}#page-tuner #tuner-instruments[data-first=piano] #tuner-range .tuner-range-keys{top:0}#tuner-range .tuner-range-target{box-sizing:border-box;display:grid;place-items:center;min-width:18px;width:auto;height:18px;padding:0 3px;border:1px solid var(--surf);border-radius:12px;transform:translate(-50%,-50%);margin:0;box-shadow:none;background:var(--prim);color:white;font:700 11px/1 system-ui;white-space:nowrap;z-index:5}#tuner-range .tuner-range-target.current{background:var(--text);color:var(--surf);outline:2px solid var(--prim)}
 #instrument-header{display:none}body:has(#page-instrument.active) #instrument-header{display:flex;align-items:center;gap:4px;margin-inline:6px auto;min-width:0}#instrument-header select,#instrument-header .tuning-bar{font:600 12px/1.15 system-ui;color:var(--text);background:var(--surf);border:1px solid var(--border);border-radius:8px;min-height:44px;padding:2px 6px;width:auto;max-width:100%;margin:0}#instrument-header .instrument-tuning-picker{width:auto;margin:0}#instrument-header .tb-left,#instrument-header .tb-arrow{display:none}#instrument-header .tuning-bar::before{content:'调弦 ⌄'}#instrument-header #instrument-tuning-visual.open{position:fixed;top:calc(var(--safe-t,0px) + 47px);left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 16px));max-height:55dvh;overflow:auto;box-sizing:border-box;z-index:2500;background:var(--surf);box-shadow:0 6px 22px #15223636}body:has(#page-instrument.active) .top-bar{z-index:100;gap:2px}body:has(#page-instrument.active) #page-title{white-space:nowrap}body:has(#page-instrument.active) .watermark-top{display:block;margin-inline:0 3px}
 #page-instrument .board-tabs{position:relative;gap:6px}#page-instrument .board-tabs button{display:flex;align-items:center;justify-content:center;gap:7px}#page-instrument .board-tabs button::after{content:'⌄';font-size:13px;color:var(--text-sub)}#page-instrument .board-menu{position:absolute!important;top:54px;right:8px;z-index:40;width:min(350px,calc(100% - 16px));max-height:min(55dvh,420px);box-sizing:border-box;overflow:auto;overscroll-behavior:contain;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--surf);box-shadow:0 6px 22px #15223636}#page-instrument #study-flyout{left:8px;right:auto}#page-instrument .board-menu[hidden],#page-instrument .board-status [hidden],#page-instrument .board-answers[hidden],#page-instrument .game-picks [hidden]{display:none!important}#page-instrument{position:relative}#page-instrument .board-menu .game-picks{display:grid;gap:8px}#game-flyout label{display:flex;align-items:center;justify-content:space-between}#page-instrument .board-menu :is(button,select,summary){min-height:44px}#page-instrument .board-menu summary{display:flex;align-items:center;color:var(--prim);cursor:pointer}#game-flyout [data-record]{display:block;padding-top:8px;color:var(--text-sub)}#study-flyout .study-caption{display:none}#page-instrument .board-status{width:100%;height:48px;min-height:48px;flex:none;display:grid;align-items:center;border-block-end:1px solid var(--border)}#page-instrument .board-training-line,#page-instrument #fret-game .game-question{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;height:44px;min-width:0}#page-instrument .board-status strong,#page-instrument .board-status output{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.2;font-size:13px}#page-instrument .board-status strong{flex:1}#page-instrument .board-status output{color:var(--prim)}#page-instrument .board-status .game-question:has(output:not(:empty)) strong{display:none}#page-instrument .board-status button{min-width:44px;min-height:44px;margin-left:auto;color:var(--prim);background:var(--surf);border:1px solid var(--border);border-radius:8px}#page-instrument .board-answers:not(:empty){display:grid;width:100%;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px}#page-instrument .board-answers button{min-height:44px;font-size:12px;color:var(--text);background:var(--surf);border:1px solid var(--border);border-radius:6px}
 #page-instrument[data-tab=game] .instrument-toolbar .game-picks{flex:1}#page-instrument[data-tab=game] .instrument-toolbar .game-picks>[data-kind]{flex:1 1 auto;width:146px!important;max-width:156px!important;min-width:103px!important}#page-instrument[data-tab=game] .board-feedback{width:100%}#page-instrument[data-tab=game] .board-feedback output{flex:1}
@@ -2212,8 +2226,8 @@ html body #music-tip-stream[data-guide=true]{display:block!important}
 #page-settings .settings-community{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}#page-settings #settings-update-check{display:block;min-width:0;padding:0;margin:0;border:none;background:none;box-shadow:none}#page-settings #settings-update-check button{width:100%;height:100%;min-height:44px;display:flex;align-items:center;justify-content:center;gap:2px;flex-direction:column;color:var(--text);font-size:12px}#settings-update-check output{font-size:10px;color:var(--text-sub)}#settings-update-check progress{height:3px;width:75%;accent-color:var(--prim)}#settings-update-check progress[hidden]{display:none}
 #drum-workshop .drum-primary{grid-template-columns:1.24fr 1.05fr minmax(49px,.55fr) .86fr}#drum-workshop .drum-primary input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:5px;border:1px solid var(--border);border-radius:10px;background:var(--surf);color:var(--text)}@media(max-height:500px){.drum-expanded #drum-workshop .drum-primary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!important;background:color-mix(in srgb,var(--surf) 64%,transparent)!important;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}html[data-motion=reduced] #music-tip-stream .music-tip-danmaku{backdrop-filter:none;-webkit-backdrop-filter:none}
-#metro-ramp-modal,#ramp-actions-pop{position:fixed!important;inset:auto;display:block;box-sizing:border-box;width:min(330px,calc(100vw - 16px));height:auto;overflow:auto;overscroll-behavior:contain;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--surf)!important;color:var(--text);box-shadow:0 6px 24px #182b412b;z-index:3000;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;animation:none;transform:none}
-#metro-ramp-modal .practice-modal-card{width:100%;max-width:none;max-height:none;overflow:visible;margin:0;padding:0;border:0;box-shadow:none;background:none;transform:none;animation:none}#metro-ramp-modal h3{margin:0}.ramp-dismiss-hint{display:block;font-size:12px;color:var(--text-sub);margin:3px 0 8px}#ramp-actions-pop{display:grid;grid-template-columns:1fr 1fr;gap:5px}#ramp-actions-pop small{grid-column:1/-1}#ramp-actions-pop [data-end]{color:var(--prim)}.bpm-wrapper .metro-ramp-open{width:112px;min-width:112px;max-width:112px;box-sizing:border-box;white-space:nowrap}
+#metro-ramp-modal{position:fixed!important;inset:auto;display:block;box-sizing:border-box;width:min(330px,calc(100vw - 16px));height:auto;overflow:auto;overscroll-behavior:contain;padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--surf)!important;color:var(--text);box-shadow:0 6px 24px #182b412b;z-index:3000;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;animation:none;transform:none}
+#metro-ramp-modal .practice-modal-card{width:100%;max-width:none;max-height:none;overflow:visible;margin:0;padding:0;border:0;box-shadow:none;background:none;transform:none;animation:none}#metro-ramp-modal h3{margin:0}.ramp-dismiss-hint{display:block;font-size:12px;color:var(--text-sub);margin:3px 0 8px}.bpm-wrapper .metro-ramp-open{width:112px;min-width:112px;max-width:112px;box-sizing:border-box;white-space:nowrap}
 #music-tip-stream .music-tip-danmaku{padding:4px 10px!important;border:1px solid var(--shell-line,var(--border))!important;border-radius:14px!important;background:var(--surf)!important;background:color-mix(in srgb,var(--surf) 80%,transparent)!important;box-shadow:0 1px 3px #15223316!important;width:max-content;overflow:hidden;text-overflow:ellipsis;line-height:18px}
 #page-tuner #tuner-instruments{position:relative;isolation:isolate;grid-template-columns:minmax(0,1fr)}#page-tuner #tuner-instruments[data-first=piano]>#tuner-range,#page-tuner #tuner-instruments[data-first=head]>#tuner-headstock{order:0!important}#page-tuner #tuner-instruments[data-first=piano]>#tuner-headstock,#page-tuner #tuner-instruments[data-first=head]>#tuner-range{order:1!important}
 #tuner-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}#tuner-links path{fill:none;stroke:var(--prim);stroke-opacity:.26;stroke-width:1.2;stroke-linecap:round}#tuner-links .current{stroke-opacity:.88;stroke-width:2}.tuner-range-keys .linked-key{box-shadow:inset 0 -5px var(--prim)!important}#tuner-swap{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0;margin-inline-start:auto;background:transparent;border:0;color:var(--prim);cursor:pointer;z-index:4}#tuner-swap svg{width:17px;height:17px}.tuner-range-heading:has(#tuner-swap),.headstock-heading:has(#tuner-swap){display:flex;align-items:center;gap:8px}
@@ -2467,10 +2481,15 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
             </ul>
         </div>
         <section class="release-notice" aria-label="本次更新公告">
-            <div><strong>本次更新</strong><small>v13.5.30</small></div>
-            <p>五款日间主题 · 指板上的 CAGED 与音阶 · 游戏题目显示</p>
-            <details><summary>展开全部更新 · 13.5.14 至 13.5.30</summary><div class="release-list">
-                <section><h3>本轮新增 · 13.5.30</h3><ul>
+            <div><strong>本次更新</strong><small>v13.5.31</small></div>
+            <p>渐速训练单窗口 · 琴键波纹分层 · 表盘贴士停靠</p>
+            <details><summary>展开全部更新 · 13.5.14 至 13.5.31</summary><div class="release-list">
+                <section><h3>本轮新增 · 13.5.31</h3><ul>
+                    <li>渐速训练统一使用精简版／高级版窗口；主播放键和拍点与训练同步。</li>
+                    <li>白键波纹限于黑键下方的键面，同时显示六弦时保持分层。</li>
+                    <li>贴士灯泡默认停靠调音表右上，可拖回吸附；日间与夜间按钮使用圆角选中框。</li>
+                </ul></section>
+                <section><h3>13.5.30</h3><ul>
                     <li>调音器弦号固定在同一行，锁弦和音高刷新时不再跳位；白键波纹不遮黑键，连线止于琴键边缘。</li>
                     <li>五款主题均可在日间使用；右上角调色板可直接选择配色和明暗。</li>
                     <li>功能提示随弹幕飘走，乐器页避开演奏区；节拍灯使用蓝、薄荷、紫和杏色。</li>
@@ -2558,7 +2577,7 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
             </div></details>
         </section>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.30</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.31</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
@@ -3060,7 +3079,7 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.30</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.31</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>
@@ -22279,8 +22298,8 @@ window.MTU_ACCENT_INLINE_URLS={"accent_cc0_01":"data:audio/wav;base64,UklGRmhbAQ
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.30';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.30-20261119-9';
+const V13_VERSION='13.5.31';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.31-20261119-10';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -23077,7 +23096,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const steps=Math.ceil(Math.abs(r.target-r.start)/r.step),pct=r.completed?100:Math.min(100,Math.round(100*Math.floor(Math.abs(r.current-r.start)/r.step)/Math.max(1,steps)));
     const label=!r.started?'渐速训练':`${r.completed?'已完成':r.running?'进行中':'已暂停'} · ${r.mode==='range'?pct+'%':r.current+' BPM'}`;
     if(b.dataset.label!==label){b.dataset.label=label;b.textContent=label;b.dataset.mode=r.started?r.mode:'';b.dataset.running=String(r.running);b.style.setProperty('--progress',pct+'%');if(r.started){document.getElementById('bpm-val').textContent=r.current;document.getElementById('bpm-slider').value=r.current;}}
-    const pop=document.getElementById('ramp-actions-pop');if(pop){pop.querySelector('[data-toggle]').textContent=r.running?'暂停':r.completed?'再练一次':'继续';}
+    const main=document.getElementById('play-btn');if(main&&(r.started||main.hasAttribute('data-ramp'))){const state=r.started?(r.running?'pause':r.completed?'restart':'resume'):'';if(main.dataset.ramp!==state){if(state)main.dataset.ramp=state;else delete main.dataset.ramp;main.innerHTML=r.running?this._pauseIcon:this._playIcon;main.setAttribute('aria-label',r.running?'暂停渐速训练':r.completed?'重新开始渐速训练':r.started?'继续渐速训练':'开始或暂停节拍器');}}
+    const fields=document.getElementById('ramp-range-fields');if(fields&&fields.dataset.running!==String(r.running)){fields.dataset.running=String(r.running);fields.querySelectorAll('input,button').forEach(el=>el.disabled=r.running);}
   };
   const rampUI=Metro._rampUpdateUI.bind(Metro);
   Metro._rampUpdateUI=function(...args){const result=rampUI(...args);this.renderRampDock();return result;};
@@ -23089,7 +23109,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.30';
+const RELEASE_VERSION='13.5.31';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -23525,25 +23545,26 @@ Metro._rampUpdateUI=function(message=''){
     if(state)state.textContent=message||(ramp.mode==='range'?`${ramp.start} → ${ramp.target} · 每 ${ramp.interval} 秒变化 ${ramp.step} BPM`:`当前 ${ramp.current} BPM · 每 ${ramp.interval} 秒 +1 BPM`);if(button)button.textContent=ramp.running?'Ⅱ 暂停':ramp.completed?'↻ 重新开始':ramp.started?'▶ 继续':'▶ 开始';
     this._rampUpdateDerived();
 };
-Metro.rampFieldChanged=function(){if(this.ramp.running)return;this._rampReadFields();this.ramp.current=this.ramp.mode==='range'?this.ramp.start:this.ramp.baseline;this.ramp.started=false;this.ramp.completed=false;this._rampUpdateUI();};
+Metro.rampFieldChanged=function(){if(this.ramp.running)return;this._rampReadFields();this.ramp.current=this.ramp.mode==='range'?this.ramp.start:this.ramp.baseline;delete this.ramp.remaining;this.ramp.completed=false;this._rampUpdateUI();};
 Metro.adjustRampValue=function(id,delta){const input=document.getElementById(id);if(!input)return;input.value=String(clamp((Number(input.value)||5)+(Number(delta)||0),Number(input.min)||1,Number(input.max)||600));this.rampFieldChanged();};
 Metro._rampBeatDuration=function(){return 60/Math.max(30,this.ramp.current);};
 Metro._rampScheduleBeat=function(index,time){
+    if(this.ramp.running){const token=this.ramp.generation;setTimeout(()=>{if(this.ramp.running&&this.ramp.generation===token)document.querySelectorAll('.v-dot').forEach((dot,i)=>{dot.classList.remove('beat-1','beat-mid','beat-weak');if(i===index)dot.classList.add(index===0?'beat-1':this._accentPattern()[i]>=.72?'beat-mid':'beat-weak');});},Math.max(0,(time-AudioEngine.ctx.currentTime)*1000));}
     this._visualEvents.push({beat:index,time,duration:this._rampBeatDuration(index),level:this._accentPattern()[index]??.58});if(this._visualEvents.length>16)this._visualEvents.shift();if(this.visualPanel?.querySelector('[data-sound]')?.checked===false)return;
     const duration=this._rampBeatDuration(index),level=this._accentPattern()[index]??.58,strong=this.accentMode==='meter'&&index===0,secondary=this.accentMode==='meter'&&!strong&&level>=.72;this._playMainBeat(index,time,strong,secondary);
     if(this.sub>1){const subDur=duration/this.sub;for(let sub=1;sub<this.sub;sub++){const swing=this.swingEnabled&&this.sub%2===0&&sub%2===1;AudioEngine.playClick(time+this._swingPosition(sub,subDur,this.sub),false,this.subSound(swing),this._subdivisionLevel(swing));}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.subSound(true),this._subdivisionLevel(true));
 };
 Metro.toggleRamp=async function(){
     const ramp=this.ramp;if(ramp.running){this.pauseRamp();return;}this._rampReadFields();if(ramp.mode==='range'&&ramp.start===ramp.target){toast('起始 BPM 和目标 BPM 不能相同');return;}if(ramp.completed){ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;ramp.started=false;ramp.completed=false;}if(!ramp.started)ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;
-    if(ramp.pending)return;const generation=ramp.generation;ramp.pending=true;try{if(!AudioEngine.ctx)await AudioEngine.init();else if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await this._prepareCurrentSounds();if(!AudioEngine.ctx)throw Error('audio');}catch(error){toast('节拍器音频暂未就绪，请重试');return;}finally{ramp.pending=false;}if(generation!==ramp.generation)return;this._visualEvents.length=0;ramp.running=true;ramp.started=true;ramp.completed=false;ramp.generation++;ramp.beat=0;ramp.nextBeatTime=AudioEngine.ctx.currentTime+.06;ramp.nextChangeAt=performance.now()+(ramp.remaining??ramp.interval*1000);delete ramp.remaining;document.getElementById('metro-ramp-modal')?.remove();document.getElementById('ramp-actions-pop')?.remove();this._rampUpdateUI();this._runRamp(ramp.generation);if(this.visualPanel)this.startVisualMetronome(this.visualPanel);
+    if(ramp.pending)return;const generation=ramp.generation;ramp.pending=true;try{if(!AudioEngine.ctx)await AudioEngine.init();else if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await this._prepareCurrentSounds();if(!AudioEngine.ctx)throw Error('audio');}catch(error){toast('节拍器音频暂未就绪，请重试');return;}finally{ramp.pending=false;}if(generation!==ramp.generation)return;this._visualEvents.length=0;ramp.running=true;ramp.started=true;ramp.completed=false;ramp.generation++;ramp.beat=0;ramp.nextBeatTime=AudioEngine.ctx.currentTime+.06;ramp.nextChangeAt=performance.now()+(ramp.remaining??ramp.interval*1000);delete ramp.remaining;document.getElementById('metro-ramp-modal')?.remove();this._rampUpdateUI();this._runRamp(ramp.generation);if(this.visualPanel)this.startVisualMetronome(this.visualPanel);
 };
 Metro._runRamp=function(generation){
     const ramp=this.ramp;if(!ramp.running||generation!==ramp.generation||!AudioEngine.ctx)return;const audioNow=AudioEngine.ctx.currentTime;while(ramp.nextBeatTime<audioNow+.14){const beat=ramp.beat;this._rampScheduleBeat(beat,ramp.nextBeatTime);ramp.nextBeatTime+=this._rampBeatDuration(beat);ramp.beat=(beat+1)%Math.max(1,this.ts);}
     const now=performance.now();if(now>=ramp.nextChangeAt){const ticks=Math.max(1,Math.floor((now-ramp.nextChangeAt)/(ramp.interval*1000))+1);ramp.nextChangeAt+=ticks*ramp.interval*1000;if(ramp.mode==='lite'){ramp.current=clamp(ramp.current+ticks,30,300);if(ramp.current>=300){this.pauseRamp(true);this._rampUpdateUI('已到 300 BPM · 点击撤回或退出');return;}}else{const direction=Math.sign(ramp.target-ramp.start)||1;ramp.current+=direction*ramp.step*ticks;if((direction>0&&ramp.current>=ramp.target)||(direction<0&&ramp.current<=ramp.target)){ramp.current=ramp.target;this.pauseRamp(true);this._rampUpdateUI(`完成 · 已到 ${ramp.target} BPM`);return;}}}
     this._rampUpdateUI();ramp.timer=setTimeout(()=>this._runRamp(generation),25);
 };
-Metro.pauseRamp=function(done=false){const ramp=this.ramp;if(ramp.running&&!done)ramp.remaining=Math.max(1,ramp.nextChangeAt-performance.now());ramp.running=false;ramp.completed=!!done;ramp.generation++;clearTimeout(ramp.timer);ramp.timer=null;this._rampUpdateUI(done?`完成 · 当前 ${Math.round(ramp.current)} BPM`:'已暂停 · 点击继续');};
-Metro.closeRamp=function(){const r=this.ramp;r.started=false;delete r.remaining;this.pauseRamp();this.setBpm(r.baseline);this.stop();document.getElementById('metro-ramp-modal')?.remove();document.getElementById('ramp-actions-pop')?.remove();};
+Metro.pauseRamp=function(done=false){const ramp=this.ramp;if(ramp.running&&!done)ramp.remaining=Math.max(1,ramp.nextChangeAt-performance.now());ramp.running=false;ramp.completed=!!done;ramp.generation++;clearTimeout(ramp.timer);ramp.timer=null;document.querySelectorAll('.v-dot').forEach(dot=>dot.classList.remove('beat-1','beat-mid','beat-weak'));this._rampUpdateUI(done?`完成 · 当前 ${Math.round(ramp.current)} BPM`:'已暂停 · 点击继续');};
+Metro.closeRamp=function(){const r=this.ramp;r.started=false;this.pauseRamp();delete r.remaining;this.setBpm(r.baseline);this.stop();document.getElementById('metro-ramp-modal')?.remove();};
 
 /* ---------- 虚拟指板与演奏区共用真实琴弦坐标 ---------- */
 InstrumentPage.syncStringAxis=function(){
@@ -23746,7 +23767,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.30';
+const RELEASE_VERSION='13.5.31';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -23948,29 +23969,27 @@ Metro.renderSwingControls=function(){
 Metro._rampFieldsMarkup=function(){const ramp=this.ramp;if(ramp.mode==='lite')return `<div id="ramp-lite-fields" class="ramp-lite-panel"><input id="ramp-lite-interval" type="hidden" value="${ramp.interval}"><div class="ramp-lite-stepper" aria-label="精简渐速间隔"><button type="button" onclick="Metro.adjustLiteInterval(-1)" aria-label="间隔减一秒">−</button><span><small>每隔</small><strong id="ramp-lite-interval-display">${ramp.interval} 秒</strong><em>固定 +1 BPM</em></span><button type="button" onclick="Metro.adjustLiteInterval(1)" aria-label="间隔加一秒">＋</button></div></div>`;return `<div id="ramp-range-fields" class="ramp-range-grid"><label class="ramp-field">从 BPM<input id="ramp-start" type="number" min="30" max="300" value="${ramp.start}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">到 BPM<input id="ramp-target" type="number" min="30" max="300" value="${ramp.target}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每次变化 BPM<input id="ramp-step" type="number" min="1" max="30" value="${ramp.step}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每隔多少秒<span class="ramp-stepper-field"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',-1)">−</button><input id="ramp-interval" type="number" min="1" max="600" value="${ramp.interval}" oninput="Metro.rampFieldChanged()"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',1)">＋</button></span></label><div class="ramp-derived ramp-field-wide"><span>预计总时长（自动计算）</span><strong id="ramp-duration"></strong></div></div>`;};
 Metro._renderRampFields=function(){const host=document.getElementById('ramp-mode-fields');if(host)host.innerHTML=this._rampFieldsMarkup();this._rampUpdateUI();};
 Metro.setRampMode=function(mode){
-    this.pauseRamp();const ramp=this.ramp;ramp.mode=mode==='range'?'range':'lite';ramp.started=false;ramp.completed=false;ramp.current=ramp.mode==='range'?this._rampNumber('ramp-start',ramp.start,30,300):ramp.baseline;
+    const ramp=this.ramp;if(mode===ramp.mode)return;this.pauseRamp();delete ramp.remaining;ramp.mode=mode==='range'?'range':'lite';ramp.completed=false;ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;
     const modal=document.getElementById('metro-ramp-modal');if(modal)modal.dataset.mode=ramp.mode;document.querySelectorAll('[data-ramp-mode]').forEach(button=>button.classList.toggle('active',button.dataset.rampMode===ramp.mode));
     this._renderRampFields();
     this._rampUpdateUI(ramp.mode==='lite'?`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`:'高级渐速待开始 · 总时长由区间、步长和间隔计算');
 };
 Metro.openRamp=function(){
     if(document.getElementById('metro-ramp-modal')){document.getElementById('metro-ramp-modal').remove();return;}
-    if(this.ramp.started){this.openRampActions();return;}
-    this.stop();const ramp=this.ramp;ramp.baseline=this.bpm;ramp.start=this.bpm;ramp.target=Math.min(300,this.bpm+30);ramp.current=this.bpm;ramp.step=Math.max(1,ramp.step||1);ramp.interval=Math.max(1,ramp.interval||5);ramp.mode='lite';ramp.running=false;ramp.started=false;ramp.completed=false;ramp.generation++;clearTimeout(ramp.timer);document.getElementById('metro-ramp-modal')?.remove();
+    const ramp=this.ramp;if(!ramp.started){this.stop();ramp.baseline=this.bpm;ramp.start=this.bpm;ramp.target=Math.min(300,this.bpm+30);ramp.current=this.bpm;ramp.step=Math.max(1,ramp.step||1);ramp.interval=Math.max(1,ramp.interval||5);ramp.mode='lite';ramp.completed=false;ramp.generation++;delete ramp.remaining;}
     const modal=document.createElement('div');modal.id='metro-ramp-modal';modal.className='practice-modal metro-ramp-modal';modal.dataset.mode='lite';modal.innerHTML=`<div class="practice-modal-card"><h3>渐速训练</h3><div class="ramp-tabs"><button type="button" data-ramp-mode="lite" class="active" onclick="Metro.setRampMode('lite')">精简版</button><button type="button" data-ramp-mode="range" onclick="Metro.setRampMode('range')">高级版</button></div><div class="ramp-bpm-display"><small>当前 ♩ =</small><strong id="ramp-current">${ramp.current}</strong><span id="ramp-state">等待开始</span></div><div id="ramp-mode-fields"></div><div class="ramp-progress"><i id="ramp-progress"></i></div><div class="ramp-actions"><button type="button" class="ramp-start" id="ramp-start-button" onclick="Metro.toggleRamp()">▶ 开始</button><button type="button" class="ramp-restore" id="ramp-restore-button" onclick="Metro.restoreRamp()">↶ 撤回到 ${ramp.baseline} BPM</button><button type="button" class="ramp-confirm" onclick="Metro.closeRamp()">完成并退出</button></div></div>`;
-    modal.setAttribute('role','dialog');modal.setAttribute('aria-label','渐速训练设置');modal.firstElementChild.querySelector('h3').insertAdjacentHTML('afterend','<small class="ramp-dismiss-hint">点空白处收起</small>');document.body.appendChild(modal);this._renderRampFields();this._rampUpdateUI(`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`);placeRampMenu();
+    modal.dataset.mode=ramp.mode;modal.querySelectorAll('[data-ramp-mode]').forEach(b=>b.classList.toggle('active',b.dataset.rampMode===ramp.mode));modal.setAttribute('role','dialog');modal.setAttribute('aria-label','渐速训练设置');modal.firstElementChild.querySelector('h3').insertAdjacentHTML('afterend','<small class="ramp-dismiss-hint">点空白处收起</small>');document.body.appendChild(modal);this._renderRampFields();this._rampUpdateUI(ramp.started?'':`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`);placeRampMenu();
 };
 function placeRampMenu(){
- const pop=document.querySelector('#ramp-actions-pop,#metro-ramp-modal'),b=document.querySelector('.metro-ramp-open');if(!pop||!b)return;
+ const pop=document.getElementById('metro-ramp-modal'),b=document.querySelector('.metro-ramp-open');if(!pop||!b)return;
  const r=b.getBoundingClientRect(),top=Math.max(8,document.querySelector('.top-bar')?.getBoundingClientRect().bottom||0)+4,bottom=Math.min(innerHeight-8,document.querySelector('nav')?.getBoundingClientRect().top||innerHeight)-4;
  const down=bottom-r.bottom-6,up=r.top-top-6,below=down>=pop.scrollHeight||down>=up;
  pop.style.maxHeight=Math.max(80,below?down:up)+'px';pop.style.left=Math.max(8,Math.min(innerWidth-pop.offsetWidth-8,r.left+(r.width-pop.offsetWidth)/2))+'px';pop.style.top=(below?r.bottom+6:Math.max(top,r.top-6-pop.offsetHeight))+'px';
 }
-Metro.openRampActions=function(){const old=document.getElementById('ramp-actions-pop');if(old){old.remove();return;}const pop=document.createElement('div');pop.id='ramp-actions-pop';pop.setAttribute('role','group');pop.setAttribute('aria-label','渐速训练控制');pop.innerHTML='<small class="ramp-dismiss-hint">点空白处收起 · 不会暂停训练</small><button data-toggle></button><button data-again>重新开始</button><button data-back>回到起始速度</button><button data-end>完成并退出</button>';document.body.append(pop);this.renderRampDock();placeRampMenu();pop.onclick=e=>{const r=this.ramp;if(e.target.hasAttribute('data-toggle')){this.toggleRamp();}else if(e.target.hasAttribute('data-end'))this.closeRamp();else if(e.target.matches('[data-back],[data-again]')){const again=e.target.hasAttribute('data-again');this.pauseRamp();delete r.remaining;r.current=r.mode==='range'?r.start:r.baseline;r.completed=false;r.started=true;this._rampUpdateUI();if(again)this.toggleRamp();}else return;pop.remove();};};
-document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('#metro-ramp-modal,#ramp-actions-pop,.metro-ramp-open')){document.querySelector('#metro-ramp-modal,#ramp-actions-pop')?.remove();}});
-document.addEventListener('click',e=>{if(e.target.closest?.('[data-ramp-mode]'))placeRampMenu();});window.addEventListener('resize',placeRampMenu);document.addEventListener('scroll',e=>{if(!e.target.closest?.('#metro-ramp-modal,#ramp-actions-pop'))placeRampMenu();},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('ramp-actions-pop')?.remove();document.getElementById('metro-ramp-modal')?.remove();}});
-Metro.restoreRamp=function(){const ramp=this.ramp;this.pauseRamp();ramp.current=ramp.mode==='range'?this._rampNumber('ramp-start',ramp.start,30,300):ramp.baseline;ramp.started=false;ramp.completed=false;this._rampUpdateUI(`已撤回到 ${Math.round(ramp.current)} BPM · 等待开始`);};
+document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('#metro-ramp-modal,.metro-ramp-open'))document.getElementById('metro-ramp-modal')?.remove();});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-ramp-mode]'))placeRampMenu();});window.addEventListener('resize',placeRampMenu);document.addEventListener('scroll',e=>{if(!e.target.closest?.('#metro-ramp-modal'))placeRampMenu();},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('metro-ramp-modal')?.remove();});
+Metro.restoreRamp=function(){const ramp=this.ramp;this.pauseRamp();delete ramp.remaining;ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;ramp.completed=false;this._rampUpdateUI(`已撤回到 ${Math.round(ramp.current)} BPM`);};
 
 /* ---------- 和弦查询：同尺寸十二平均律刻度尺 ---------- */
 const ROOT_NATURALS=new Map([[0,'C'],[2,'D'],[4,'E'],[5,'F'],[7,'G'],[9,'A'],[11,'B'],[12,'C']]);
@@ -24172,7 +24191,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.9';
+const FINAL_BUILD='2026.11.19.10';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -24271,6 +24290,8 @@ Tuner.startLoop=function(){
 
 /* 节拍器：先完成默认重拍采样解码，再调度第一拍。 */
 Metro._finalStartToken=0;Metro._starting=false;
+Metro._playIcon=document.getElementById('play-btn').innerHTML;
+Metro._pauseIcon='<svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
 Metro.start=async function(){
     window.DrumWorkshop?.stop();
     if(this.playing||this._starting)return;const token=++this._finalStartToken;this._starting=true;
@@ -24287,11 +24308,11 @@ Metro.start=async function(){
     finally{if(button){button.disabled=false;button.setAttribute('aria-label','开始或暂停节拍器');}this._starting=false;}
     if(token!==this._finalStartToken||this.playing)return;
     this._visualEvents.length=0;this.playing=true;this.currentBeat=0;this.nextTime=AudioEngine.ctx.currentTime+.075;this._scheduler();
-    if(button)button.innerHTML='<svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    if(button)button.innerHTML=this._pauseIcon;
 };
 const metroStopBeforeFinal=Metro.stop.bind(Metro);
 Metro.stop=function(){this._finalStartToken++;this._starting=false;if(this.workPlayback){window.DrumWorkshop?.stop();this.workPlayback=null;}return metroStopBeforeFinal();};
-Metro.toggle=function(){if(this.ramp.started){this.toggleRamp();return;}if(this._starting){this.stop();return;}if(this.playing)this.stop();else{this.customMode=false;void this.start();}};
+Metro.toggle=function(){if(this.ramp.pending)return;if(this.ramp.started){this.toggleRamp();return;}if(this._starting){this.stop();return;}if(this.playing)this.stop();else{this.customMode=false;void this.start();}};
 Metro.toggleCustomPlayback=function(){if(this.playing&&this.customMode){this.stop();return;}if(this.playing)this.stop();this.customMode=true;void this.start();};
 
 /* 视唱谱面：手机默认每行 1 小节，平板默认每行 2 小节，并可手动切换。 */
@@ -26232,7 +26253,7 @@ Shell.init();
   const pill=document.createElement('aside');pill.id='music-tip-pill';pill.className='music-tip-pill';
   pill.innerHTML='<button class="music-tip-toggle" data-ui="lightbulb" type="button" title="学习小贴士 · 可拖动" aria-label="学习小贴士" aria-expanded="false"></button>';
   const host=document.createElement('div');host.id='music-tip-stream';host.className='music-tip-stream';
-  document.querySelector('.top-bar').insertBefore(pill,byId('theme-toggle-btn'));document.body.append(host);
+  const dock=document.createElement('div');dock.id='tip-gauge-dock';document.querySelector('#page-tuner .tuner-display').append(dock);dock.append(pill);document.body.append(host);
   const close=()=>{byId('music-tip-card')?.remove();pill.firstChild.setAttribute('aria-expanded','false');};
   const syncVisibility=()=>{host.hidden=get(hiddenKey,'0')==='1'||get(foldedKey,'0')==='1';host.replaceChildren();const opt=document.querySelector('#music-tip-settings-v21 [data-auto]');if(opt)opt.checked=get(hiddenKey,'0')!=='1';};
   const setStream=state=>{localStorage.setItem(hiddenKey,state==='off'?'1':'0');localStorage.setItem(foldedKey,state==='fold'?'1':'0');syncVisibility();close();if(!host.hidden)spawn();};
@@ -26262,18 +26283,18 @@ Shell.init();
   const limit=(v,min,max)=>Math.max(min,Math.min(v,max));let drag,dragged=false;
   function bounds(){return {w:innerWidth,h:innerHeight,top:Math.max(8,document.querySelector('.top-bar').getBoundingClientRect().bottom+5),bottom:Math.min(innerHeight-8,document.querySelector('nav').getBoundingClientRect().top-5)};}
   function placeCard(){const card=byId('music-tip-card');if(!card)return;const r=pill.getBoundingClientRect(),b=bounds(),h=card.offsetHeight;Object.assign(card.style,{left:`${limit(r.left+22-card.offsetWidth/2,8,b.w-card.offsetWidth-8)}px`,top:`${limit(r.bottom+h+6<b.bottom?r.bottom+6:r.top-h-6,b.top,b.bottom-h)}px`,right:'auto',bottom:'auto'});}
-  function move(x,y){const b=bounds();Object.assign(pill.style,{position:'fixed',left:`${limit(x,6,b.w-50)}px`,top:`${limit(y,b.top,b.bottom-44)}px`,right:'auto',bottom:'auto'});placeCard();}
-  function restore(){const value=get('mtu-tip-xy','').split(',').map(Number);if(value.length===2&&value.every(Number.isFinite))move(value[0]*(innerWidth-44),value[1]*(innerHeight-44));else{pill.removeAttribute('style');placeCard();}}
+  function move(x,y){if(pill.parentElement!==document.body)document.body.append(pill);const b=bounds();Object.assign(pill.style,{position:'fixed',left:`${limit(x,6,b.w-50)}px`,top:`${limit(y,b.top,b.bottom-44)}px`,right:'auto',bottom:'auto'});placeCard();}
+  function restore(){if(drag)return;const value=get('mtu-tip-xy','').split(',').map(Number);if(value.length===2&&value.every(Number.isFinite)){move(value[0]*(innerWidth-44),value[1]*(innerHeight-44));return;}pill.removeAttribute('style');if(byId('page-tuner').classList.contains('active'))dock.append(pill);else byId('theme-toggle-btn').before(pill);placeCard();}
   pill.onpointerdown=e=>{if(e.button!==0)return;const r=pill.getBoundingClientRect();drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top};dragged=false;pill.firstChild.setPointerCapture(e.pointerId);};
-  pill.onpointermove=e=>{if(!drag||e.pointerId!==drag.id)return;if(!dragged&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;dragged=true;pill.firstChild.setPointerCapture(e.pointerId);move(e.clientX-drag.dx,e.clientY-drag.dy);};
-  window.addEventListener('pointerup',()=>{if(drag&&dragged){const r=pill.getBoundingClientRect();localStorage.setItem('mtu-tip-xy',[r.left/(innerWidth-44),r.top/(innerHeight-44)].join(','));}drag=null;});window.addEventListener('pointercancel',()=>{drag=null;dragged=false;});window.addEventListener('resize',restore);requestAnimationFrame(restore);
+  pill.onpointermove=e=>{if(!drag||e.pointerId!==drag.id)return;if(!dragged&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;dragged=true;dock.classList.add('return-target');move(e.clientX-drag.dx,e.clientY-drag.dy);pill.firstChild.setPointerCapture(e.pointerId);};
+  window.addEventListener('pointerup',e=>{if(drag?.id!==e.pointerId)return;drag=null;dock.classList.remove('return-target');if(!dragged)return;const r=pill.getBoundingClientRect(),d=dock.getBoundingClientRect();if(d.width&&Math.hypot(r.left-d.left,r.top-d.top)<=34){localStorage.removeItem('mtu-tip-xy');restore();}else localStorage.setItem('mtu-tip-xy',[r.left/(innerWidth-44),r.top/(innerHeight-44)].join(','));});window.addEventListener('pointercancel',()=>{drag=null;dragged=false;dock.classList.remove('return-target');restore();});window.addEventListener('resize',restore);requestAnimationFrame(restore);
   for(const option of position.options)option.selected=option.value===get(positionKey,'spread');
   position.onchange=()=>{localStorage.setItem(positionKey,position.value);host.replaceChildren();spawn();};
   const obstacles='button,select,input,textarea,summary,label,a,[role="button"],svg,canvas,#tuner-headstock,#tuner-range,.ear-display,#sight-score,.drum-grid,.music-tip-toggle';
   const spawn=(hint='')=>{
     if(typeof hint!=='string')hint='';const reduced=document.documentElement.dataset.motion==='reduced'||matchMedia('(prefers-reduced-motion: reduce)').matches;
     if((host.hidden||reduced)&&!hint||document.hidden||byId('music-tip-card'))return;
-    const page=byId(`page-${scene}`);if(!page?.classList.contains('active')||[...document.querySelectorAll('dialog[open],.practice-modal:not([hidden]),.metro-visual-panel,#study-flyout:not([hidden]),.tuner-settings-fold[open],#ramp-actions-pop,.start-screen:not([hidden]):not(.hide)')].some(e=>e.getClientRects().length)){host.replaceChildren();return;}
+    const page=byId(`page-${scene}`);if(!page?.classList.contains('active')||[...document.querySelectorAll('dialog[open],.practice-modal:not([hidden]),.metro-visual-panel,#study-flyout:not([hidden]),.tuner-settings-fold[open],.start-screen:not([hidden]):not(.hide)')].some(e=>e.getClientRects().length)){host.replaceChildren();return;}
     if(hint){hideHint();host.dataset.guide='true';}const area=host.getBoundingClientRect();if(!area.width||!area.height)return;
     const blocks=[...page.querySelectorAll(obstacles+',output,.tuner-display,#instrument-stage,#fret-game'),pill,document.querySelector('.top-bar'),document.querySelector('nav')].filter(Boolean).map(node=>node.getBoundingClientRect()).filter(r=>r.width&&r.height);for(const n of page.querySelectorAll('p,h2,h3,h4,article>strong')){const range=document.createRange();range.selectNodeContents(n);blocks.push(...range.getClientRects());}
     if(scene==='instrument'){for(const el of page.querySelectorAll('.board-tabs,.board-status,.board-answers,.board-menu:not([hidden]),.board-study-settings:not([hidden]),.instrument-session-strip,#instrument-stage')){const r=el.getBoundingClientRect();if(r.width&&r.height)blocks.push({left:r.left-10,right:r.right+10,top:r.top-10,bottom:r.bottom+10});}}
@@ -26292,7 +26313,7 @@ Shell.init();
   };
   const changeScene=()=>{
     const next=document.querySelector('main .page.active')?.id.replace('page-','');if(!scenes[next]||next===scene)return;
-    const follow=!!byId('music-tip-card');scene=next;context=null;close();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
+    const follow=!!byId('music-tip-card');scene=next;context=null;close();restore();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
   };
   const observer=new MutationObserver(changeScene);
   document.querySelectorAll('main > .page').forEach(page=>observer.observe(page,{attributes:true,attributeFilter:['class']}));

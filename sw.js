@@ -1,4 +1,4 @@
-const CACHE_NAME='music-toolbox-ultra-v13.5.30-20261119-9';
+const CACHE_NAME='music-toolbox-ultra-v13.5.31-20261119-10';
 const SCOPE_TAG='::'+encodeURIComponent(new URL(self.registration.scope).pathname);
 const ACTIVE_CACHE=CACHE_NAME+SCOPE_TAG;
 const STAGING_CACHE=`${ACTIVE_CACHE}-staging`;

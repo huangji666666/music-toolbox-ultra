@@ -162,7 +162,7 @@
   const pill=document.createElement('aside');pill.id='music-tip-pill';pill.className='music-tip-pill';
   pill.innerHTML='<button class="music-tip-toggle" data-ui="lightbulb" type="button" title="学习小贴士 · 可拖动" aria-label="学习小贴士" aria-expanded="false"></button>';
   const host=document.createElement('div');host.id='music-tip-stream';host.className='music-tip-stream';
-  document.querySelector('.top-bar').insertBefore(pill,byId('theme-toggle-btn'));document.body.append(host);
+  const dock=document.createElement('div');dock.id='tip-gauge-dock';document.querySelector('#page-tuner .tuner-display').append(dock);dock.append(pill);document.body.append(host);
   const close=()=>{byId('music-tip-card')?.remove();pill.firstChild.setAttribute('aria-expanded','false');};
   const syncVisibility=()=>{host.hidden=get(hiddenKey,'0')==='1'||get(foldedKey,'0')==='1';host.replaceChildren();const opt=document.querySelector('#music-tip-settings-v21 [data-auto]');if(opt)opt.checked=get(hiddenKey,'0')!=='1';};
   const setStream=state=>{localStorage.setItem(hiddenKey,state==='off'?'1':'0');localStorage.setItem(foldedKey,state==='fold'?'1':'0');syncVisibility();close();if(!host.hidden)spawn();};
@@ -192,18 +192,18 @@
   const limit=(v,min,max)=>Math.max(min,Math.min(v,max));let drag,dragged=false;
   function bounds(){return {w:innerWidth,h:innerHeight,top:Math.max(8,document.querySelector('.top-bar').getBoundingClientRect().bottom+5),bottom:Math.min(innerHeight-8,document.querySelector('nav').getBoundingClientRect().top-5)};}
   function placeCard(){const card=byId('music-tip-card');if(!card)return;const r=pill.getBoundingClientRect(),b=bounds(),h=card.offsetHeight;Object.assign(card.style,{left:`${limit(r.left+22-card.offsetWidth/2,8,b.w-card.offsetWidth-8)}px`,top:`${limit(r.bottom+h+6<b.bottom?r.bottom+6:r.top-h-6,b.top,b.bottom-h)}px`,right:'auto',bottom:'auto'});}
-  function move(x,y){const b=bounds();Object.assign(pill.style,{position:'fixed',left:`${limit(x,6,b.w-50)}px`,top:`${limit(y,b.top,b.bottom-44)}px`,right:'auto',bottom:'auto'});placeCard();}
-  function restore(){const value=get('mtu-tip-xy','').split(',').map(Number);if(value.length===2&&value.every(Number.isFinite))move(value[0]*(innerWidth-44),value[1]*(innerHeight-44));else{pill.removeAttribute('style');placeCard();}}
+  function move(x,y){if(pill.parentElement!==document.body)document.body.append(pill);const b=bounds();Object.assign(pill.style,{position:'fixed',left:`${limit(x,6,b.w-50)}px`,top:`${limit(y,b.top,b.bottom-44)}px`,right:'auto',bottom:'auto'});placeCard();}
+  function restore(){if(drag)return;const value=get('mtu-tip-xy','').split(',').map(Number);if(value.length===2&&value.every(Number.isFinite)){move(value[0]*(innerWidth-44),value[1]*(innerHeight-44));return;}pill.removeAttribute('style');if(byId('page-tuner').classList.contains('active'))dock.append(pill);else byId('theme-toggle-btn').before(pill);placeCard();}
   pill.onpointerdown=e=>{if(e.button!==0)return;const r=pill.getBoundingClientRect();drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top};dragged=false;pill.firstChild.setPointerCapture(e.pointerId);};
-  pill.onpointermove=e=>{if(!drag||e.pointerId!==drag.id)return;if(!dragged&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;dragged=true;pill.firstChild.setPointerCapture(e.pointerId);move(e.clientX-drag.dx,e.clientY-drag.dy);};
-  window.addEventListener('pointerup',()=>{if(drag&&dragged){const r=pill.getBoundingClientRect();localStorage.setItem('mtu-tip-xy',[r.left/(innerWidth-44),r.top/(innerHeight-44)].join(','));}drag=null;});window.addEventListener('pointercancel',()=>{drag=null;dragged=false;});window.addEventListener('resize',restore);requestAnimationFrame(restore);
+  pill.onpointermove=e=>{if(!drag||e.pointerId!==drag.id)return;if(!dragged&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;dragged=true;dock.classList.add('return-target');move(e.clientX-drag.dx,e.clientY-drag.dy);pill.firstChild.setPointerCapture(e.pointerId);};
+  window.addEventListener('pointerup',e=>{if(drag?.id!==e.pointerId)return;drag=null;dock.classList.remove('return-target');if(!dragged)return;const r=pill.getBoundingClientRect(),d=dock.getBoundingClientRect();if(d.width&&Math.hypot(r.left-d.left,r.top-d.top)<=34){localStorage.removeItem('mtu-tip-xy');restore();}else localStorage.setItem('mtu-tip-xy',[r.left/(innerWidth-44),r.top/(innerHeight-44)].join(','));});window.addEventListener('pointercancel',()=>{drag=null;dragged=false;dock.classList.remove('return-target');restore();});window.addEventListener('resize',restore);requestAnimationFrame(restore);
   for(const option of position.options)option.selected=option.value===get(positionKey,'spread');
   position.onchange=()=>{localStorage.setItem(positionKey,position.value);host.replaceChildren();spawn();};
   const obstacles='button,select,input,textarea,summary,label,a,[role="button"],svg,canvas,#tuner-headstock,#tuner-range,.ear-display,#sight-score,.drum-grid,.music-tip-toggle';
   const spawn=(hint='')=>{
     if(typeof hint!=='string')hint='';const reduced=document.documentElement.dataset.motion==='reduced'||matchMedia('(prefers-reduced-motion: reduce)').matches;
     if((host.hidden||reduced)&&!hint||document.hidden||byId('music-tip-card'))return;
-    const page=byId(`page-${scene}`);if(!page?.classList.contains('active')||[...document.querySelectorAll('dialog[open],.practice-modal:not([hidden]),.metro-visual-panel,#study-flyout:not([hidden]),.tuner-settings-fold[open],#ramp-actions-pop,.start-screen:not([hidden]):not(.hide)')].some(e=>e.getClientRects().length)){host.replaceChildren();return;}
+    const page=byId(`page-${scene}`);if(!page?.classList.contains('active')||[...document.querySelectorAll('dialog[open],.practice-modal:not([hidden]),.metro-visual-panel,#study-flyout:not([hidden]),.tuner-settings-fold[open],.start-screen:not([hidden]):not(.hide)')].some(e=>e.getClientRects().length)){host.replaceChildren();return;}
     if(hint){hideHint();host.dataset.guide='true';}const area=host.getBoundingClientRect();if(!area.width||!area.height)return;
     const blocks=[...page.querySelectorAll(obstacles+',output,.tuner-display,#instrument-stage,#fret-game'),pill,document.querySelector('.top-bar'),document.querySelector('nav')].filter(Boolean).map(node=>node.getBoundingClientRect()).filter(r=>r.width&&r.height);for(const n of page.querySelectorAll('p,h2,h3,h4,article>strong')){const range=document.createRange();range.selectNodeContents(n);blocks.push(...range.getClientRects());}
     if(scene==='instrument'){for(const el of page.querySelectorAll('.board-tabs,.board-status,.board-answers,.board-menu:not([hidden]),.board-study-settings:not([hidden]),.instrument-session-strip,#instrument-stage')){const r=el.getBoundingClientRect();if(r.width&&r.height)blocks.push({left:r.left-10,right:r.right+10,top:r.top-10,bottom:r.bottom+10});}}
@@ -222,7 +222,7 @@
   };
   const changeScene=()=>{
     const next=document.querySelector('main .page.active')?.id.replace('page-','');if(!scenes[next]||next===scene)return;
-    const follow=!!byId('music-tip-card');scene=next;context=null;close();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
+    const follow=!!byId('music-tip-card');scene=next;context=null;close();restore();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
   };
   const observer=new MutationObserver(changeScene);
   document.querySelectorAll('main > .page').forEach(page=>observer.observe(page,{attributes:true,attributeFilter:['class']}));

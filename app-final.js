@@ -3,8 +3,8 @@
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.30';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.30-20261119-9';
+const V13_VERSION='13.5.31';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.31-20261119-10';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -801,7 +801,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const steps=Math.ceil(Math.abs(r.target-r.start)/r.step),pct=r.completed?100:Math.min(100,Math.round(100*Math.floor(Math.abs(r.current-r.start)/r.step)/Math.max(1,steps)));
     const label=!r.started?'渐速训练':`${r.completed?'已完成':r.running?'进行中':'已暂停'} · ${r.mode==='range'?pct+'%':r.current+' BPM'}`;
     if(b.dataset.label!==label){b.dataset.label=label;b.textContent=label;b.dataset.mode=r.started?r.mode:'';b.dataset.running=String(r.running);b.style.setProperty('--progress',pct+'%');if(r.started){document.getElementById('bpm-val').textContent=r.current;document.getElementById('bpm-slider').value=r.current;}}
-    const pop=document.getElementById('ramp-actions-pop');if(pop){pop.querySelector('[data-toggle]').textContent=r.running?'暂停':r.completed?'再练一次':'继续';}
+    const main=document.getElementById('play-btn');if(main&&(r.started||main.hasAttribute('data-ramp'))){const state=r.started?(r.running?'pause':r.completed?'restart':'resume'):'';if(main.dataset.ramp!==state){if(state)main.dataset.ramp=state;else delete main.dataset.ramp;main.innerHTML=r.running?this._pauseIcon:this._playIcon;main.setAttribute('aria-label',r.running?'暂停渐速训练':r.completed?'重新开始渐速训练':r.started?'继续渐速训练':'开始或暂停节拍器');}}
+    const fields=document.getElementById('ramp-range-fields');if(fields&&fields.dataset.running!==String(r.running)){fields.dataset.running=String(r.running);fields.querySelectorAll('input,button').forEach(el=>el.disabled=r.running);}
   };
   const rampUI=Metro._rampUpdateUI.bind(Metro);
   Metro._rampUpdateUI=function(...args){const result=rampUI(...args);this.renderRampDock();return result;};
@@ -813,7 +814,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.30';
+const RELEASE_VERSION='13.5.31';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -1249,25 +1250,26 @@ Metro._rampUpdateUI=function(message=''){
     if(state)state.textContent=message||(ramp.mode==='range'?`${ramp.start} → ${ramp.target} · 每 ${ramp.interval} 秒变化 ${ramp.step} BPM`:`当前 ${ramp.current} BPM · 每 ${ramp.interval} 秒 +1 BPM`);if(button)button.textContent=ramp.running?'Ⅱ 暂停':ramp.completed?'↻ 重新开始':ramp.started?'▶ 继续':'▶ 开始';
     this._rampUpdateDerived();
 };
-Metro.rampFieldChanged=function(){if(this.ramp.running)return;this._rampReadFields();this.ramp.current=this.ramp.mode==='range'?this.ramp.start:this.ramp.baseline;this.ramp.started=false;this.ramp.completed=false;this._rampUpdateUI();};
+Metro.rampFieldChanged=function(){if(this.ramp.running)return;this._rampReadFields();this.ramp.current=this.ramp.mode==='range'?this.ramp.start:this.ramp.baseline;delete this.ramp.remaining;this.ramp.completed=false;this._rampUpdateUI();};
 Metro.adjustRampValue=function(id,delta){const input=document.getElementById(id);if(!input)return;input.value=String(clamp((Number(input.value)||5)+(Number(delta)||0),Number(input.min)||1,Number(input.max)||600));this.rampFieldChanged();};
 Metro._rampBeatDuration=function(){return 60/Math.max(30,this.ramp.current);};
 Metro._rampScheduleBeat=function(index,time){
+    if(this.ramp.running){const token=this.ramp.generation;setTimeout(()=>{if(this.ramp.running&&this.ramp.generation===token)document.querySelectorAll('.v-dot').forEach((dot,i)=>{dot.classList.remove('beat-1','beat-mid','beat-weak');if(i===index)dot.classList.add(index===0?'beat-1':this._accentPattern()[i]>=.72?'beat-mid':'beat-weak');});},Math.max(0,(time-AudioEngine.ctx.currentTime)*1000));}
     this._visualEvents.push({beat:index,time,duration:this._rampBeatDuration(index),level:this._accentPattern()[index]??.58});if(this._visualEvents.length>16)this._visualEvents.shift();if(this.visualPanel?.querySelector('[data-sound]')?.checked===false)return;
     const duration=this._rampBeatDuration(index),level=this._accentPattern()[index]??.58,strong=this.accentMode==='meter'&&index===0,secondary=this.accentMode==='meter'&&!strong&&level>=.72;this._playMainBeat(index,time,strong,secondary);
     if(this.sub>1){const subDur=duration/this.sub;for(let sub=1;sub<this.sub;sub++){const swing=this.swingEnabled&&this.sub%2===0&&sub%2===1;AudioEngine.playClick(time+this._swingPosition(sub,subDur,this.sub),false,this.subSound(swing),this._subdivisionLevel(swing));}}else if(this.swingEnabled)AudioEngine.playClick(time+duration*this.swing,false,this.subSound(true),this._subdivisionLevel(true));
 };
 Metro.toggleRamp=async function(){
     const ramp=this.ramp;if(ramp.running){this.pauseRamp();return;}this._rampReadFields();if(ramp.mode==='range'&&ramp.start===ramp.target){toast('起始 BPM 和目标 BPM 不能相同');return;}if(ramp.completed){ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;ramp.started=false;ramp.completed=false;}if(!ramp.started)ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;
-    if(ramp.pending)return;const generation=ramp.generation;ramp.pending=true;try{if(!AudioEngine.ctx)await AudioEngine.init();else if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await this._prepareCurrentSounds();if(!AudioEngine.ctx)throw Error('audio');}catch(error){toast('节拍器音频暂未就绪，请重试');return;}finally{ramp.pending=false;}if(generation!==ramp.generation)return;this._visualEvents.length=0;ramp.running=true;ramp.started=true;ramp.completed=false;ramp.generation++;ramp.beat=0;ramp.nextBeatTime=AudioEngine.ctx.currentTime+.06;ramp.nextChangeAt=performance.now()+(ramp.remaining??ramp.interval*1000);delete ramp.remaining;document.getElementById('metro-ramp-modal')?.remove();document.getElementById('ramp-actions-pop')?.remove();this._rampUpdateUI();this._runRamp(ramp.generation);if(this.visualPanel)this.startVisualMetronome(this.visualPanel);
+    if(ramp.pending)return;const generation=ramp.generation;ramp.pending=true;try{if(!AudioEngine.ctx)await AudioEngine.init();else if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await this._prepareCurrentSounds();if(!AudioEngine.ctx)throw Error('audio');}catch(error){toast('节拍器音频暂未就绪，请重试');return;}finally{ramp.pending=false;}if(generation!==ramp.generation)return;this._visualEvents.length=0;ramp.running=true;ramp.started=true;ramp.completed=false;ramp.generation++;ramp.beat=0;ramp.nextBeatTime=AudioEngine.ctx.currentTime+.06;ramp.nextChangeAt=performance.now()+(ramp.remaining??ramp.interval*1000);delete ramp.remaining;document.getElementById('metro-ramp-modal')?.remove();this._rampUpdateUI();this._runRamp(ramp.generation);if(this.visualPanel)this.startVisualMetronome(this.visualPanel);
 };
 Metro._runRamp=function(generation){
     const ramp=this.ramp;if(!ramp.running||generation!==ramp.generation||!AudioEngine.ctx)return;const audioNow=AudioEngine.ctx.currentTime;while(ramp.nextBeatTime<audioNow+.14){const beat=ramp.beat;this._rampScheduleBeat(beat,ramp.nextBeatTime);ramp.nextBeatTime+=this._rampBeatDuration(beat);ramp.beat=(beat+1)%Math.max(1,this.ts);}
     const now=performance.now();if(now>=ramp.nextChangeAt){const ticks=Math.max(1,Math.floor((now-ramp.nextChangeAt)/(ramp.interval*1000))+1);ramp.nextChangeAt+=ticks*ramp.interval*1000;if(ramp.mode==='lite'){ramp.current=clamp(ramp.current+ticks,30,300);if(ramp.current>=300){this.pauseRamp(true);this._rampUpdateUI('已到 300 BPM · 点击撤回或退出');return;}}else{const direction=Math.sign(ramp.target-ramp.start)||1;ramp.current+=direction*ramp.step*ticks;if((direction>0&&ramp.current>=ramp.target)||(direction<0&&ramp.current<=ramp.target)){ramp.current=ramp.target;this.pauseRamp(true);this._rampUpdateUI(`完成 · 已到 ${ramp.target} BPM`);return;}}}
     this._rampUpdateUI();ramp.timer=setTimeout(()=>this._runRamp(generation),25);
 };
-Metro.pauseRamp=function(done=false){const ramp=this.ramp;if(ramp.running&&!done)ramp.remaining=Math.max(1,ramp.nextChangeAt-performance.now());ramp.running=false;ramp.completed=!!done;ramp.generation++;clearTimeout(ramp.timer);ramp.timer=null;this._rampUpdateUI(done?`完成 · 当前 ${Math.round(ramp.current)} BPM`:'已暂停 · 点击继续');};
-Metro.closeRamp=function(){const r=this.ramp;r.started=false;delete r.remaining;this.pauseRamp();this.setBpm(r.baseline);this.stop();document.getElementById('metro-ramp-modal')?.remove();document.getElementById('ramp-actions-pop')?.remove();};
+Metro.pauseRamp=function(done=false){const ramp=this.ramp;if(ramp.running&&!done)ramp.remaining=Math.max(1,ramp.nextChangeAt-performance.now());ramp.running=false;ramp.completed=!!done;ramp.generation++;clearTimeout(ramp.timer);ramp.timer=null;document.querySelectorAll('.v-dot').forEach(dot=>dot.classList.remove('beat-1','beat-mid','beat-weak'));this._rampUpdateUI(done?`完成 · 当前 ${Math.round(ramp.current)} BPM`:'已暂停 · 点击继续');};
+Metro.closeRamp=function(){const r=this.ramp;r.started=false;this.pauseRamp();delete r.remaining;this.setBpm(r.baseline);this.stop();document.getElementById('metro-ramp-modal')?.remove();};
 
 /* ---------- 虚拟指板与演奏区共用真实琴弦坐标 ---------- */
 InstrumentPage.syncStringAxis=function(){
@@ -1470,7 +1472,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.30';
+const RELEASE_VERSION='13.5.31';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -1672,29 +1674,27 @@ Metro.renderSwingControls=function(){
 Metro._rampFieldsMarkup=function(){const ramp=this.ramp;if(ramp.mode==='lite')return `<div id="ramp-lite-fields" class="ramp-lite-panel"><input id="ramp-lite-interval" type="hidden" value="${ramp.interval}"><div class="ramp-lite-stepper" aria-label="精简渐速间隔"><button type="button" onclick="Metro.adjustLiteInterval(-1)" aria-label="间隔减一秒">−</button><span><small>每隔</small><strong id="ramp-lite-interval-display">${ramp.interval} 秒</strong><em>固定 +1 BPM</em></span><button type="button" onclick="Metro.adjustLiteInterval(1)" aria-label="间隔加一秒">＋</button></div></div>`;return `<div id="ramp-range-fields" class="ramp-range-grid"><label class="ramp-field">从 BPM<input id="ramp-start" type="number" min="30" max="300" value="${ramp.start}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">到 BPM<input id="ramp-target" type="number" min="30" max="300" value="${ramp.target}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每次变化 BPM<input id="ramp-step" type="number" min="1" max="30" value="${ramp.step}" oninput="Metro.rampFieldChanged()"></label><label class="ramp-field">每隔多少秒<span class="ramp-stepper-field"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',-1)">−</button><input id="ramp-interval" type="number" min="1" max="600" value="${ramp.interval}" oninput="Metro.rampFieldChanged()"><button type="button" onclick="Metro.adjustRampValue('ramp-interval',1)">＋</button></span></label><div class="ramp-derived ramp-field-wide"><span>预计总时长（自动计算）</span><strong id="ramp-duration"></strong></div></div>`;};
 Metro._renderRampFields=function(){const host=document.getElementById('ramp-mode-fields');if(host)host.innerHTML=this._rampFieldsMarkup();this._rampUpdateUI();};
 Metro.setRampMode=function(mode){
-    this.pauseRamp();const ramp=this.ramp;ramp.mode=mode==='range'?'range':'lite';ramp.started=false;ramp.completed=false;ramp.current=ramp.mode==='range'?this._rampNumber('ramp-start',ramp.start,30,300):ramp.baseline;
+    const ramp=this.ramp;if(mode===ramp.mode)return;this.pauseRamp();delete ramp.remaining;ramp.mode=mode==='range'?'range':'lite';ramp.completed=false;ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;
     const modal=document.getElementById('metro-ramp-modal');if(modal)modal.dataset.mode=ramp.mode;document.querySelectorAll('[data-ramp-mode]').forEach(button=>button.classList.toggle('active',button.dataset.rampMode===ramp.mode));
     this._renderRampFields();
     this._rampUpdateUI(ramp.mode==='lite'?`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`:'高级渐速待开始 · 总时长由区间、步长和间隔计算');
 };
 Metro.openRamp=function(){
     if(document.getElementById('metro-ramp-modal')){document.getElementById('metro-ramp-modal').remove();return;}
-    if(this.ramp.started){this.openRampActions();return;}
-    this.stop();const ramp=this.ramp;ramp.baseline=this.bpm;ramp.start=this.bpm;ramp.target=Math.min(300,this.bpm+30);ramp.current=this.bpm;ramp.step=Math.max(1,ramp.step||1);ramp.interval=Math.max(1,ramp.interval||5);ramp.mode='lite';ramp.running=false;ramp.started=false;ramp.completed=false;ramp.generation++;clearTimeout(ramp.timer);document.getElementById('metro-ramp-modal')?.remove();
+    const ramp=this.ramp;if(!ramp.started){this.stop();ramp.baseline=this.bpm;ramp.start=this.bpm;ramp.target=Math.min(300,this.bpm+30);ramp.current=this.bpm;ramp.step=Math.max(1,ramp.step||1);ramp.interval=Math.max(1,ramp.interval||5);ramp.mode='lite';ramp.completed=false;ramp.generation++;delete ramp.remaining;}
     const modal=document.createElement('div');modal.id='metro-ramp-modal';modal.className='practice-modal metro-ramp-modal';modal.dataset.mode='lite';modal.innerHTML=`<div class="practice-modal-card"><h3>渐速训练</h3><div class="ramp-tabs"><button type="button" data-ramp-mode="lite" class="active" onclick="Metro.setRampMode('lite')">精简版</button><button type="button" data-ramp-mode="range" onclick="Metro.setRampMode('range')">高级版</button></div><div class="ramp-bpm-display"><small>当前 ♩ =</small><strong id="ramp-current">${ramp.current}</strong><span id="ramp-state">等待开始</span></div><div id="ramp-mode-fields"></div><div class="ramp-progress"><i id="ramp-progress"></i></div><div class="ramp-actions"><button type="button" class="ramp-start" id="ramp-start-button" onclick="Metro.toggleRamp()">▶ 开始</button><button type="button" class="ramp-restore" id="ramp-restore-button" onclick="Metro.restoreRamp()">↶ 撤回到 ${ramp.baseline} BPM</button><button type="button" class="ramp-confirm" onclick="Metro.closeRamp()">完成并退出</button></div></div>`;
-    modal.setAttribute('role','dialog');modal.setAttribute('aria-label','渐速训练设置');modal.firstElementChild.querySelector('h3').insertAdjacentHTML('afterend','<small class="ramp-dismiss-hint">点空白处收起</small>');document.body.appendChild(modal);this._renderRampFields();this._rampUpdateUI(`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`);placeRampMenu();
+    modal.dataset.mode=ramp.mode;modal.querySelectorAll('[data-ramp-mode]').forEach(b=>b.classList.toggle('active',b.dataset.rampMode===ramp.mode));modal.setAttribute('role','dialog');modal.setAttribute('aria-label','渐速训练设置');modal.firstElementChild.querySelector('h3').insertAdjacentHTML('afterend','<small class="ramp-dismiss-hint">点空白处收起</small>');document.body.appendChild(modal);this._renderRampFields();this._rampUpdateUI(ramp.started?'':`等待开始 · 每 ${ramp.interval} 秒自动 +1 BPM`);placeRampMenu();
 };
 function placeRampMenu(){
- const pop=document.querySelector('#ramp-actions-pop,#metro-ramp-modal'),b=document.querySelector('.metro-ramp-open');if(!pop||!b)return;
+ const pop=document.getElementById('metro-ramp-modal'),b=document.querySelector('.metro-ramp-open');if(!pop||!b)return;
  const r=b.getBoundingClientRect(),top=Math.max(8,document.querySelector('.top-bar')?.getBoundingClientRect().bottom||0)+4,bottom=Math.min(innerHeight-8,document.querySelector('nav')?.getBoundingClientRect().top||innerHeight)-4;
  const down=bottom-r.bottom-6,up=r.top-top-6,below=down>=pop.scrollHeight||down>=up;
  pop.style.maxHeight=Math.max(80,below?down:up)+'px';pop.style.left=Math.max(8,Math.min(innerWidth-pop.offsetWidth-8,r.left+(r.width-pop.offsetWidth)/2))+'px';pop.style.top=(below?r.bottom+6:Math.max(top,r.top-6-pop.offsetHeight))+'px';
 }
-Metro.openRampActions=function(){const old=document.getElementById('ramp-actions-pop');if(old){old.remove();return;}const pop=document.createElement('div');pop.id='ramp-actions-pop';pop.setAttribute('role','group');pop.setAttribute('aria-label','渐速训练控制');pop.innerHTML='<small class="ramp-dismiss-hint">点空白处收起 · 不会暂停训练</small><button data-toggle></button><button data-again>重新开始</button><button data-back>回到起始速度</button><button data-end>完成并退出</button>';document.body.append(pop);this.renderRampDock();placeRampMenu();pop.onclick=e=>{const r=this.ramp;if(e.target.hasAttribute('data-toggle')){this.toggleRamp();}else if(e.target.hasAttribute('data-end'))this.closeRamp();else if(e.target.matches('[data-back],[data-again]')){const again=e.target.hasAttribute('data-again');this.pauseRamp();delete r.remaining;r.current=r.mode==='range'?r.start:r.baseline;r.completed=false;r.started=true;this._rampUpdateUI();if(again)this.toggleRamp();}else return;pop.remove();};};
-document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('#metro-ramp-modal,#ramp-actions-pop,.metro-ramp-open')){document.querySelector('#metro-ramp-modal,#ramp-actions-pop')?.remove();}});
-document.addEventListener('click',e=>{if(e.target.closest?.('[data-ramp-mode]'))placeRampMenu();});window.addEventListener('resize',placeRampMenu);document.addEventListener('scroll',e=>{if(!e.target.closest?.('#metro-ramp-modal,#ramp-actions-pop'))placeRampMenu();},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('ramp-actions-pop')?.remove();document.getElementById('metro-ramp-modal')?.remove();}});
-Metro.restoreRamp=function(){const ramp=this.ramp;this.pauseRamp();ramp.current=ramp.mode==='range'?this._rampNumber('ramp-start',ramp.start,30,300):ramp.baseline;ramp.started=false;ramp.completed=false;this._rampUpdateUI(`已撤回到 ${Math.round(ramp.current)} BPM · 等待开始`);};
+document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('#metro-ramp-modal,.metro-ramp-open'))document.getElementById('metro-ramp-modal')?.remove();});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-ramp-mode]'))placeRampMenu();});window.addEventListener('resize',placeRampMenu);document.addEventListener('scroll',e=>{if(!e.target.closest?.('#metro-ramp-modal'))placeRampMenu();},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('metro-ramp-modal')?.remove();});
+Metro.restoreRamp=function(){const ramp=this.ramp;this.pauseRamp();delete ramp.remaining;ramp.current=ramp.mode==='range'?ramp.start:ramp.baseline;ramp.completed=false;this._rampUpdateUI(`已撤回到 ${Math.round(ramp.current)} BPM`);};
 
 /* ---------- 和弦查询：同尺寸十二平均律刻度尺 ---------- */
 const ROOT_NATURALS=new Map([[0,'C'],[2,'D'],[4,'E'],[5,'F'],[7,'G'],[9,'A'],[11,'B'],[12,'C']]);
@@ -1896,7 +1896,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.9';
+const FINAL_BUILD='2026.11.19.10';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -1995,6 +1995,8 @@ Tuner.startLoop=function(){
 
 /* 节拍器：先完成默认重拍采样解码，再调度第一拍。 */
 Metro._finalStartToken=0;Metro._starting=false;
+Metro._playIcon=document.getElementById('play-btn').innerHTML;
+Metro._pauseIcon='<svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
 Metro.start=async function(){
     window.DrumWorkshop?.stop();
     if(this.playing||this._starting)return;const token=++this._finalStartToken;this._starting=true;
@@ -2011,11 +2013,11 @@ Metro.start=async function(){
     finally{if(button){button.disabled=false;button.setAttribute('aria-label','开始或暂停节拍器');}this._starting=false;}
     if(token!==this._finalStartToken||this.playing)return;
     this._visualEvents.length=0;this.playing=true;this.currentBeat=0;this.nextTime=AudioEngine.ctx.currentTime+.075;this._scheduler();
-    if(button)button.innerHTML='<svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    if(button)button.innerHTML=this._pauseIcon;
 };
 const metroStopBeforeFinal=Metro.stop.bind(Metro);
 Metro.stop=function(){this._finalStartToken++;this._starting=false;if(this.workPlayback){window.DrumWorkshop?.stop();this.workPlayback=null;}return metroStopBeforeFinal();};
-Metro.toggle=function(){if(this.ramp.started){this.toggleRamp();return;}if(this._starting){this.stop();return;}if(this.playing)this.stop();else{this.customMode=false;void this.start();}};
+Metro.toggle=function(){if(this.ramp.pending)return;if(this.ramp.started){this.toggleRamp();return;}if(this._starting){this.stop();return;}if(this.playing)this.stop();else{this.customMode=false;void this.start();}};
 Metro.toggleCustomPlayback=function(){if(this.playing&&this.customMode){this.stop();return;}if(this.playing)this.stop();this.customMode=true;void this.start();};
 
 /* 视唱谱面：手机默认每行 1 小节，平板默认每行 2 小节，并可手动切换。 */
