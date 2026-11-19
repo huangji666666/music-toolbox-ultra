@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<!-- 音乐工具箱 Ultra v13.5.32 最终单文件版；与 PWA 最终版同源生成。
+<!-- 音乐工具箱 Ultra v13.5.33 最终单文件版；与 PWA 最终版同源生成。
 Lucide 0.468.0
 ISC License
 
@@ -2477,10 +2477,15 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
             </ul>
         </div>
         <section class="release-notice" aria-label="本次更新公告">
-            <div><strong>本次更新</strong><small>v13.5.32</small></div>
-            <p>统一贴士灯泡位置 · 放大桌面图标 · 弱音指针平滑移动</p>
-            <details><summary>展开全部更新 · 13.5.14 至 13.5.32</summary><div class="release-list">
-                <section><h3>本轮新增 · 13.5.32</h3><ul>
+            <div><strong>本次更新</strong><small>v13.5.33</small></div>
+            <p>修复 Safari 离线首页 · 损坏缓存自动接管 · 保留个人数据</p>
+            <details><summary>展开全部更新 · 13.5.14 至 13.5.33</summary><div class="release-list">
+                <section><h3>本轮新增 · 13.5.33</h3><ul>
+                    <li>从站点根地址缓存首页；过滤跳转响应，弱网或断网回退到同一版完整离线文件。</li>
+                    <li>旧首页损坏时，新版完整下载后自动接管；健康版本仍可稍后更新。</li>
+                    <li>联网修复入口独立可用，不清除个人设置、练习记录或其他网站数据。</li>
+                </ul></section>
+                <section><h3>13.5.32</h3><ul>
                     <li>九页的贴士灯泡固定在顶栏最右侧；点开仍显示当前页面的内容。</li>
                     <li>沿白色内框裁切桌面图标，移除外圈灰底和阴影，保留原图案。</li>
                     <li>音名确认前和弱音期间指针连续移动；未识别时不显示音分或频率数值。</li>
@@ -2578,7 +2583,7 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
             </div></details>
         </section>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.32</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.33</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
@@ -3080,7 +3085,7 @@ body #music-tip-stream .context-flight{pointer-events:none!important;max-width:m
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.32</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.33</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>
@@ -22299,8 +22304,8 @@ window.MTU_ACCENT_INLINE_URLS={"accent_cc0_01":"data:audio/wav;base64,UklGRmhbAQ
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.32';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.32-20261119-11';
+const V13_VERSION='13.5.33';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.33-20261119-12';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -23110,7 +23115,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.32';
+const RELEASE_VERSION='13.5.33';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -23768,7 +23773,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.32';
+const RELEASE_VERSION='13.5.33';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -24192,7 +24197,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.11';
+const FINAL_BUILD='2026.11.19.12';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;

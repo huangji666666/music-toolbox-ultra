@@ -34,8 +34,8 @@ async function auditCacheInstall(kind){
  const self={registration:{scope},location:{origin:'https://qa.invalid'},crypto,clients:{matchAll:async()=>[{postMessage:m=>messages.push(m)}],claim:async()=>{}},addEventListener:(kind,fn)=>handlers[kind]=fn};
  const fetch=async request=>{
   if(request.url.endsWith('release-assets.json'))return new Response(JSON.stringify({cache:version.cache,assets}));
-  if(kind==='download'&&request.url.endsWith('index.html'))return new Response('failure',{status:503});
-  return new Response(bodies.get('./'+request.url.split('/').at(-1)));
+  if(kind==='download'&&request.url===scope)return new Response('failure',{status:503});
+  return new Response(bodies.get(request.url===scope?'./index.html':'./'+request.url.split('/').at(-1)));
  };
  const RelativeRequest=class {constructor(url){this.url=new URL(url,scope).href;}};
  vm.runInNewContext(read('sw.js'),{self,caches,fetch,Request:RelativeRequest,URL,Uint8Array,Error});

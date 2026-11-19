@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "13.5.32",
-  "build": "2026.11.19.11",
-  "cache": "music-toolbox-ultra-v13.5.32-20261119-11",
+  "version": "13.5.33",
+  "build": "2026.11.19.12",
+  "cache": "music-toolbox-ultra-v13.5.33-20261119-12",
   "generatedAt": "2026-11-19T00:00:00.000Z",
   "assets": [
     {
@@ -13,7 +13,7 @@
     {
       "url": "./app-final.js",
       "bytes": 466050,
-      "sha256": "6a8a05ae3c6a06a5b56572ba996ed6ff8cae03ce73fd0a7931ef9501d0885d95"
+      "sha256": "1461eac98bcc2abb64cbe1859443bc5e44ba3fb576b35647dfa5ebf15207bbe7"
     },
     {
       "url": "./app-shell.css",
@@ -702,8 +702,8 @@
     },
     {
       "url": "./index.html",
-      "bytes": 4572154,
-      "sha256": "3eadf2fc7073aaa9bf85aba66b1b9e6e4e1e9656c2c86efafbc8e41cc049e0eb"
+      "bytes": 4572620,
+      "sha256": "316c6e12ffd40c1c34a1f23ee9afe36c414517df2d42eea34a444020eaa74de3"
     },
     {
       "url": "./learning-tips.js",
@@ -767,8 +767,8 @@
     },
     {
       "url": "./repair.html",
-      "bytes": 2411,
-      "sha256": "2db3dfc377ac7aa160f321eef8269e904cf7a43c5b20684524b38535e0992a3a"
+      "bytes": 2450,
+      "sha256": "ace1bb2de236722243a0205c744c278c8524a688209ec8e7ddc52ebfc257e6b8"
     },
     {
       "url": "./sight-library-v2.js",
@@ -783,7 +783,7 @@
     {
       "url": "./version.json",
       "bytes": 110,
-      "sha256": "d0cf15ed3eb55a1c1cbac21b73fee877f37f23e7d3a9073b65866e2de24ed0cb"
+      "sha256": "64e34e8857a2f543f88370c2f495456511eda1e58300d0bcfef5e5c12d9ffbbf"
     }
   ]
 }
