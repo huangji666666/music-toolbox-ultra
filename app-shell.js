@@ -29,6 +29,10 @@ const Shell={
    const actions=fold.querySelector('[onclick="Settings.clearData()"]')?.parentElement;if(actions){actions.classList.add('settings-actions');fold.after(actions);}
   }
   host.querySelector('.settings-community').insertAdjacentElement('afterend',section);
+  const quick=document.createElement('div');quick.id='quick-theme';quick.setAttribute('popover','auto');quick.setAttribute('aria-label','选择主题');quick.innerHTML='<div class="skin-choices">'+section.querySelector('.skin-choices').innerHTML+'</div><div class="brightness-picks"><button data-brightness="light">日间</button><button data-brightness="dark">夜间</button></div>';document.body.append(quick);
+  for(const b of quick.querySelectorAll('button'))b.onclick=()=>{if(b.dataset.brightness)App.setTheme(b.dataset.brightness);else this.setSkin(b.dataset.skinChoice);quick.hidePopover?.();if(!quick.hidePopover)quick.hidden=true;};
+  for(const b of quick.querySelectorAll('[data-brightness]'))b.setAttribute('aria-pressed',String(b.dataset.brightness===document.body.dataset.theme));
+  if(!quick.showPopover){quick.hidden=true;byId('theme-toggle-btn').onclick=()=>quick.hidden=!quick.hidden;document.addEventListener('pointerdown',e=>{if(!quick.contains(e.target)&&!byId('theme-toggle-btn').contains(e.target))quick.hidden=true;});}
   section.querySelectorAll('[data-skin-choice]').forEach(b=>b.onclick=()=>this.setSkin(b.dataset.skinChoice));byId('shell-motion').onchange=e=>this.setMotion(e.target.value);
  },
  mountTuner(){
@@ -65,9 +69,9 @@ const Shell={
    const last=packed.at(-1);packed.push({badge,w,x:Math.max(mid,last?last.x+(last.w+w)/2+1:w/2)});
    badge.classList.toggle('current',Number(badge.dataset.midi)===selected);targets.set(badge.dataset.midi,badge);
   }
-  let right=origin.width;for(const p of packed.reverse()){p.x=Math.min(p.x,right-p.w/2);p.badge.style.left=p.x+'px';right=p.x-p.w/2-1;}
+  let right=origin.width;for(const p of packed.reverse()){p.x=Math.min(p.x,right-p.w/2);p.badge.style.left=p.x+'px';right=p.x-p.w/2-1;}byId('tuner-range-targets').style.visibility='visible';
   for(const [i,b] of buttons.entries()){const midi=Tuner.targetStrings[i]?.midi,key=keys.querySelector(`[data-range-midi="${midi}"]`);if(!key)continue;const a=b.getBoundingClientRect(),z=key.getBoundingClientRect();if(!a.width||!z.width)continue;
-   const left=a.left+a.width/2<head.left+head.width/2,dir=left?-1:1,x=(left?a.left:a.right)-box.left,y=a.top+a.height/2-box.top,k=z.left+z.width/2-box.left,v=(above?z.bottom:z.top)-box.top,offset=6+(i%4)*2;
+   const left=a.left+a.width/2<head.left+head.width/2,dir=left?-1:1,x=(left?a.left:a.right)-box.left,y=a.top+a.height/2-box.top,k=z.left+z.width/2-box.left,v=(above?keyboard.bottom:keyboard.top)-box.top,offset=6+(i%4)*2;
    const edge=side?(keyboard.left>head.left?head.right:head.left)-box.left:(above?head.top:head.bottom)-box.top,rail=Math.min(box.width-2,Math.max(2,x+dir*offset));
    const dot=targets.get(String(midi))?.getBoundingClientRect(),dy=dot?dot.top+dot.height/2-box.top:v,dx=dot?dot.left+dot.width/2-box.left:k;
    const d=side?`M${x} ${y} C${edge} ${y} ${dx} ${y} ${dx} ${dy} L${k} ${v}`:`M${x} ${y} Q${rail} ${y} ${rail} ${y+(above?-1:1)*7} C${rail} ${edge} ${rail} ${edge} ${(rail+dx)/2} ${edge} S${dx} ${dy+(above?8:-8)} ${dx} ${dy} L${k} ${v}`;
@@ -131,7 +135,7 @@ const Shell={
  },
  accessibility(){
   document.querySelectorAll('nav .nav-item').forEach(item=>{item.setAttribute('role','button');item.tabIndex=0;item.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();item.click();}};});
-  for(const [id,label] of [['theme-toggle-btn','切换浅色与深色'],['play-btn','开始或暂停节拍器'],['ear-play-btn','播放或重听练耳题目']])byId(id)?.setAttribute('aria-label',label);
+  for(const [id,label] of [['theme-toggle-btn','选择主题'],['play-btn','开始或暂停节拍器'],['ear-play-btn','播放或重听练耳题目']])byId(id)?.setAttribute('aria-label',label);
   document.querySelector('.ear-play-btn')?.setAttribute('aria-label','播放或重听练耳题目');
  },
  init(){this.appearance();this.setSkin(read('skin','glass'));this.setMotion(read('motion','auto'));this.mountTuner();this.accessibility();PWAInstall.init();}

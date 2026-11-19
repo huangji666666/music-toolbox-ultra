@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<!-- 音乐工具箱 Ultra v13.5.29 最终单文件版；与 PWA 最终版同源生成。
+<!-- 音乐工具箱 Ultra v13.5.30 最终单文件版；与 PWA 最终版同源生成。
 Lucide 0.468.0
 ISC License
 
@@ -63,7 +63,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     --gauge-edge: #dce4f0;
 }
 @media (prefers-color-scheme: light) {
-    :root:not([data-theme-manual]) body:not([data-theme="dark"]) {
+    body:not([data-theme]) {
         --bg:#fff; --surf:#f2f2f7; --prim:#007AFF; --text:#000;
         --text-sub:#3c3c43; --border:#d1d1d6;
         --glass:rgba(255,255,255,0.9); --needle:#222;
@@ -1238,12 +1238,13 @@ html[data-ios="true"][data-layout="short"] .top-bar{height:calc(44px + var(--saf
 .tuner-range-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:10px}
 .tuner-range-heading span{color:var(--text-sub);font-size:11px}
 .tuner-range-track{height:52px;position:relative;margin-inline:5px}
-.tuner-range-keys{position:absolute;inset:0;border:1px solid #777;border-radius:4px;overflow:hidden;background:#fff}
+.tuner-range-keys{position:absolute;inset:0;isolation:isolate;border:1px solid #777;border-radius:4px;overflow:hidden;background:#fff}
 .tuner-range-keys i,.tuner-range-keys button{position:absolute;top:0;height:100%;width:calc(100% / 52);transform:translateX(-50%);box-sizing:border-box;border:0;border-right:1px solid #aaa;background:#fff;padding:0;min-width:0;min-height:0;cursor:pointer;touch-action:manipulation}
 .tuner-range-keys i.black,.tuner-range-keys button.black{background:#141416;border:1px solid #000;height:62%;width:calc(100% / 52 * .64);z-index:1;border-radius:0 0 2px 2px;opacity:1}
 .tuner-range-target,#tuner-range-pointer,#tuner-range-targets{pointer-events:none}
 .tuner-range-keys button.auditioning{box-shadow:inset 0 -5px var(--prim)}
-.tuner-range-keys button:focus-visible{outline:2px solid var(--orange);outline-offset:-2px;z-index:2}
+.tuner-range-keys button.white{z-index:0}
+.tuner-range-keys button:focus-visible{outline:2px solid var(--orange);outline-offset:-2px}
 .range-play-panel summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--prim)}
 #tuner-range-capo{margin:10px 0;padding:10px 12px;border:1px solid var(--prim);border-left:4px solid var(--prim);border-radius:10px;background:rgba(10,132,255,.10);color:var(--text);overflow-wrap:anywhere}
 #tuner-range-capo[hidden]{display:none}#tuner-range-capo strong{color:var(--prim)}#tuner-range-capo p{margin:6px 0;font-size:12px;line-height:1.6}
@@ -1750,6 +1751,13 @@ html[data-adaptive="true"] #page-metro.drum-expanded{max-width:none!important;wi
 </style>
 <style data-final-module="app-shell-css">
 /* Visual tokens and responsive presentation, separate from musical state. */
+body[data-theme=light][data-skin=glass]{--prim:#007aff}
+body[data-theme=light][data-skin=sea]{--bg:#edf7f6;--surf:#fbfffe;--prim:#007a79;--text:#133533;--text-sub:#476965;--border:#c4dcda}
+body[data-theme=light][data-skin=violet]{--bg:#f5f1fa;--surf:#fefcff;--prim:#7851ac;--text:#332340;--text-sub:#695b77;--border:#dccfe6}
+body[data-theme=light][data-skin=amber]{--bg:#fcf5e8;--surf:#fffdf7;--prim:#925c0a;--text:#382c1b;--text-sub:#736149;--border:#e4d5bb}
+body[data-theme=light][data-skin=graphite]{--bg:#eff1f3;--surf:#fdfdfd;--prim:#4e626f;--text:#232a30;--text-sub:#57626b;--border:#cbd1d5}
+body[data-theme=light][data-skin]:not([data-skin=glass]){--glass:color-mix(in srgb,var(--surf) 90%,transparent);--gauge-bg:var(--bg);--gauge-edge:var(--border);--gauge-arc:color-mix(in srgb,var(--prim) 22%,var(--surf));--gauge-tick:var(--text-sub)}
+#quick-theme{position:fixed;inset:calc(var(--safe-t) + 48px) max(8px,calc((100vw - var(--max-w))/2)) auto auto;margin:0;width:min(286px,calc(100vw - 24px));padding:10px;border:1px solid var(--border);border-radius:12px;background:var(--surf);color:var(--text);box-shadow:var(--shadow);z-index:4000}#quick-theme .skin-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#quick-theme button{min-height:44px}#quick-theme .brightness-picks{display:flex;gap:5px;margin-top:6px}#quick-theme .brightness-picks button{flex:1;background:var(--bg);border:0;color:var(--text)}#quick-theme [aria-pressed=true]{outline:2px solid var(--prim);outline-offset:-2px}
 body{--shell-panel:color-mix(in srgb,var(--surf) 80%,transparent);--shell-highlight:color-mix(in srgb,var(--prim) 11%,transparent);--shell-line:color-mix(in srgb,var(--prim) 14%,var(--border));--shell-radius:18px;--shell-shadow:0 10px 32px #172a490a;--font:'Segoe UI',-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;background-image:radial-gradient(ellipse at 12% 0%,var(--shell-highlight),transparent 60%)!important}
 #toast{bottom:calc(var(--nav-h) + var(--safe-b) + 12px)!important;max-width:min(430px,calc(100vw - 24px));z-index:2600}
 body[data-theme=light]{--bg:#f4f8fe;--surf:#fff;--text:#172943;--text-sub:#566982;--border:#cbd8e7;--glass:#ffffffc7;--gauge-bg:#f4f8fe;--gauge-arc:#d1e3f7;--gauge-tick:#8ca6c1}
@@ -2179,6 +2187,8 @@ nav .nav-icon .ui-glyph{width:22px;height:22px;fill:none!important;stroke:curren
 
 /* Local 13.5.25: overlays never participate in the transport or page layout. */
 /* Release layout: the pitch labels stay on a single rail; only the keyed light moves. */
+html body #music-tip-stream[data-guide=true]{display:block!important}
+#tuner-range .tuner-range-target{top:var(--rail-y);font-variant-numeric:tabular-nums;transition:none}
 #page-tuner.active #tuner-range .wave-key{overflow:hidden}#page-tuner.active #tuner-range .wave-key::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,transparent 8%,var(--prim) 49%,#a7f8ff 57%,transparent 91%);opacity:var(--wave,.44);animation:key-wave 2s ease-in-out infinite}#page-tuner.active #tuner-instruments[data-first=piano] #tuner-range .wave-key::after{animation-direction:reverse}html[data-motion=reduced] #page-tuner.active #tuner-range .wave-key::after{animation:none;opacity:calc(var(--wave) * .6)}@media(prefers-reduced-motion:reduce){#page-tuner.active #tuner-range .wave-key::after{animation:none;opacity:calc(var(--wave) * .6)}}
 #page-metro .metro-speed-column #metro-visual-open{height:var(--visual-tile-h,142px);flex-direction:column;gap:10px;border-radius:22px;background:linear-gradient(145deg,color-mix(in srgb,var(--prim) 18%,var(--surf)),var(--surf));color:var(--prim);border:1px solid color-mix(in srgb,var(--prim) 45%,var(--border));box-shadow:none}#page-metro #metro-visual-open .ui-glyph{width:36px;height:36px}@media(min-width:1000px){#page-metro .metro-speed-column{--visual-tile-h:clamp(142px,18vh,220px)}}
 #page-instrument .board-tabs button[aria-expanded]::after,#instrument-header #instrument-tuning-bar::after{content:'';display:inline-block;align-self:center;width:12px;height:12px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}#page-instrument .board-tabs [aria-expanded=true]::after,#instrument-header #instrument-tuning-bar[aria-expanded=true]::after{transform:rotate(180deg)}#instrument-header #instrument-tuning-bar{display:inline-flex;align-items:center;gap:4px}#instrument-header #instrument-tuning-bar::before{content:'调弦'}#page-settings .setting-row.settings-actions{background:transparent!important;border:0!important;box-shadow:none!important;padding:0}
@@ -2210,6 +2220,10 @@ body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!importa
 #page-tuner .tuner-workspace>.tuner-quick-controls{order:4!important;grid-column:2;grid-row:3;display:block;margin:0}#page-tuner .tuner-workspace>.tuner-diagnostics{order:5!important}.tuner-quick-controls .tuner-view-controls{justify-content:flex-start}.tuner-quick-controls .tuner-settings-body{align-items:center}#page-tuner #tuner-instruments .multi-strings .strings-rack>.s-btn{grid-column:auto!important;grid-row:auto!important}#page-tuner #tuner-instruments .multi-strings .headstock-string-rack{position:static!important}
 @media(min-width:700px){#page-tuner #tuner-instruments[data-arrangement=side]{grid-template-columns:repeat(2,minmax(0,1fr));display:grid!important}}
 @media(max-width:699px){#page-tuner .tuner-workspace>.tuner-quick-controls{width:100%}#page-tuner .tuner-quick-controls summary{min-height:44px;display:flex;align-items:center}#page-tuner .tuner-view-controls{width:auto}}
+#instrument-header #instrument-type,#instrument-header #instrument-tuning-bar{box-sizing:border-box;width:72px;height:44px;min-height:44px;max-width:72px;justify-content:center;text-align:center;padding:0 5px;border-radius:9px;font:600 13px/1.2 system-ui}
+#page-instrument .board-status{min-height:64px;height:auto;background:var(--shell-highlight);border:1px solid var(--shell-line);border-radius:9px;padding:4px 8px;box-sizing:border-box}#page-instrument #fret-game .game-question{display:grid;grid-template-columns:minmax(0,1fr) auto auto;height:auto;min-height:52px}#page-instrument #fret-game .game-question [data-q],#page-instrument #fret-game .game-question:has(output:not(:empty)) [data-q]{display:grid;gap:2px;overflow:visible}#fret-game [data-q] small{color:var(--text-sub);font:500 11px/1.25 system-ui}#fret-game [data-q] b{font:650 16px/1.3 system-ui;color:var(--text)}#fret-game [data-q] mark{background:transparent;color:var(--prim);font-weight:800}#page-instrument #fret-game .game-question output{grid-column:1/-1;grid-row:2;font-size:12px}#page-instrument #fret-game output:empty{display:none}
+#page-instrument .board-study-settings{align-self:stretch;width:100%;color:var(--text);font-size:13px}#page-instrument .board-study-settings[hidden]{display:none!important}.board-study-settings summary{color:var(--prim);min-height:44px;align-content:center;cursor:pointer}.board-study-settings .caged-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.board-study-settings select{max-width:100%;min-height:44px}.board-study-settings [data-lesson]{margin:4px;color:var(--text-sub)}.board-study-settings .study-caption{display:none}#page-instrument:has(.virtual-piano) #study-flyout #instrument-study,#page-instrument:has(.virtual-piano) .board-study-settings #instrument-study-panel:not([hidden]){display:block!important}#page-instrument:has(.virtual-piano) #instrument-study-panel label:has([data-pos]){display:none}
+body #music-tip-stream .context-flight{pointer-events:none!important;max-width:min(220px,59vw)!important;height:auto;white-space:normal!important;font-size:12px;line-height:1.4;text-align:left}html[data-motion=reduced] body #music-tip-stream .context-flight{animation:none!important;opacity:.9}@media(prefers-reduced-motion:reduce){body #music-tip-stream .context-flight{animation:none!important;opacity:.9}}
 #page-instrument .game-picks[hidden],#page-instrument .board-feedback[hidden]{display:none!important}#page-instrument[data-tab=game] .instrument-toolbar{display:flex;align-items:center;gap:6px;overflow:visible!important;flex-wrap:nowrap}#page-instrument .instrument-toolbar .game-picks{display:flex;align-items:center;gap:6px;min-width:0}#page-instrument .game-picks select,.game-options summary,.game-options button,.board-feedback button{min-height:44px;padding:4px 9px;border-radius:8px;border:1px solid var(--border);background:var(--surf);color:var(--text);font:inherit;font-size:13px}.game-options{position:relative}.game-options summary{display:grid;place-items:center;cursor:pointer}.game-options>div{position:absolute;right:0;top:100%;min-width:142px;z-index:12;display:grid;gap:4px;padding:6px;border:1px solid var(--border);border-radius:8px;background:var(--surf);box-shadow:0 4px 16px #14213622}.board-feedback{display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:44px;font-size:13px}.board-feedback button{margin-left:auto;white-space:nowrap}.piano-key.game-anchor{box-shadow:inset 0 -9px var(--orange,#de871e)!important}#page-instrument[data-tab=game] #fret-game .game-question{min-height:32px}#page-instrument[data-tab=game] #fret-game small{font-size:11px}
 
 </style>
@@ -2453,10 +2467,16 @@ body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!importa
             </ul>
         </div>
         <section class="release-notice" aria-label="本次更新公告">
-            <div><strong>本次更新</strong><small>v13.5.29</small></div>
-            <p>新应用图标 · 同版本不提示更新 · 离线启动与缓存修复</p>
-            <details><summary>展开全部更新 · 13.5.14 至 13.5.29</summary><div class="release-list">
-                <section><h3>本轮新增 · 13.5.29</h3><ul>
+            <div><strong>本次更新</strong><small>v13.5.30</small></div>
+            <p>五款日间主题 · 指板上的 CAGED 与音阶 · 游戏题目显示</p>
+            <details><summary>展开全部更新 · 13.5.14 至 13.5.30</summary><div class="release-list">
+                <section><h3>本轮新增 · 13.5.30</h3><ul>
+                    <li>调音器弦号固定在同一行，锁弦和音高刷新时不再跳位；白键波纹不遮黑键，连线止于琴键边缘。</li>
+                    <li>五款主题均可在日间使用；右上角调色板可直接选择配色和明暗。</li>
+                    <li>功能提示随弹幕飘走，乐器页避开演奏区；节拍灯使用蓝、薄荷、紫和杏色。</li>
+                    <li>CAGED、音阶、即兴直接使用虚拟乐器；游戏独立显示题型、范围与目标音。</li>
+                </ul></section>
+                <section><h3>13.5.29</h3><ul>
                     <li>浏览器与桌面图标统一使用蓝白三格图标。</li>
                     <li>区分离线素材准备与真正的版本更新；下载失败不切换。</li>
                     <li>离线启动保留上一份完整缓存；联网修复不清除个人记录。</li>
@@ -2538,7 +2558,7 @@ body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!importa
             </div></details>
         </section>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.29</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.30</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
@@ -2581,9 +2601,9 @@ body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!importa
     </div>
     <div id="page-title" style="display:none;font-weight:700;font-size:16px"></div>
     <div class="watermark-top">BY 黄鸡</div>
-    <button class="theme-btn" id="theme-toggle-btn" onclick="App.toggleTheme()">
+    <button class="theme-btn" id="theme-toggle-btn" popovertarget="quick-theme" title="选择主题" aria-label="选择主题">
         <svg class="nav-icon" viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
-            <path id="theme-icon-path" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            <path d="M12 22a1 1 0 0 1 0-20 10 10 0 0 1 10 10 4 4 0 0 1-4 4h-2a2 2 0 0 0-1 3.7A1.9 1.9 0 0 1 13.5 22Z"/><circle cx="7.5" cy="11" r=".8"/><circle cx="10.5" cy="7" r=".8"/><circle cx="16" cy="8" r=".8"/>
         </svg>
     </button>
 </div>
@@ -3040,7 +3060,7 @@ body #music-tip-stream .music-tip-danmaku{animation-name:mtu-stage-drift!importa
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.29</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.30</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>
@@ -7942,14 +7962,7 @@ const App = {
             localStorage.setItem('protuner_theme_manual', 'true');
         }
         localStorage.setItem('protuner_theme', theme);
-        const iconPath = document.getElementById('theme-icon-path');
-        if (iconPath) {
-            if (theme === 'light') {
-                iconPath.setAttribute('d', 'M12 3v1m0 16v1m-8-9H3m18 0h-1m-2.636-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z');
-            } else {
-                iconPath.setAttribute('d', 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z');
-            }
-        }
+        document.querySelectorAll('[data-brightness]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.brightness===theme)));
         const sel = document.getElementById('set-theme');
         if (sel) sel.value = theme;
     },
@@ -22266,8 +22279,8 @@ window.MTU_ACCENT_INLINE_URLS={"accent_cc0_01":"data:audio/wav;base64,UklGRmhbAQ
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.29';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.29-20261119-8';
+const V13_VERSION='13.5.30';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.30-20261119-9';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -23076,7 +23089,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.29';
+const RELEASE_VERSION='13.5.30';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -23733,7 +23746,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.29';
+const RELEASE_VERSION='13.5.30';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -24159,7 +24172,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.8';
+const FINAL_BUILD='2026.11.19.9';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -24519,7 +24532,7 @@ ChordLib.playChord=async function(){
 /* Piano-range audition: overview stays compact; an octave panel supplies touch targets. */
 TunerAssist.previewKey=async function(midi){
  midi=Number(midi);if(!Number.isInteger(midi)||midi<21||midi>108)return;const token=this._keyPreviewToken=(this._keyPreviewToken||0)+1;
- try{if(!AudioEngine.ctx)await AudioEngine.init();if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument([midi],'piano');if(token!==this._keyPreviewToken)return;
+ try{if(!AudioEngine.ctx)await AudioEngine.init();if(!AudioEngine.ctx)return;if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument([midi],'piano');if(token!==this._keyPreviewToken)return;
  AudioEngine.playInstrument(midi,.85,.22,'piano');this.previewMidi=midi;
  document.querySelectorAll('[data-range-midi]').forEach(key=>key.classList.toggle('auditioning',Number(key.dataset.rangeMidi)===midi));
  const output=document.getElementById('range-key-status'),name=NOTE_NAMES[midi%12]+(Math.floor(midi/12)-1);if(output)output.textContent=`试听 ${name} · ${midiToFreq(midi,Tuner.a4).toFixed(2)} Hz（A4=${Tuner.a4}）`;
@@ -24535,12 +24548,16 @@ TunerAssist.init=function(){rangeInit13512();const box=document.getElementById('
 /* Compact pitch rail: targets and live pitch share piano-key coordinates. */
 TunerAssist.renderTargets=function(){
  const layer=document.getElementById('tuner-range-targets');if(!layer)return;
- layer.replaceChildren();const groups=new Map();
- Tuner.targetStrings.forEach((s,i)=>{const g=groups.get(s.midi)||[];g.push(Tuner.targetStrings.length-i);groups.set(s.midi,g);});
- [...groups].sort((a,b)=>a[0]-b[0]).forEach(([midi,strings])=>{
-  const dot=document.createElement('i');dot.className='tuner-range-target';dot.style.left=this.position(midi)+'%';dot.style.top='var(--rail-y)';dot.dataset.midi=String(midi);dot.title=strings.join('／')+'弦 '+midiToName(midi);
-  dot.textContent=strings.join('·');dot.setAttribute('aria-label',dot.title);layer.append(dot);
- });
+ const signature=Tuner.targetStrings.map(s=>s.midi).join(',');
+ if(layer.dataset.tuning!==signature){
+  layer.dataset.tuning=signature;const groups=new Map();
+  Tuner.targetStrings.forEach((s,i)=>{const g=groups.get(s.midi)||[];g.push(Tuner.targetStrings.length-i);groups.set(s.midi,g);});
+  // Badges are revealed after the key-aligned packing pass, never at a provisional position.
+  layer.style.visibility='hidden';layer.replaceChildren(...[...groups].sort((a,b)=>a[0]-b[0]).map(([midi,strings])=>{
+   const dot=document.createElement('i');dot.className='tuner-range-target';dot.dataset.midi=String(midi);dot.title=strings.join('／')+'弦 '+midiToName(midi);
+   dot.textContent=strings.join('·');dot.setAttribute('aria-label',dot.title);return dot;
+  }));
+ }
  this.renderCapoNotice();this.renderReading();window.AppShell?.scheduleLinks?.();
 };
 TunerAssist.renderCapoNotice=function(){
@@ -24559,7 +24576,6 @@ TunerAssist.init=function(){compactRangeInit();const box=document.getElementById
  const diagnostics=document.getElementById('tuner-diagnostics'),status=document.getElementById('tuner-detection-status');if(diagnostics&&status)diagnostics.appendChild(status);
  const pointer=document.getElementById('tuner-range-pointer');pointer.appendChild(document.createElement('b'));
  this.renderTargets();
- if(typeof ResizeObserver!=='undefined'){this.railObserver=new ResizeObserver(()=>this.renderTargets());this.railObserver.observe(box);}
 };
 const compactRangeReading=TunerAssist.renderReading.bind(TunerAssist);
 TunerAssist.renderReading=function(){compactRangeReading();const pointer=document.getElementById('tuner-range-pointer');if(!pointer)return;const m=Tuner.displayFreq>0?freqToMidi(Tuner.displayFreq,Tuner.a4):NaN;
@@ -25169,9 +25185,9 @@ E.init = function() {
       const tasks=[['问句与答句','用三个音弹一句，停一拍，再用相同节奏回答。',[0,1,2,null,2,1,0]],['同一句换结尾','把前三个音保持不变。第二次只换最后一个音。',[0,1,2,0,null,0,1,2,3]],['靠近目标音','选一个和弦音，从音阶里的相邻音走向它，在目标音多停一拍。',[2,1,0,null,1,2,3]],['三度跳进','隔一个音阶音向上，再退回一个；不要只顺着品位爬。',[0,2,1,3,2,4,3]],['留出休止','重复前两个音，再把第三下留空。脚下的拍子不要停。',[0,1,null,0,1,null,2,0]],['移位模进','把短句整体上移一个音阶级，再听它与原句的关系。',[0,1,2,null,1,2,3]]];
       panel.innerHTML=`<div class="study-fields"><label>根音<select data-root>${NOTE_NAMES.map((_,i)=>`<option value="${i}">${enharmonic(i)}</option>`).join('')}</select></label><label>材料<select data-layer>${ids.map(id=>`<option value="${id}">${layers[id].label}</option>`).join('')}</select></label><label>品位<select data-pos>${[[0,'全指板'],[1,'1–5'],[5,'5–9'],[9,'9–13'],[13,'13–17']].map(([v,s])=>`<option value="${v}">${s}</option>`).join('')}</select></label><label data-task-wrap>短句<select data-task>${tasks.map(([title],i)=>`<option value="${i}">${title}</option>`).join('')}</select></label></div><div class="study-caption"><span></span><button type="button" data-demo data-ui="play" aria-label="试听当前练习"></button></div>`;
       const pick=id=>panel.querySelector(`[data-${id}]`),root=pick('root'),kind=pick('layer'),pos=pick('pos'),task=pick('task');root.value='9';kind.value='pentatonic';let mode='',generation=0;
-      this.studyNote=(s,f,midi)=>{if(!mode||document.getElementById('page-instrument').dataset.tab==='game'||s>=0&&(this.mutedStrings.has(s)||(+pos.value&&(f<+pos.value||f>+pos.value+4))))return '';const iv=(midi-Number(root.value)+120)%12;if(!layers[kind.value].intervals.includes(iv))return '';return iv===6&&kind.value==='lydian'?'♯4':['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];};
+      this.studyNote=(s,f,midi)=>{if(document.getElementById('page-instrument').dataset.tab==='game'||s>=0&&this.mutedStrings.has(s))return '';if(CagedLab.active)return CagedLab.note(s,f,midi);if(!mode||s>=0&&+pos.value&&(f<+pos.value||f>+pos.value+4))return '';const iv=(midi-Number(root.value)+120)%12;if(!layers[kind.value].intervals.includes(iv))return '';return iv===6&&kind.value==='lydian'?'♯4':['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];};
       const refresh=()=>{generation++;panel.hidden=!mode;strip.querySelectorAll('[data-study]').forEach(b=>b.setAttribute('aria-expanded',String(b.dataset.study===mode)));pick('task-wrap').hidden=mode!=='improv';panel.querySelector('.study-caption span').textContent=mode==='improv'?tasks[task.value][1]:`${enharmonic(Number(root.value))} · ${layers[kind.value].label}　｜　1 是根音`;this.render();};
-      this.openStudy=(next,layer,key)=>{if(!['scale','improv',''].includes(next))return;mode=next;if(next)this.showStudyControls?.();if(layer&&ids.includes(layer))kind.value=layer;if(Number.isInteger(key))root.value=String(key);refresh();};
+      this.openStudy=(next,layer,key)=>{if(!['scale','improv',''].includes(next))return;CagedLab.close();mode=next;if(next)this.showStudyControls?.();if(layer&&ids.includes(layer))kind.value=layer;if(Number.isInteger(key))root.value=String(key);refresh();};
       strip.querySelectorAll('[data-study]').forEach(b=>b.onclick=()=>this.openStudy(mode===b.dataset.study?'':b.dataset.study));panel.onchange=refresh;
       pick('demo').onclick=async()=>{
         const token=++generation,offsets=layers[kind.value].intervals,seq=mode==='improv'?tasks[task.value][2]:[...offsets.keys(),offsets.length,...[...offsets.keys()].reverse()];
@@ -25291,25 +25307,30 @@ E.init = function() {
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
   const CagedLab = {
     root:0,shape:'E',layer:'chord',course:'common',fretCount:12,
+    active:false,run:0,
+    compatible(){return InstrumentPage.instrument==='guitar'&&InstrumentPage.getTuning().map(noteToMidi).join()===tuning.map(noteToMidi).join();},
+    close(){this.active=false;this.run++;document.getElementById('caged-board-controls')?.remove();},
+    note(s,f,m){const shape=shapes[this.shape],iv=(m-this.root+120)%12;if(s<0||f<this.position||f>this.position+4||!layers[this.layer].intervals.includes(iv))return '';if(this.layer==='chord'&&(shape.frets[s]==null||f!==this.position+shape.frets[s]))return '';return ['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];},
+    next(){const ids=Object.keys(shapes);this.shape=ids[(ids.indexOf(this.shape)+1)%ids.length];this.open();},
     open(){
-      const existing=document.getElementById('caged-learning-modal');if(existing){existing.hidden=false;let changed=false;for(const field of ['shape','root','course','layer']){const input=existing.querySelector(`[data-${field}]`);if(input.value!==String(this[field])){input.value=String(this[field]);changed=true;}}if(changed)this.render(existing);return;}
-      const modal=document.createElement('div');modal.id='caged-learning-modal';modal.className='practice-modal caged-modal';
-      modal.innerHTML='<div class="practice-modal-card caged-card"><div class="caged-head"><div><h3>CAGED 指板教材</h3><p>C、A、G、E、D 五形 · 和弦 · 音阶 · 琶音 · 实践</p></div><button type="button" data-close aria-label="关闭 CAGED 教材">×</button></div><div class="caged-controls"><label>调性<select data-root></select></label><label>形状<select data-shape></select></label><label>学习层<select data-layer></select></label><label>课程<select data-course></select></label></div><div class="caged-lesson" data-lesson></div><div class="caged-stage" data-stage></div><div class="caged-actions"><button type="button" data-play>▶ 播放当前练习</button><button type="button" data-next>下一个形状</button><button type="button" data-close>完成</button></div></div>';
-      document.body.appendChild(modal);
-      if(App.currentPage==='instrument')document.getElementById('instrument-stage').before(modal);
+      InstrumentPage.showStudyControls?.();if(!this.compatible()){toast('CAGED 五形使用标准六弦吉他调弦；其他乐器可选音阶练习。');return;}
+      if(!this.active)InstrumentPage.openStudy?.('');this.active=true;
+      let modal=document.getElementById('caged-board-controls');if(modal){for(const field of ['shape','root','course','layer'])modal.querySelector(`[data-${field}]`).value=String(this[field]);this.render(modal);return;}
+      modal=document.createElement('details');modal.id='caged-board-controls';modal.className='board-study-settings';
+      modal.innerHTML='<summary>练习设置</summary><div class="caged-controls"><label>调性<select data-root></select></label><label>形状<select data-shape></select></label><label>学习层<select data-layer></select></label><label>课程<select data-course></select></label></div><p data-lesson></p><button type="button" data-close>结束练习</button>';
+      document.getElementById('instrument-stage').before(modal);
       const root=modal.querySelector('[data-root]'),shape=modal.querySelector('[data-shape]'),layer=modal.querySelector('[data-layer]'),course=modal.querySelector('[data-course]');
       root.innerHTML=rootNames.map((name,index)=>`<option value="${index}">${name}</option>`).join('');shape.innerHTML=Object.entries(shapes).map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');layer.innerHTML=Object.entries(layers).map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');course.innerHTML=Object.entries(courses).map(([id],index)=>`<option value="${id}">${['常用和弦','三和弦','七和弦','扩展和弦','开放和弦','练习与实践'][index]}</option>`).join('');
       root.value=String(this.root);shape.value=this.shape;layer.value=this.layer;course.value=this.course;
       root.onchange=e=>{this.root=Number(e.target.value);this.render(modal);};shape.onchange=e=>{this.shape=e.target.value;this.render(modal);};layer.onchange=e=>{this.layer=e.target.value;this.render(modal);};course.onchange=e=>{this.course=e.target.value;this.render(modal);};
-      modal.querySelectorAll('[data-close]').forEach(button=>button.onclick=()=>modal.remove());modal.onclick=e=>{if(e.target===modal)modal.remove();};modal.querySelector('[data-play]').onclick=()=>this.play();modal.querySelector('[data-next]').onclick=()=>{const ids=Object.keys(shapes),next=(ids.indexOf(this.shape)+1)%ids.length;this.shape=ids[next];shape.value=this.shape;this.render(modal);};
-      const min=modal.querySelector('[data-close]');min.textContent='−';min.setAttribute('aria-label','收起教材');min.onclick=()=>{modal.hidden=true;};
+      modal.querySelector('[data-close]').onclick=()=>{this.close();InstrumentPage.render();};
       this.render(modal);
     },
     render(modal){
       this.run=(this.run||0)+1;
-      const stage=modal.querySelector('[data-stage]'),lesson=modal.querySelector('[data-lesson]'),shape=shapes[this.shape],layer=layers[this.layer],rootFret=getRootFret(this.root,shape.rootString),position=rootFret-shape.baseRoot;
-      lesson.innerHTML=`<strong>${rootNames[this.root]} · ${shape.label} · ${layer.label}</strong><span>${courses[this.course]}</span><small>根音位置：第 ${6-shape.rootString} 弦 ${rootFret} 品 · 当前把位 ${position}–${position+4} 品</small>`;
-      stage.innerHTML=this.boardSvg(shape,layer,rootFret,position);
+      const shape=shapes[this.shape],rootFret=getRootFret(this.root,shape.rootString);this.position=rootFret-shape.baseRoot;this.caption=`${rootNames[this.root]} · ${shape.label} · ${layers[this.layer].label}`;
+      modal.querySelector('[data-lesson]').textContent=`${courses[this.course]} 根音：${6-shape.rootString} 弦 ${rootFret} 品。`;InstrumentPage.render();
+      const node=document.querySelector(`#instrument-stage [data-string="${shape.rootString}"][data-fret="${rootFret}"]`),sc=node?.closest('.virtual-board-scroll');if(sc){const r=node.getBoundingClientRect(),b=sc.getBoundingClientRect();if(r.bottom>b.bottom||r.top<b.top)sc.scrollTop+=r.top-b.top-b.height/2;if(r.right>b.right||r.left<b.left)sc.scrollLeft+=r.left-b.left-b.width/2;}
     },
     boardSvg(shape,layer,rootFret,position){
       const w=760,h=360,left=64,right=18,top=46,bottom=30,frets=Math.max(12,position+4),stringGap=(h-top-bottom)/5,fretGap=(w-left-right)/frets,openMidi=tuning.map(noteToMidi),start=position,end=start+4;
@@ -25328,9 +25349,9 @@ E.init = function() {
       }
       svg+=`<text x="${left}" y="24" fill="var(--prim)" font-size="13" font-weight="800">${rootNames[this.root]} · ${shape.label} · ${layer.label}</text><text x="${w-right}" y="24" text-anchor="end" fill="var(--text-sub)" font-size="10">根音蓝色 · 和弦音与音阶音分层</text></svg>`;return svg;
     },
-    play(){
+    async play(){
       const shape=shapes[this.shape],rootFret=getRootFret(this.root,shape.rootString),position=rootFret-shape.baseRoot,intervals=layers[this.layer].intervals;
-      const modal=document.getElementById('caged-learning-modal'),token=++this.run;const hit=(m,s)=>{if(!modal?.isConnected||token!==this.run||App.currentPage!=='instrument')return;const el=modal.querySelector(`[data-midi="${m}"]${s==null?'':`[data-string="${s}"]`}`);InstrumentPage.flashStudy?.(el);if(el&&InstrumentPage.instrument==='guitar'&&InstrumentPage.getTuning().join()===tuning.join())InstrumentPage.flashStudy?.(document.querySelector(`#instrument-stage .virtual-note-hit[data-string="${el.dataset.string}"][data-fret="${el.dataset.fret}"]`));AudioEngine.playInstrument(m,.45,.18,'instrument');};
+      const token=++this.run;await AudioEngine.init();const hit=(m,s)=>{if(!this.active||token!==this.run||App.currentPage!=='instrument')return;const el=[...document.querySelectorAll('#instrument-stage .virtual-note-hit[data-degree]:not([data-degree=""])')].find(n=>(s==null||+n.dataset.string===s)&&noteToMidi(tuning[+n.dataset.string])+Number(n.dataset.fret)===m);if(el){InstrumentPage.flashStudy?.(el);InstrumentPage.playInstrumentNote(m,.45,.18);}};
       if(this.layer==='chord'){shape.frets.forEach((f,s)=>{if(f!==null){const midi=noteToMidi(tuning[s])+position+f;setTimeout(()=>hit(midi,s),s*110);}});return;}
       const notes=new Set();
       for(const openNote of tuning){
@@ -25360,15 +25381,15 @@ E.init = function() {
     const dpr=Math.min(devicePixelRatio||1,reduced?1:2);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
     const g=canvas.getContext('2d');if(!g)return;g.setTransform(dpr,0,0,dpr,0,0);
     const cx=w/2,cy=h/2,r=Math.min(w,h)*.39,level=current?.level??levels[beat]??.55,hit=beat>=0?(reduced?.35:Math.pow(1-p,3))*Math.min(1,level):0;
-    const hue=i=>i===beat&&current?.track!=null?185+current.track*37:(levels[i]??0)>=.9?39:(levels[i]??0)>=.7?173:200;
-    const color=(i,l=60,a=1)=>`hsla(${hue(i)},90%,${l}%,${a})`;
+    // Stable hue per beat; brightness, edge and numeral carry the attack.
+    const palette=[[209,65],[169,43],[263,44],[21,68]],color=(i,l=60,a=1)=>{const [h,s]=palette[Math.max(0,i)%4];return `hsla(${h},${s}%,${l}%,${a})`;};
     const rect=(x,y,a,b,c)=>{g.fillStyle=c;g.fillRect(x,y,a,b);};
     const text=(s,x,y,size,c='#f1faff')=>{g.textAlign='center';g.textBaseline='middle';g.fillStyle=c;g.font=`700 ${Math.max(8,Math.floor(size))}px system-ui`;g.fillText(String(s),x,y);};
     const arc=(x,y,rad,from,to,line,c)=>{g.beginPath();g.arc(x,y,Math.max(1,rad),from,to);g.strokeStyle=c;g.lineWidth=line;g.stroke();};
     const tau=Math.PI*2;rect(0,0,w,h,'#0b1521');if(hit)rect(0,0,w,h,color(beat,29,.25*hit));
     if(mode==='bars'||mode==='vertical'){
       const horiz=mode==='bars',bw=horiz?w/count:w,bh=horiz?h:h/count;
-      for(let i=0;i<count;i++){const x=horiz?bw*i:0,y=horiz?0:bh*i,on=i===beat;rect(x+2,y+2,bw-4,bh-4,color(i,on?28+hit*12:13));if(on){rect(x+2,y+2,horiz?bw-4:5,horiz?5:bh-4,color(i,76));if(!reduced)rect(x+2,y+bh-5,(bw-4)*p,3,color(i,80));}text(i+1,x+bw/2,y+bh/2,Math.min(bw*.6,bh*.57,100),on?'#fff':'#9baebf');}
+      for(let i=0;i<count;i++){const x=horiz?bw*i:0,y=horiz?0:bh*i,on=i===beat;rect(x+2,y+2,bw-4,bh-4,color(i,on?63+hit*9:22));if(on){rect(x+2,y+2,horiz?bw-4:5,horiz?5:bh-4,color(i,86));if(!reduced)rect(x+2,y+bh-5,(bw-4)*p,3,color(i,86));}text(i+1,x+bw/2,y+bh/2,Math.min(bw*.6,bh*.57,100),on?'#101620':color(i,87));}
     }else if(mode==='pulse'||mode==='ring'){
       if(!reduced&&hit>.02){g.shadowColor=color(beat,60,.8);g.shadowBlur=Math.min(24,r*.13)*hit;}
       if(mode==='pulse'){for(let i=0;i<3;i++){const f=(p+i/3)%1;arc(cx,cy,r*(.32+.85*f),0,tau,Math.max(1,r*.038*(1-f)),color(beat,68,(1-f)*(.22+.68*hit)));}arc(cx,cy,r*.3,0,tau,4+9*hit,color(beat,74));}
@@ -25825,6 +25846,10 @@ const Shell={
    const actions=fold.querySelector('[onclick="Settings.clearData()"]')?.parentElement;if(actions){actions.classList.add('settings-actions');fold.after(actions);}
   }
   host.querySelector('.settings-community').insertAdjacentElement('afterend',section);
+  const quick=document.createElement('div');quick.id='quick-theme';quick.setAttribute('popover','auto');quick.setAttribute('aria-label','选择主题');quick.innerHTML='<div class="skin-choices">'+section.querySelector('.skin-choices').innerHTML+'</div><div class="brightness-picks"><button data-brightness="light">日间</button><button data-brightness="dark">夜间</button></div>';document.body.append(quick);
+  for(const b of quick.querySelectorAll('button'))b.onclick=()=>{if(b.dataset.brightness)App.setTheme(b.dataset.brightness);else this.setSkin(b.dataset.skinChoice);quick.hidePopover?.();if(!quick.hidePopover)quick.hidden=true;};
+  for(const b of quick.querySelectorAll('[data-brightness]'))b.setAttribute('aria-pressed',String(b.dataset.brightness===document.body.dataset.theme));
+  if(!quick.showPopover){quick.hidden=true;byId('theme-toggle-btn').onclick=()=>quick.hidden=!quick.hidden;document.addEventListener('pointerdown',e=>{if(!quick.contains(e.target)&&!byId('theme-toggle-btn').contains(e.target))quick.hidden=true;});}
   section.querySelectorAll('[data-skin-choice]').forEach(b=>b.onclick=()=>this.setSkin(b.dataset.skinChoice));byId('shell-motion').onchange=e=>this.setMotion(e.target.value);
  },
  mountTuner(){
@@ -25861,9 +25886,9 @@ const Shell={
    const last=packed.at(-1);packed.push({badge,w,x:Math.max(mid,last?last.x+(last.w+w)/2+1:w/2)});
    badge.classList.toggle('current',Number(badge.dataset.midi)===selected);targets.set(badge.dataset.midi,badge);
   }
-  let right=origin.width;for(const p of packed.reverse()){p.x=Math.min(p.x,right-p.w/2);p.badge.style.left=p.x+'px';right=p.x-p.w/2-1;}
+  let right=origin.width;for(const p of packed.reverse()){p.x=Math.min(p.x,right-p.w/2);p.badge.style.left=p.x+'px';right=p.x-p.w/2-1;}byId('tuner-range-targets').style.visibility='visible';
   for(const [i,b] of buttons.entries()){const midi=Tuner.targetStrings[i]?.midi,key=keys.querySelector(`[data-range-midi="${midi}"]`);if(!key)continue;const a=b.getBoundingClientRect(),z=key.getBoundingClientRect();if(!a.width||!z.width)continue;
-   const left=a.left+a.width/2<head.left+head.width/2,dir=left?-1:1,x=(left?a.left:a.right)-box.left,y=a.top+a.height/2-box.top,k=z.left+z.width/2-box.left,v=(above?z.bottom:z.top)-box.top,offset=6+(i%4)*2;
+   const left=a.left+a.width/2<head.left+head.width/2,dir=left?-1:1,x=(left?a.left:a.right)-box.left,y=a.top+a.height/2-box.top,k=z.left+z.width/2-box.left,v=(above?keyboard.bottom:keyboard.top)-box.top,offset=6+(i%4)*2;
    const edge=side?(keyboard.left>head.left?head.right:head.left)-box.left:(above?head.top:head.bottom)-box.top,rail=Math.min(box.width-2,Math.max(2,x+dir*offset));
    const dot=targets.get(String(midi))?.getBoundingClientRect(),dy=dot?dot.top+dot.height/2-box.top:v,dx=dot?dot.left+dot.width/2-box.left:k;
    const d=side?`M${x} ${y} C${edge} ${y} ${dx} ${y} ${dx} ${dy} L${k} ${v}`:`M${x} ${y} Q${rail} ${y} ${rail} ${y+(above?-1:1)*7} C${rail} ${edge} ${rail} ${edge} ${(rail+dx)/2} ${edge} S${dx} ${dy+(above?8:-8)} ${dx} ${dy} L${k} ${v}`;
@@ -25927,7 +25952,7 @@ const Shell={
  },
  accessibility(){
   document.querySelectorAll('nav .nav-item').forEach(item=>{item.setAttribute('role','button');item.tabIndex=0;item.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();item.click();}};});
-  for(const [id,label] of [['theme-toggle-btn','切换浅色与深色'],['play-btn','开始或暂停节拍器'],['ear-play-btn','播放或重听练耳题目']])byId(id)?.setAttribute('aria-label',label);
+  for(const [id,label] of [['theme-toggle-btn','选择主题'],['play-btn','开始或暂停节拍器'],['ear-play-btn','播放或重听练耳题目']])byId(id)?.setAttribute('aria-label',label);
   document.querySelector('.ear-play-btn')?.setAttribute('aria-label','播放或重听练耳题目');
  },
  init(){this.appearance();this.setSkin(read('skin','glass'));this.setMotion(read('motion','auto'));this.mountTuner();this.accessibility();PWAInstall.init();}
@@ -26245,22 +26270,25 @@ Shell.init();
   for(const option of position.options)option.selected=option.value===get(positionKey,'spread');
   position.onchange=()=>{localStorage.setItem(positionKey,position.value);host.replaceChildren();spawn();};
   const obstacles='button,select,input,textarea,summary,label,a,[role="button"],svg,canvas,#tuner-headstock,#tuner-range,.ear-display,#sight-score,.drum-grid,.music-tip-toggle';
-  const spawn=()=>{
-    if(host.hidden||document.hidden||byId('music-tip-card')||document.documentElement.dataset.motion==='reduced'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const spawn=(hint='')=>{
+    if(typeof hint!=='string')hint='';const reduced=document.documentElement.dataset.motion==='reduced'||matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if((host.hidden||reduced)&&!hint||document.hidden||byId('music-tip-card'))return;
     const page=byId(`page-${scene}`);if(!page?.classList.contains('active')||[...document.querySelectorAll('dialog[open],.practice-modal:not([hidden]),.metro-visual-panel,#study-flyout:not([hidden]),.tuner-settings-fold[open],#ramp-actions-pop,.start-screen:not([hidden]):not(.hide)')].some(e=>e.getClientRects().length)){host.replaceChildren();return;}
-    const area=host.getBoundingClientRect();if(!area.width||!area.height)return;
+    if(hint){hideHint();host.dataset.guide='true';}const area=host.getBoundingClientRect();if(!area.width||!area.height)return;
     const blocks=[...page.querySelectorAll(obstacles+',output,.tuner-display,#instrument-stage,#fret-game'),pill,document.querySelector('.top-bar'),document.querySelector('nav')].filter(Boolean).map(node=>node.getBoundingClientRect()).filter(r=>r.width&&r.height);for(const n of page.querySelectorAll('p,h2,h3,h4,article>strong')){const range=document.createRange();range.selectNodeContents(n);blocks.push(...range.getClientRects());}
+    if(scene==='instrument'){for(const el of page.querySelectorAll('.board-tabs,.board-status,.board-answers,.board-menu:not([hidden]),.board-study-settings:not([hidden]),.instrument-session-strip,#instrument-stage')){const r=el.getBoundingClientRect();if(r.width&&r.height)blocks.push({left:r.left-10,right:r.right+10,top:r.top-10,bottom:r.bottom+10});}}
+    if(hint&&host.childElementCount>=(scene==='instrument'?1:3))host.firstElementChild?.remove();
     const intersects=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;for(const other of [...host.children])if(other._lane){if(blocks.some(b=>intersects(other._lane,b)))other.remove();else blocks.push(other._lane);}
-    if(host.childElementCount>=3)return;const item=draw();if(!item)return;
-    const chip=document.createElement('button');chip.className='music-tip-danmaku';chip.textContent=item.title;chip.setAttribute('aria-label',item.text);chip.dataset.scene=scene;chip.onclick=()=>show(item);host.append(chip);
+    if(host.childElementCount>=(scene==='instrument'?1:3))return;const item=hint?{title:hint,text:hint}:draw();if(!item)return;
+    const chip=document.createElement(hint?'span':'button');chip.className='music-tip-danmaku'+(hint?' context-flight':'');chip.textContent=item.title;chip.setAttribute('aria-label',item.text);chip.dataset.scene=scene;if(hint)chip.setAttribute('role','status');else chip.onclick=()=>show(item);host.append(chip);
     const w=chip.offsetWidth,h=chip.offsetHeight,range=position.value;
     const start=0,end=area.height;
     const spots=[];
     for(let y=start+4;y+h+4<end;y+=h+5){const top=area.top+y;const ranges=blocks.filter(r=>r.bottom+4>top&&r.top-4<top+h).map(r=>[r.left-area.left-6,r.right-area.left+6]).sort((a,b)=>a[0]-b[0]);let left=4;
       for(const [a,b] of [...ranges,[area.width-4,area.width]]){const width=Math.min(a,area.width-4)-left;if(width>=w+52)spots.push([left,y,width]);left=Math.max(left,b);}}
-    if(!spots.length){chip.remove();return;}const preferred=spots.filter(([,y])=>range==='top'?y<end/2:range==='bottom'?y>end/2:true),paths=preferred.length?preferred:spots;
+    if(!spots.length){chip.remove();if(hint)hideHint();return;}const preferred=spots.filter(([,y])=>range==='top'?y<end/2:range==='bottom'?y>end/2:true),paths=preferred.length?preferred:spots;
     const centers=[...host.children].filter(n=>n!==chip&&n._lane).map(n=>n._lane.top-area.top);const anchor=Math.random()*end;const score=s=>centers.length?Math.min(...centers.map(v=>Math.abs(s[1]-v)))+Math.random()*h: -Math.abs(s[1]-anchor)+Math.random()*h;const [left,y,width]=paths.map(s=>[score(s),s]).sort((a,b)=>b[0]-a[0])[0][1],travel=width-w;chip._lane={left:area.left+left,right:area.left+left+width,top:area.top+y,bottom:area.top+y+h};chip.style.cssText=`--tip-x:${left}px;--tip-y:${y}px;--travel:${travel}px;--seconds:${Math.max(4,travel/36)}s`;
-    chip.onanimationend=()=>chip.remove();
+    if(hint){if(reduced){chip.style.setProperty('animation','none','important');chip.style.transform='none';}hintTimer=setTimeout(hideHint,reduced?3500:Math.max(4,travel/36)*1000+300);}chip.onanimationend=hint?hideHint:()=>chip.remove();
   };
   const changeScene=()=>{
     const next=document.querySelector('main .page.active')?.id.replace('page-','');if(!scenes[next]||next===scene)return;
@@ -26271,10 +26299,10 @@ Shell.init();
   document.addEventListener('scroll',()=>host.replaceChildren(),{capture:true,passive:true});window.addEventListener('resize',()=>host.replaceChildren());
   document.addEventListener('pointerdown',e=>{if(!e.target.closest?.('.music-tip-danmaku,#music-tip-card,#music-tip-pill'))host.replaceChildren();},true);
   document.addEventListener('keydown',event=>{if(event.key==='Escape')close();});
-  let hintTimer;function hideHint(){clearTimeout(hintTimer);pill.querySelector('.tool-hint')?.remove();}
+  let hintTimer;function hideHint(){clearTimeout(hintTimer);host.querySelector('.context-flight')?.remove();delete host.dataset.guide;}
   const help=[['#a4-box','八度和频率','440 Hz 是 A4 的参照；改变它，会一起改变调音目标。'],['#tuner-headstock','标准六弦','点弦号锁定目标；左列从上到下是四、五、六弦。'],['#tuner-range','半音与品位','相邻黑白键差一个半音。点键可听参考音。'],['#tuner-capo-button','全夹二品','全夹每升一品，所有弦升一个半音；蜘蛛夹按弦分别计算。'],['#metro-swing-master,#metro-swing-body','Swing 的长短','Swing 改细分的长短，不改变主拍速度。'],['#metro-accent-profile','二四拍重音','计拍方式管音色，重音方案管重音落在哪一拍。'],['#play-btn','看一小节','数到一时是新小节；开可视化能看见同一组拍点。'],['#instrument-study [data-study="scale"]','大调阶梯','蓝色的 1 是根音；其他数字是同一音阶里的级数。'],['#instrument-study [data-study="improv"]','只改最后一音','先用三个音组成短句，再只改节奏或最后一个音。'],['#instrument-caged-open','五形连成指板','五个名称是开放和弦形状，不是五种不同的调。'],['.circle-compose','属到主','ii–V–I 是和弦进行。选好调，就能把对应的和弦放进编排。'],['.ear-level-select','同时还是先后','先后听的是旋律音程，同时听的是和声音程。'],['#sight-demo','先认谱号','先看第一音，再听示范；唱时按相同乐句范围练。'],['.chord-page-tabs','最低音','查询给出按法，探索则根据你按下的音识别和弦。'],['#theory-memory-kit','自然半音','速记可以翻页或暂停。去练习会打开这张卡的对应工具。'],['#shell-appearance','离线使用','自然动效遵循系统偏好；减少动效后可手动翻卡。']];
   help.unshift(['.circle-compose','编排当前调的终止式','先选调，再加入三个和弦。'],['#instrument-study [data-study="scale"]','音名定位','可从贴士进入当前把位的找音游戏。']);
-  document.addEventListener('click',e=>{if(!e.target.closest?.('button,input,select,summary,[role=button]'))return;const match=help.find(([s])=>e.target.closest(s));if(!match)return;context=items.find(i=>i.scene===scene&&i.title===match[1])||context;if(!guides.checked||byId('music-tip-card')||document.querySelector('dialog[open],.practice-modal'))return;hideHint();const hint=document.createElement('span');hint.className='tool-hint';hint.setAttribute('role','status');hint.textContent=match[2];pill.append(hint);hint.style[pill.getBoundingClientRect().left<innerWidth/2?'left':'right']='0';hintTimer=setTimeout(hideHint,4300);});
+  document.addEventListener('click',e=>{if(!e.target.closest?.('button,input,select,summary,[role=button]'))return;const match=help.find(([s])=>e.target.closest(s));if(!match)return;context=items.find(i=>i.scene===scene&&i.title===match[1])||context;if(guides.checked)requestAnimationFrame(()=>spawn(match[2]));});
   const mappings={'#sight-demo':'volume-2','#sight-prev-phrase':'chevron-left','#sight-next-phrase':'chevron-right','#instrument-tone-open':'sliders-horizontal','.special-tuning-open':'search','#theme-toggle-btn':'circle-fading-plus','.metro-ramp-open':'timer','#metro-visual-open':'activity','.remember-primary':'bookmark','.music-tip-toggle':'lightbulb','.ear-play-btn':'ear','.drum-header-actions [data-use-metronome]':'timer','[data-use-metronome]':'timer','.metro-accent-edit':'sliders-horizontal','.tuner-diagnostics-toggle':'settings-2'};
   Object.assign(mappings,{'[onclick="DrumWorkshop.generate()"]':'shuffle','[onclick="DrumWorkshop.undo()"]':'undo-2','[onclick="DrumWorkshop.settings()"]':'settings-2','[onclick="InstrumentPage.clearMapping()"]':'x','[onclick="InstrumentPage.clearHeld()"]':'x','#instrument-orientation':'repeat','#settings-update-check button':'repeat'});
   function commonIcons(){for(const [s,id] of Object.entries(mappings)){for(const b of document.querySelectorAll(s)){if(b.querySelector('svg:not(.ui-glyph)'))continue;if(s==='.special-tuning-open'&&!b.dataset.ui)b.textContent='';b.dataset.ui=id;}}icons();}
@@ -26298,9 +26326,11 @@ Shell.init();
  const pop=(id,label)=>{const el=document.createElement('div');el.id=id;el.className='board-menu';el.hidden=true;el.setAttribute('role','region');el.setAttribute('aria-label',label);tabs.after(el);return el;};
  const fly=pop('study-flyout','训练菜单'),gameFly=pop('game-flyout','游戏菜单'),settings=document.createElement('details');settings.className='performance-settings';settings.innerHTML='<summary>演奏设置</summary>';settings.append(toolbar,$('#instrument-tone-note'),page.querySelector('.instrument-session-strip'));fly.append(study,panel,settings);
  const status=document.createElement('div');status.className='board-status';stage.before(status);const train=document.createElement('div');train.className='board-training-line';train.innerHTML='<strong>自由演奏</strong><button type="button" data-ui="volume-2" aria-label="试听当前材料" hidden></button>';status.append(train);const demo=train.querySelector('button');demo.onclick=()=>panel.querySelector('[data-demo]')?.click();
- I.syncStudyStatus=()=>{const label=panel.querySelector('.study-caption span')?.textContent;train.firstChild.textContent=!panel.hidden&&label?label:'自由演奏';demo.hidden=panel.hidden||!label;};
+ const options=document.createElement('details');options.className='board-study-settings';options.innerHTML='<summary>练习设置</summary>';options.append(panel);stage.before(options);options.hidden=true;
+ const nextShape=document.createElement('button');nextShape.type='button';nextShape.dataset.ui='chevron-right';nextShape.title=nextShape.ariaLabel='下一个形状';train.append(nextShape);nextShape.onclick=()=>CagedLab.next();demo.onclick=()=>CagedLab.active?CagedLab.play():panel.querySelector('[data-demo]')?.click();
+ I.syncStudyStatus=()=>{const c=CagedLab.active,label=c?CagedLab.caption:!panel.hidden&&panel.querySelector('.study-caption span')?.textContent;train.firstChild.textContent=label||'自由演奏';demo.hidden=!label;nextShape.hidden=!c;options.hidden=!label||c||active;if(options.hidden)options.open=false;};
  function menu(which){for(const [name,el] of [['train',fly],['game',gameFly]]){el.hidden=which!==name;tabs.querySelector(`[data-board-tab="${name}"]`).setAttribute('aria-expanded',String(!el.hidden));}if(which)I.closeTuningPicker();}
- I.showStudyControls=()=>{if(active)tab(false);menu('train');};document.addEventListener('pointerdown',e=>{if(!tabs.contains(e.target)&&!fly.contains(e.target)&&!gameFly.contains(e.target))menu(null);if(!picker.contains(e.target))I.closeTuningPicker();},true);document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const opener=tabs.querySelector('[aria-expanded="true"]');if(opener){menu(null);opener.focus();}if($('#instrument-tuning-bar').getAttribute('aria-expanded')==='true'){I.closeTuningPicker();$('#instrument-tuning-bar').focus();}});
+ I.showStudyControls=()=>{if(active)tab(false);menu(null);};document.addEventListener('pointerdown',e=>{if(!tabs.contains(e.target)&&!fly.contains(e.target)&&!gameFly.contains(e.target))menu(null);if(!picker.contains(e.target))I.closeTuningPicker();},true);document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const opener=tabs.querySelector('[aria-expanded="true"]');if(opener){menu(null);opener.focus();}if($('#instrument-tuning-bar').getAttribute('aria-expanded')==='true'){I.closeTuningPicker();$('#instrument-tuning-bar').focus();}});
  const game=document.createElement('section');game.id='fret-game';game.hidden=true;game.innerHTML=`<div class="game-picks"><select aria-label="游戏题型" data-kind>${Object.entries(modes).map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select><select aria-label="练习品位" data-zone><option value="0">0–5 品</option><option value="5">5–10 品</option><option value="10">10–15 品</option></select><button data-weak data-ui="repeat" title="复习当前题型的薄弱位置">薄弱位置</button></div><div class="game-question"><strong data-q></strong><button data-listen data-ui="volume-2" aria-label="重听题目"></button></div><div data-answers></div><div class="game-result"><output aria-live="polite"></output><button data-next data-ui="chevron-right">下一题</button></div><small data-record></small>`;stage.before(game);
  const find=s=>game.querySelector(s),kind=find('[data-kind]'),zone=find('[data-zone]'),q=find('[data-q]'),answers=find('[data-answers]'),result=find('output'),record=find('[data-record]'),listen=find('[data-listen]');
  const picks=game.querySelector('.game-picks'),feedback=game.querySelector('.game-result');gameFly.append(picks,record);const question=game.querySelector('.game-question');status.append(game);question.append(result,feedback.querySelector('[data-next]'));feedback.remove();stage.after(answers);answers.className='board-answers';for(const [el,text] of [[kind,'题型'],[zone,'范围']]){const label=document.createElement('label');label.textContent=text;el.before(label);label.append(el);}
@@ -26325,15 +26355,15 @@ Shell.init();
    if(t==='interval'){const p=rand(pairs(n));point(p.a);text=`从 ${coords(p.a)} ${p.sign===1?'向上':'向下'}找${p.label}`;task.check=v=>v.m===n.m;}
    if(t==='ear'){text='听音找位置 · 八度也要相同';task.check=v=>v.m===n.m;listen.hidden=false;void sound(n);}
    if(t==='degree'){const chord=Math.random()<.5,deg=rand(chord?[[0,'根音'],[4,'三音'],[7,'五音'],[10,'七音']]:[[0,'一级'],[2,'二级'],[4,'三级'],[5,'四级'],[7,'五级'],[9,'六级'],[11,'七级']]);text=`在 ${names[(pc-deg[0]+12)%12]}${chord?' 属七和弦':' 大调'}中找${deg[1]}`;}
-   q.textContent=text;task.at=performance.now();}
+   const label=document.createElement('small'),target=document.createElement('b');label.textContent=modes[t]+(piano()?' · 琴键':' · '+zone.selectedOptions[0].textContent);if(t==='axis'||t==='name'){const [before,after]=text.split(names[pc]),mark=document.createElement('mark');mark.textContent=names[pc];target.append(before,mark,after);}else target.textContent=text;q.replaceChildren(label,target);q.setAttribute('aria-live','polite');task.at=performance.now();}
  function answer(ok,pos,label){if(!item||item.done)return;item.done=true;const n=item.n,shown=ok&&pos?pos:n,k=key(shown),r=ledger[k]||{n:0,ok:0,ms:0};r.n++;r.ok+=Number(ok);r.ms+=Math.round(performance.now()-item.at);ledger[k]=r;try{localStorage.setItem(store,JSON.stringify(ledger));}catch{}point(shown);I.flashStudy(elFor(shown));result.textContent=`${ok?'正确':`你选了 ${pos?midiToName(pos.m):label||'其他音'}；答案示例`} · ${coords(shown)} ${midiToName(shown.m)}`;stats();if(ok)timer=setTimeout(ask,800);}
  function press(e){if(!active)return;const el=e.target.closest('.virtual-note-hit,.piano-key');if(!el)return;e.stopImmediatePropagation();if(!item||item.done||kind.value==='read')return;const v=piano()?{s:-1,f:+el.dataset.midi,m:+el.dataset.midi}:{s:+el.dataset.string,f:+el.dataset.fret,m:opens()[+el.dataset.string]+ +el.dataset.fret};if(!pool().some(n=>n.s===v.s&&n.f===v.f)){result.textContent='请选择本题范围内可用的位置。';return;}answer(item.check(v),v);}
  stage.addEventListener('pointerdown',press,true);stage.addEventListener('click',e=>{if(e.detail===0)press(e);},true);
  for(const event of ['pointerup','click','dblclick'])stage.addEventListener(event,e=>{if(active)e.stopImmediatePropagation();},true);
  function adapt(){if(piano()!==wasPiano){if(wasPiano)lastPianoKind=kind.value;else lastStringKind=kind.value;kind.value=piano()?lastPianoKind:lastStringKind;}wasPiano=piano();for(const o of kind.options){o.hidden=o.disabled=piano()&&o.value==='axis';o.textContent=piano()&&o.value==='name'?'给音找琴键':modes[o.value];}zone.parentElement.hidden=piano();}
- function tab(on){if(page.dataset.tab===(on?'game':'train'))return;clearTimeout(timer);active=on;page.dataset.tab=on?'game':'train';game.hidden=answers.hidden=!on;train.hidden=on;settings.open=false;$('#caged-learning-modal')?.remove();tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.boardTab===page.dataset.tab)));if(on){adapt();I.render();ask();}else{item=null;I.render();I.syncStudyStatus();}}
+ function tab(on){if(page.dataset.tab===(on?'game':'train'))return;clearTimeout(timer);active=on;page.dataset.tab=on?'game':'train';game.hidden=answers.hidden=!on;train.hidden=on;settings.open=false;options.hidden=on||panel.hidden;if(on)CagedLab.close();tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.boardTab===page.dataset.tab)));if(on){adapt();I.render();ask();}else{item=null;I.render();I.syncStudyStatus();}}
  page.dataset.tab='train';answers.hidden=true;tabs.querySelectorAll('button').forEach(b=>b.onclick=()=>{const name=b.dataset.boardTab,open=b.getAttribute('aria-expanded')!=='true';tab(name==='game');menu(open?name:null);});kind.onchange=zone.onchange=()=>{review=false;ask();menu(null);};listen.onclick=()=>item&&sound(item.n);question.querySelector('[data-next]').onclick=ask;picks.querySelector('[data-weak]').onclick=()=>{review=!review;ask();menu(null);};
- let lastBoard='';const savedRender=I.render.bind(I);I.render=function(...args){const r=savedRender(...args),signature=[I.instrument,I.getTuning().join(','),...I.mutedStrings].join('|');if(active&&lastBoard!==signature){review=false;adapt();ask();}else if(active&&item&&kind.value==='read')point(item.n);if(!active)I.syncStudyStatus();lastBoard=signature;return r;};new MutationObserver(()=>{if(!page.classList.contains('active')){clearTimeout(timer);item=null;menu(null);I.closeTuningPicker();}else if(active&&!item)ask();}).observe(page,{attributes:true,attributeFilter:['class']});
+ let lastBoard='';const savedRender=I.render.bind(I);I.render=function(...args){if(CagedLab.active&&!CagedLab.compatible())CagedLab.close();const r=savedRender(...args),signature=[I.instrument,I.getTuning().join(','),...I.mutedStrings].join('|');if(active&&lastBoard!==signature){review=false;adapt();ask();}else if(active&&item&&kind.value==='read')point(item.n);if(!active)I.syncStudyStatus();lastBoard=signature;return r;};new MutationObserver(()=>{if(!page.classList.contains('active')){CagedLab.run++;clearTimeout(timer);item=null;menu(null);I.closeTuningPicker();}else if(active&&!item)ask();}).observe(page,{attributes:true,attributeFilter:['class']});
  const playPiano=I.playPiano.bind(I);I.playPiano=function(m){I.flashStudy(stage.querySelector(`[onpointerdown="InstrumentPage.playPiano(${m})"]`));return playPiano(m);};
  const renderPiano=I.renderPiano.bind(I);I.renderPiano=function(el){renderPiano(el);if(!active)for(const k of el.querySelectorAll('.piano-key'))k.dataset.degree=I.studyNote?.(-1,0,+k.dataset.midi)||'';};
  window.FretTrainer={open(type,at){App.goPage('instrument');tab(true);if(type in modes&&!(piano()&&type==='axis'))kind.value=type;zone.value=String([0,1,5,9,13].includes(at)?at:'auto');ask();menu(null);},get active(){return active;}};window.MusicTips?.icons(page);

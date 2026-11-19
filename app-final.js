@@ -3,8 +3,8 @@
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.29';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.29-20261119-8';
+const V13_VERSION='13.5.30';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.30-20261119-9';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -813,7 +813,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.29';
+const RELEASE_VERSION='13.5.30';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -1470,7 +1470,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.29';
+const RELEASE_VERSION='13.5.30';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -1896,7 +1896,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.8';
+const FINAL_BUILD='2026.11.19.9';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -2256,7 +2256,7 @@ ChordLib.playChord=async function(){
 /* Piano-range audition: overview stays compact; an octave panel supplies touch targets. */
 TunerAssist.previewKey=async function(midi){
  midi=Number(midi);if(!Number.isInteger(midi)||midi<21||midi>108)return;const token=this._keyPreviewToken=(this._keyPreviewToken||0)+1;
- try{if(!AudioEngine.ctx)await AudioEngine.init();if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument([midi],'piano');if(token!==this._keyPreviewToken)return;
+ try{if(!AudioEngine.ctx)await AudioEngine.init();if(!AudioEngine.ctx)return;if(AudioEngine.ctx.state==='suspended')await AudioEngine.ctx.resume();await AudioEngine.prepareInstrument([midi],'piano');if(token!==this._keyPreviewToken)return;
  AudioEngine.playInstrument(midi,.85,.22,'piano');this.previewMidi=midi;
  document.querySelectorAll('[data-range-midi]').forEach(key=>key.classList.toggle('auditioning',Number(key.dataset.rangeMidi)===midi));
  const output=document.getElementById('range-key-status'),name=NOTE_NAMES[midi%12]+(Math.floor(midi/12)-1);if(output)output.textContent=`试听 ${name} · ${midiToFreq(midi,Tuner.a4).toFixed(2)} Hz（A4=${Tuner.a4}）`;
@@ -2272,12 +2272,16 @@ TunerAssist.init=function(){rangeInit13512();const box=document.getElementById('
 /* Compact pitch rail: targets and live pitch share piano-key coordinates. */
 TunerAssist.renderTargets=function(){
  const layer=document.getElementById('tuner-range-targets');if(!layer)return;
- layer.replaceChildren();const groups=new Map();
- Tuner.targetStrings.forEach((s,i)=>{const g=groups.get(s.midi)||[];g.push(Tuner.targetStrings.length-i);groups.set(s.midi,g);});
- [...groups].sort((a,b)=>a[0]-b[0]).forEach(([midi,strings])=>{
-  const dot=document.createElement('i');dot.className='tuner-range-target';dot.style.left=this.position(midi)+'%';dot.style.top='var(--rail-y)';dot.dataset.midi=String(midi);dot.title=strings.join('／')+'弦 '+midiToName(midi);
-  dot.textContent=strings.join('·');dot.setAttribute('aria-label',dot.title);layer.append(dot);
- });
+ const signature=Tuner.targetStrings.map(s=>s.midi).join(',');
+ if(layer.dataset.tuning!==signature){
+  layer.dataset.tuning=signature;const groups=new Map();
+  Tuner.targetStrings.forEach((s,i)=>{const g=groups.get(s.midi)||[];g.push(Tuner.targetStrings.length-i);groups.set(s.midi,g);});
+  // Badges are revealed after the key-aligned packing pass, never at a provisional position.
+  layer.style.visibility='hidden';layer.replaceChildren(...[...groups].sort((a,b)=>a[0]-b[0]).map(([midi,strings])=>{
+   const dot=document.createElement('i');dot.className='tuner-range-target';dot.dataset.midi=String(midi);dot.title=strings.join('／')+'弦 '+midiToName(midi);
+   dot.textContent=strings.join('·');dot.setAttribute('aria-label',dot.title);return dot;
+  }));
+ }
  this.renderCapoNotice();this.renderReading();window.AppShell?.scheduleLinks?.();
 };
 TunerAssist.renderCapoNotice=function(){
@@ -2296,7 +2300,6 @@ TunerAssist.init=function(){compactRangeInit();const box=document.getElementById
  const diagnostics=document.getElementById('tuner-diagnostics'),status=document.getElementById('tuner-detection-status');if(diagnostics&&status)diagnostics.appendChild(status);
  const pointer=document.getElementById('tuner-range-pointer');pointer.appendChild(document.createElement('b'));
  this.renderTargets();
- if(typeof ResizeObserver!=='undefined'){this.railObserver=new ResizeObserver(()=>this.renderTargets());this.railObserver.observe(box);}
 };
 const compactRangeReading=TunerAssist.renderReading.bind(TunerAssist);
 TunerAssist.renderReading=function(){compactRangeReading();const pointer=document.getElementById('tuner-range-pointer');if(!pointer)return;const m=Tuner.displayFreq>0?freqToMidi(Tuner.displayFreq,Tuner.a4):NaN;
@@ -2906,9 +2909,9 @@ E.init = function() {
       const tasks=[['问句与答句','用三个音弹一句，停一拍，再用相同节奏回答。',[0,1,2,null,2,1,0]],['同一句换结尾','把前三个音保持不变。第二次只换最后一个音。',[0,1,2,0,null,0,1,2,3]],['靠近目标音','选一个和弦音，从音阶里的相邻音走向它，在目标音多停一拍。',[2,1,0,null,1,2,3]],['三度跳进','隔一个音阶音向上，再退回一个；不要只顺着品位爬。',[0,2,1,3,2,4,3]],['留出休止','重复前两个音，再把第三下留空。脚下的拍子不要停。',[0,1,null,0,1,null,2,0]],['移位模进','把短句整体上移一个音阶级，再听它与原句的关系。',[0,1,2,null,1,2,3]]];
       panel.innerHTML=`<div class="study-fields"><label>根音<select data-root>${NOTE_NAMES.map((_,i)=>`<option value="${i}">${enharmonic(i)}</option>`).join('')}</select></label><label>材料<select data-layer>${ids.map(id=>`<option value="${id}">${layers[id].label}</option>`).join('')}</select></label><label>品位<select data-pos>${[[0,'全指板'],[1,'1–5'],[5,'5–9'],[9,'9–13'],[13,'13–17']].map(([v,s])=>`<option value="${v}">${s}</option>`).join('')}</select></label><label data-task-wrap>短句<select data-task>${tasks.map(([title],i)=>`<option value="${i}">${title}</option>`).join('')}</select></label></div><div class="study-caption"><span></span><button type="button" data-demo data-ui="play" aria-label="试听当前练习"></button></div>`;
       const pick=id=>panel.querySelector(`[data-${id}]`),root=pick('root'),kind=pick('layer'),pos=pick('pos'),task=pick('task');root.value='9';kind.value='pentatonic';let mode='',generation=0;
-      this.studyNote=(s,f,midi)=>{if(!mode||document.getElementById('page-instrument').dataset.tab==='game'||s>=0&&(this.mutedStrings.has(s)||(+pos.value&&(f<+pos.value||f>+pos.value+4))))return '';const iv=(midi-Number(root.value)+120)%12;if(!layers[kind.value].intervals.includes(iv))return '';return iv===6&&kind.value==='lydian'?'♯4':['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];};
+      this.studyNote=(s,f,midi)=>{if(document.getElementById('page-instrument').dataset.tab==='game'||s>=0&&this.mutedStrings.has(s))return '';if(CagedLab.active)return CagedLab.note(s,f,midi);if(!mode||s>=0&&+pos.value&&(f<+pos.value||f>+pos.value+4))return '';const iv=(midi-Number(root.value)+120)%12;if(!layers[kind.value].intervals.includes(iv))return '';return iv===6&&kind.value==='lydian'?'♯4':['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];};
       const refresh=()=>{generation++;panel.hidden=!mode;strip.querySelectorAll('[data-study]').forEach(b=>b.setAttribute('aria-expanded',String(b.dataset.study===mode)));pick('task-wrap').hidden=mode!=='improv';panel.querySelector('.study-caption span').textContent=mode==='improv'?tasks[task.value][1]:`${enharmonic(Number(root.value))} · ${layers[kind.value].label}　｜　1 是根音`;this.render();};
-      this.openStudy=(next,layer,key)=>{if(!['scale','improv',''].includes(next))return;mode=next;if(next)this.showStudyControls?.();if(layer&&ids.includes(layer))kind.value=layer;if(Number.isInteger(key))root.value=String(key);refresh();};
+      this.openStudy=(next,layer,key)=>{if(!['scale','improv',''].includes(next))return;CagedLab.close();mode=next;if(next)this.showStudyControls?.();if(layer&&ids.includes(layer))kind.value=layer;if(Number.isInteger(key))root.value=String(key);refresh();};
       strip.querySelectorAll('[data-study]').forEach(b=>b.onclick=()=>this.openStudy(mode===b.dataset.study?'':b.dataset.study));panel.onchange=refresh;
       pick('demo').onclick=async()=>{
         const token=++generation,offsets=layers[kind.value].intervals,seq=mode==='improv'?tasks[task.value][2]:[...offsets.keys(),offsets.length,...[...offsets.keys()].reverse()];
@@ -3028,25 +3031,30 @@ E.init = function() {
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
   const CagedLab = {
     root:0,shape:'E',layer:'chord',course:'common',fretCount:12,
+    active:false,run:0,
+    compatible(){return InstrumentPage.instrument==='guitar'&&InstrumentPage.getTuning().map(noteToMidi).join()===tuning.map(noteToMidi).join();},
+    close(){this.active=false;this.run++;document.getElementById('caged-board-controls')?.remove();},
+    note(s,f,m){const shape=shapes[this.shape],iv=(m-this.root+120)%12;if(s<0||f<this.position||f>this.position+4||!layers[this.layer].intervals.includes(iv))return '';if(this.layer==='chord'&&(shape.frets[s]==null||f!==this.position+shape.frets[s]))return '';return ['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'][iv];},
+    next(){const ids=Object.keys(shapes);this.shape=ids[(ids.indexOf(this.shape)+1)%ids.length];this.open();},
     open(){
-      const existing=document.getElementById('caged-learning-modal');if(existing){existing.hidden=false;let changed=false;for(const field of ['shape','root','course','layer']){const input=existing.querySelector(`[data-${field}]`);if(input.value!==String(this[field])){input.value=String(this[field]);changed=true;}}if(changed)this.render(existing);return;}
-      const modal=document.createElement('div');modal.id='caged-learning-modal';modal.className='practice-modal caged-modal';
-      modal.innerHTML='<div class="practice-modal-card caged-card"><div class="caged-head"><div><h3>CAGED 指板教材</h3><p>C、A、G、E、D 五形 · 和弦 · 音阶 · 琶音 · 实践</p></div><button type="button" data-close aria-label="关闭 CAGED 教材">×</button></div><div class="caged-controls"><label>调性<select data-root></select></label><label>形状<select data-shape></select></label><label>学习层<select data-layer></select></label><label>课程<select data-course></select></label></div><div class="caged-lesson" data-lesson></div><div class="caged-stage" data-stage></div><div class="caged-actions"><button type="button" data-play>▶ 播放当前练习</button><button type="button" data-next>下一个形状</button><button type="button" data-close>完成</button></div></div>';
-      document.body.appendChild(modal);
-      if(App.currentPage==='instrument')document.getElementById('instrument-stage').before(modal);
+      InstrumentPage.showStudyControls?.();if(!this.compatible()){toast('CAGED 五形使用标准六弦吉他调弦；其他乐器可选音阶练习。');return;}
+      if(!this.active)InstrumentPage.openStudy?.('');this.active=true;
+      let modal=document.getElementById('caged-board-controls');if(modal){for(const field of ['shape','root','course','layer'])modal.querySelector(`[data-${field}]`).value=String(this[field]);this.render(modal);return;}
+      modal=document.createElement('details');modal.id='caged-board-controls';modal.className='board-study-settings';
+      modal.innerHTML='<summary>练习设置</summary><div class="caged-controls"><label>调性<select data-root></select></label><label>形状<select data-shape></select></label><label>学习层<select data-layer></select></label><label>课程<select data-course></select></label></div><p data-lesson></p><button type="button" data-close>结束练习</button>';
+      document.getElementById('instrument-stage').before(modal);
       const root=modal.querySelector('[data-root]'),shape=modal.querySelector('[data-shape]'),layer=modal.querySelector('[data-layer]'),course=modal.querySelector('[data-course]');
       root.innerHTML=rootNames.map((name,index)=>`<option value="${index}">${name}</option>`).join('');shape.innerHTML=Object.entries(shapes).map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');layer.innerHTML=Object.entries(layers).map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');course.innerHTML=Object.entries(courses).map(([id],index)=>`<option value="${id}">${['常用和弦','三和弦','七和弦','扩展和弦','开放和弦','练习与实践'][index]}</option>`).join('');
       root.value=String(this.root);shape.value=this.shape;layer.value=this.layer;course.value=this.course;
       root.onchange=e=>{this.root=Number(e.target.value);this.render(modal);};shape.onchange=e=>{this.shape=e.target.value;this.render(modal);};layer.onchange=e=>{this.layer=e.target.value;this.render(modal);};course.onchange=e=>{this.course=e.target.value;this.render(modal);};
-      modal.querySelectorAll('[data-close]').forEach(button=>button.onclick=()=>modal.remove());modal.onclick=e=>{if(e.target===modal)modal.remove();};modal.querySelector('[data-play]').onclick=()=>this.play();modal.querySelector('[data-next]').onclick=()=>{const ids=Object.keys(shapes),next=(ids.indexOf(this.shape)+1)%ids.length;this.shape=ids[next];shape.value=this.shape;this.render(modal);};
-      const min=modal.querySelector('[data-close]');min.textContent='−';min.setAttribute('aria-label','收起教材');min.onclick=()=>{modal.hidden=true;};
+      modal.querySelector('[data-close]').onclick=()=>{this.close();InstrumentPage.render();};
       this.render(modal);
     },
     render(modal){
       this.run=(this.run||0)+1;
-      const stage=modal.querySelector('[data-stage]'),lesson=modal.querySelector('[data-lesson]'),shape=shapes[this.shape],layer=layers[this.layer],rootFret=getRootFret(this.root,shape.rootString),position=rootFret-shape.baseRoot;
-      lesson.innerHTML=`<strong>${rootNames[this.root]} · ${shape.label} · ${layer.label}</strong><span>${courses[this.course]}</span><small>根音位置：第 ${6-shape.rootString} 弦 ${rootFret} 品 · 当前把位 ${position}–${position+4} 品</small>`;
-      stage.innerHTML=this.boardSvg(shape,layer,rootFret,position);
+      const shape=shapes[this.shape],rootFret=getRootFret(this.root,shape.rootString);this.position=rootFret-shape.baseRoot;this.caption=`${rootNames[this.root]} · ${shape.label} · ${layers[this.layer].label}`;
+      modal.querySelector('[data-lesson]').textContent=`${courses[this.course]} 根音：${6-shape.rootString} 弦 ${rootFret} 品。`;InstrumentPage.render();
+      const node=document.querySelector(`#instrument-stage [data-string="${shape.rootString}"][data-fret="${rootFret}"]`),sc=node?.closest('.virtual-board-scroll');if(sc){const r=node.getBoundingClientRect(),b=sc.getBoundingClientRect();if(r.bottom>b.bottom||r.top<b.top)sc.scrollTop+=r.top-b.top-b.height/2;if(r.right>b.right||r.left<b.left)sc.scrollLeft+=r.left-b.left-b.width/2;}
     },
     boardSvg(shape,layer,rootFret,position){
       const w=760,h=360,left=64,right=18,top=46,bottom=30,frets=Math.max(12,position+4),stringGap=(h-top-bottom)/5,fretGap=(w-left-right)/frets,openMidi=tuning.map(noteToMidi),start=position,end=start+4;
@@ -3065,9 +3073,9 @@ E.init = function() {
       }
       svg+=`<text x="${left}" y="24" fill="var(--prim)" font-size="13" font-weight="800">${rootNames[this.root]} · ${shape.label} · ${layer.label}</text><text x="${w-right}" y="24" text-anchor="end" fill="var(--text-sub)" font-size="10">根音蓝色 · 和弦音与音阶音分层</text></svg>`;return svg;
     },
-    play(){
+    async play(){
       const shape=shapes[this.shape],rootFret=getRootFret(this.root,shape.rootString),position=rootFret-shape.baseRoot,intervals=layers[this.layer].intervals;
-      const modal=document.getElementById('caged-learning-modal'),token=++this.run;const hit=(m,s)=>{if(!modal?.isConnected||token!==this.run||App.currentPage!=='instrument')return;const el=modal.querySelector(`[data-midi="${m}"]${s==null?'':`[data-string="${s}"]`}`);InstrumentPage.flashStudy?.(el);if(el&&InstrumentPage.instrument==='guitar'&&InstrumentPage.getTuning().join()===tuning.join())InstrumentPage.flashStudy?.(document.querySelector(`#instrument-stage .virtual-note-hit[data-string="${el.dataset.string}"][data-fret="${el.dataset.fret}"]`));AudioEngine.playInstrument(m,.45,.18,'instrument');};
+      const token=++this.run;await AudioEngine.init();const hit=(m,s)=>{if(!this.active||token!==this.run||App.currentPage!=='instrument')return;const el=[...document.querySelectorAll('#instrument-stage .virtual-note-hit[data-degree]:not([data-degree=""])')].find(n=>(s==null||+n.dataset.string===s)&&noteToMidi(tuning[+n.dataset.string])+Number(n.dataset.fret)===m);if(el){InstrumentPage.flashStudy?.(el);InstrumentPage.playInstrumentNote(m,.45,.18);}};
       if(this.layer==='chord'){shape.frets.forEach((f,s)=>{if(f!==null){const midi=noteToMidi(tuning[s])+position+f;setTimeout(()=>hit(midi,s),s*110);}});return;}
       const notes=new Set();
       for(const openNote of tuning){
@@ -3097,15 +3105,15 @@ E.init = function() {
     const dpr=Math.min(devicePixelRatio||1,reduced?1:2);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
     const g=canvas.getContext('2d');if(!g)return;g.setTransform(dpr,0,0,dpr,0,0);
     const cx=w/2,cy=h/2,r=Math.min(w,h)*.39,level=current?.level??levels[beat]??.55,hit=beat>=0?(reduced?.35:Math.pow(1-p,3))*Math.min(1,level):0;
-    const hue=i=>i===beat&&current?.track!=null?185+current.track*37:(levels[i]??0)>=.9?39:(levels[i]??0)>=.7?173:200;
-    const color=(i,l=60,a=1)=>`hsla(${hue(i)},90%,${l}%,${a})`;
+    // Stable hue per beat; brightness, edge and numeral carry the attack.
+    const palette=[[209,65],[169,43],[263,44],[21,68]],color=(i,l=60,a=1)=>{const [h,s]=palette[Math.max(0,i)%4];return `hsla(${h},${s}%,${l}%,${a})`;};
     const rect=(x,y,a,b,c)=>{g.fillStyle=c;g.fillRect(x,y,a,b);};
     const text=(s,x,y,size,c='#f1faff')=>{g.textAlign='center';g.textBaseline='middle';g.fillStyle=c;g.font=`700 ${Math.max(8,Math.floor(size))}px system-ui`;g.fillText(String(s),x,y);};
     const arc=(x,y,rad,from,to,line,c)=>{g.beginPath();g.arc(x,y,Math.max(1,rad),from,to);g.strokeStyle=c;g.lineWidth=line;g.stroke();};
     const tau=Math.PI*2;rect(0,0,w,h,'#0b1521');if(hit)rect(0,0,w,h,color(beat,29,.25*hit));
     if(mode==='bars'||mode==='vertical'){
       const horiz=mode==='bars',bw=horiz?w/count:w,bh=horiz?h:h/count;
-      for(let i=0;i<count;i++){const x=horiz?bw*i:0,y=horiz?0:bh*i,on=i===beat;rect(x+2,y+2,bw-4,bh-4,color(i,on?28+hit*12:13));if(on){rect(x+2,y+2,horiz?bw-4:5,horiz?5:bh-4,color(i,76));if(!reduced)rect(x+2,y+bh-5,(bw-4)*p,3,color(i,80));}text(i+1,x+bw/2,y+bh/2,Math.min(bw*.6,bh*.57,100),on?'#fff':'#9baebf');}
+      for(let i=0;i<count;i++){const x=horiz?bw*i:0,y=horiz?0:bh*i,on=i===beat;rect(x+2,y+2,bw-4,bh-4,color(i,on?63+hit*9:22));if(on){rect(x+2,y+2,horiz?bw-4:5,horiz?5:bh-4,color(i,86));if(!reduced)rect(x+2,y+bh-5,(bw-4)*p,3,color(i,86));}text(i+1,x+bw/2,y+bh/2,Math.min(bw*.6,bh*.57,100),on?'#101620':color(i,87));}
     }else if(mode==='pulse'||mode==='ring'){
       if(!reduced&&hit>.02){g.shadowColor=color(beat,60,.8);g.shadowBlur=Math.min(24,r*.13)*hit;}
       if(mode==='pulse'){for(let i=0;i<3;i++){const f=(p+i/3)%1;arc(cx,cy,r*(.32+.85*f),0,tau,Math.max(1,r*.038*(1-f)),color(beat,68,(1-f)*(.22+.68*hit)));}arc(cx,cy,r*.3,0,tau,4+9*hit,color(beat,74));}

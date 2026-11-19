@@ -1,29 +1,29 @@
 {
   "schema": 1,
-  "version": "13.5.29",
-  "build": "2026.11.19.8",
-  "cache": "music-toolbox-ultra-v13.5.29-20261119-8",
+  "version": "13.5.30",
+  "build": "2026.11.19.9",
+  "cache": "music-toolbox-ultra-v13.5.30-20261119-9",
   "generatedAt": "2026-11-19T00:00:00.000Z",
   "assets": [
     {
       "url": "./app-final.css",
-      "bytes": 110795,
-      "sha256": "2ea6209321242e339f2faafcb9260a54232a414484ef80b1196b58859f0db5fb"
+      "bytes": 110845,
+      "sha256": "82787be9809f759681a9c3725cc734b8602cb85a34b0dd42652d7a965b2c9721"
     },
     {
       "url": "./app-final.js",
-      "bytes": 465781,
-      "sha256": "03d92bae056a14f8edadaaf1ce4331c1ed302c6c464975573fe5c656398b05fe"
+      "bytes": 465876,
+      "sha256": "c5dbf02d0ad3613d4717c616bb3b242236489e527c553ee12053b2fbdfd26c37"
     },
     {
       "url": "./app-shell.css",
-      "bytes": 71722,
-      "sha256": "9fa71f7c8c91f35c9688c6c5463f87ba6e51297d9d83d1e0412cd5487e68d217"
+      "bytes": 75768,
+      "sha256": "51cb50dece5bc26ae10a54874e334af7923ca1c2e317722a8238ae42e668ad08"
     },
     {
       "url": "./app-shell.js",
-      "bytes": 37791,
-      "sha256": "0991fdac5b7266b1b65758cf986f5730280869b9afc31b227a7dae9ec8915406"
+      "bytes": 38894,
+      "sha256": "c87774c6ed7e52391af462703930f4f6fcc293a32cdc4fd87359f7a0f8a71104"
     },
     {
       "url": "./assets/contact-douyin.jpg",
@@ -657,8 +657,8 @@
     },
     {
       "url": "./fret-trainer.js",
-      "bytes": 13432,
-      "sha256": "edc5c38cc01557cc0d170a02aa2d3300dfe590c81ba81392ab5bcc87b0383445"
+      "bytes": 14576,
+      "sha256": "121f9482546c98e2c23498b9ceea455ba863887006743ccf61b30ad3af9abab9"
     },
     {
       "url": "./icons/app-icon.svg",
@@ -702,13 +702,13 @@
     },
     {
       "url": "./index.html",
-      "bytes": 4570747,
-      "sha256": "6409752c64767fb6bde41661c9d183820c941564961b6c43288565d4fc8f1e23"
+      "bytes": 4571159,
+      "sha256": "96785aa91bcffb651027dbe4172ad0d22cb1f022e64b1d89e95dc43bcc3fb744"
     },
     {
       "url": "./learning-tips.js",
-      "bytes": 44258,
-      "sha256": "e4c8a178bd3256b535371783ce62344b942bcef54546bcfb7ec594b670eb1c77"
+      "bytes": 44904,
+      "sha256": "0587cc9d9b9e0ac3c1c575a8ef49e2f0c572fb351eb4361c80dc614b844fa2b8"
     },
     {
       "url": "./licenses/C01-muted-strum-CC0.txt",
@@ -783,7 +783,7 @@
     {
       "url": "./version.json",
       "bytes": 108,
-      "sha256": "addbfa7b563c4d248f4f9cb546696060d1c029f67fab8f4ec6dbdefb6a8a03dd"
+      "sha256": "ed1eae6ca1a40a4208143fc339b28ed9a58781b7e848bc8f9a26b0f097632303"
     }
   ]
 }

@@ -44,7 +44,7 @@ try{
     check(true,'最终发布脚本链实际加载');
     check(document.querySelectorAll('#start-mask .start-btn').length===1,'首页只有一个进入应用入口');
     check(document.querySelectorAll('#start-mask #start-install-btn').length===1&&!document.getElementById('start-install-btn').hidden,'首页立即初始化独立安装入口');
-    check(document.querySelectorAll('#shell-appearance').length===1&&document.querySelectorAll('[data-skin-choice]').length===5,'五种皮肤选择器完整');
+    check(document.querySelectorAll('#shell-appearance [data-skin-choice]').length===5&&document.querySelectorAll('#quick-theme [data-skin-choice]').length===5,'设置与顶栏均有五种配色');
     run('AppShell.init();AppShell.init()');
     check(document.querySelectorAll('#shell-appearance').length===1&&document.querySelectorAll('#tuner-instruments').length===1,'外壳重复初始化不重复创建控件');
     for(const item of document.querySelectorAll('nav .nav-item')){
@@ -111,6 +111,7 @@ try{
 
     run("Tuner.presetName='Standard';Tuner.customTuning=null;Tuner.lockedString=-1;Tuner.confirmedStringIdx=-1;GlobalCapo.mode='none';Tuner.renderStrings();window.__stringHits=[];AudioEngine.playInstrumentOnce=(...args)=>window.__stringHits.push(args)");
     check(document.querySelectorAll('#tuner-headstock #strings-container .s-btn').length===6&&document.querySelectorAll('[data-head-string]').length===6,'琴头复用全部六弦真实按钮');
+    const railDots=[...document.querySelectorAll('#tuner-range-targets i')];run('Tuner.renderStrings();TunerAssist.renderReading()');check(railDots.length===6&&railDots.every((n,i)=>n===document.querySelectorAll('#tuner-range-targets i')[i]),'刷新弦和音高时六个编号原位复用');
     for(let i=0;i<6;i++){
         document.querySelectorAll('#strings-container .s-btn')[i].onclick();
         const button=document.querySelectorAll('#strings-container .s-btn')[i],peg=document.querySelector(`[data-head-string="${i}"]`),hit=sandbox.__stringHits.at(-1);
