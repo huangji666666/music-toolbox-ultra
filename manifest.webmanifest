@@ -12,19 +12,19 @@
   "theme_color": "#0a84ff",
   "icons": [
     {
-      "src": "./icons/bento-192.png",
+      "src": "./icons/bento-crop-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/bento-512.png",
+      "src": "./icons/bento-crop-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/bento-maskable-512.png",
+      "src": "./icons/bento-crop-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

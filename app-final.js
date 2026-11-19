@@ -3,8 +3,8 @@
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.31';
-const PAGE_CACHE='music-toolbox-ultra-v13.5.31-20261119-10';
+const V13_VERSION='13.5.32';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.32-20261119-11';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -814,7 +814,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.31';
+const RELEASE_VERSION='13.5.32';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -1472,7 +1472,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.31';
+const RELEASE_VERSION='13.5.32';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -1896,7 +1896,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.10';
+const FINAL_BUILD='2026.11.19.11';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -1961,12 +1961,17 @@ Tuner.linearSmoothing=.065;
 Tuner.startLoop=function(){
     cancelAnimationFrame(this.animId);
     this._analysisElapsed=0;
+    let pitchTarget=null;
+    const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const loop=timestamp=>{
         this.animId=requestAnimationFrame(loop);
-        if(!AudioEngine.analyser||App.currentPage!=='tuner'||!AudioEngine.micStream?.active)return;
         const dt=Math.min(Math.max(0,(timestamp-this.lastFrameTime)/1000),.05);this.lastFrameTime=timestamp;
+        if(!AudioEngine.analyser||App.currentPage!=='tuner'||!AudioEngine.micStream?.active){pitchTarget=null;return;}
+        // Search motion is visual only; never send it to the note, Hz or string detector.
+        const idle=pitchTarget===null&&document.documentElement.dataset.motion!=='reduced'&&!reduce?.matches;
+        this.updateNeedle(pitchTarget??(idle?3*Math.sin(timestamp*.0032):0),dt);
         this._analysisElapsed+=dt*1000;
-        if(this._analysisElapsed<this.analysisIntervalMs){if(this.displayNote!=='--')this.updateNeedle(this.displayCents||0,dt);return;}
+        if(this._analysisElapsed<this.analysisIntervalMs)return;
         this._analysisElapsed=0;
         const capture=AudioEngine.captureProfiles[AudioEngine.captureProfile]||AudioEngine.captureProfiles.standard,result=AudioEngine.samplePitch(this.minFreq,this.maxFreq),now=performance.now();this.displayHoldMs=capture.holdMs;
         if(!result.valid||!result.freq)this.noiseFloor=finalClamp(this.noiseFloor*.965+(result.rms||0)*.035,capture.rmsFloor*.85,.025);
@@ -1974,10 +1979,11 @@ Tuner.startLoop=function(){
         const valid=result.valid&&result.freq>0&&result.rms>=threshold;
         window.TunerAssist?.observe({...result,valid},now);
         if(!valid){
-            if(sustain){this.updateNeedle(this.displayCents||0,dt);return;}
+            if(sustain)return;
+            pitchTarget=null;
             this.hideSnapWarning();
             if(this.displayNote!=='--'){this.displayNote='--';this.displayFreq=0;this.displayCents=0;this.isTuned=false;this.updateDisplay();}
-            this.freqBuffer=[];this.stableNote=-1;this.lastNote=-1;this.stableSince=0;this.updateNeedle(0,dt);
+            this.freqBuffer=[];this.stableNote=-1;this.lastNote=-1;this.stableSince=0;
             if(this.confirmedStringIdx!==-1||this.pendingStringIdx!==-1){this.confirmedStringIdx=-1;this.pendingStringIdx=-1;this.renderStrings();}
             return;
         }
@@ -1987,7 +1993,7 @@ Tuner.startLoop=function(){
         if(pc!==this.lastNote){this.lastNote=pc;this.stableSince=now;this.stableCount=0;}
         if(this.stableNote!==pc&&now-this.stableSince>=this.noteConfirmWindowMs){this.stableNote=pc;this.stableCount=0;}
         if(this.stableNote>=0){this.displayNote=noteName;this.displayFreq=medianFreq;this.displayCents=cents;this.isTuned=Math.abs(cents)<5;}
-        this.updateDisplay();this.updateNeedle(cents,dt);this.detectString(roundedMidi,result.confidence);
+        pitchTarget=cents;this.updateDisplay();this.detectString(roundedMidi,result.confidence);
         if(this.lockedString>=0&&this.targetStrings[this.lockedString]){const targetMidi=this.targetStrings[this.lockedString].midi;midi-targetMidi>=3?this.showSnapWarning(noteName):this.hideSnapWarning();}else this.hideSnapWarning();
     };
     this.lastFrameTime=performance.now();this.animId=requestAnimationFrame(loop);

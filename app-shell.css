@@ -342,21 +342,17 @@ html[data-motion=reduced] *,html[data-motion=reduced] *::before,html[data-motion
 /* 13.5.20 tuner mobile order: gauge, A4, headstock, piano rail. */
 .ui-glyph{display:inline-block;width:18px;height:18px;flex:0 0 18px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 [data-ui]>.ui-glyph:not(:last-child){margin-inline-end:5px}
-#music-tip-pill{position:relative;inset:auto;flex:0 0 44px;width:44px;height:44px;z-index:20}
-#tip-gauge-dock{position:absolute;right:5px;top:3px;width:44px;height:44px;pointer-events:none}
-@media(max-width:699px){#tip-gauge-dock{right:calc(max(82px,28%) + 12px)}}
-#tip-gauge-dock.return-target{border-radius:50%;outline:2px dashed var(--prim);outline-offset:-3px}
-body>#music-tip-pill{z-index:2400}
+.top-bar:has(#music-tip-pill){--tip-edge:max(8px,env(safe-area-inset-right,0px));min-height:calc(var(--safe-t,0px) + 49px)!important;padding-right:calc(var(--tip-edge) + 48px)!important}
+#music-tip-pill{position:absolute;inset:calc(var(--safe-t,0px) + 2px) var(--tip-edge) auto auto;width:44px;height:44px;z-index:20}
 #quick-theme .brightness-picks{padding:3px;background:var(--bg);border-radius:14px}
 #quick-theme .brightness-picks button{border-radius:11px;background:transparent}
 #quick-theme .brightness-picks button[aria-pressed=true]{color:var(--prim);background:var(--surf);outline:0;box-shadow:inset 0 0 0 2px var(--prim)}
 #quick-theme .brightness-picks button:focus-visible{outline:2px solid var(--text);outline-offset:1px}
-.top-bar .watermark-top{position:static;transform:none;margin-left:auto;margin-right:6px;white-space:nowrap}.top-bar .mode-group{min-width:0;flex:0 1 auto}.top-bar #music-tip-pill{margin-right:4px}
+.top-bar .watermark-top{position:static;transform:none;margin-left:auto;margin-right:6px;white-space:nowrap}.top-bar .mode-group{min-width:0;flex:0 1 auto}
 nav .nav-icon .ui-glyph{width:22px;height:22px;fill:none!important;stroke:currentColor!important}
 #instrument-study #instrument-caged-open{width:auto;min-height:44px;padding:4px 10px;gap:4px;font-size:12px}#instrument-study #instrument-caged-open svg{margin:0}
 .circle-compose summary small{float:right;color:var(--text-sub);font-weight:500}.compose-tools button:disabled{opacity:.5}
-#music-tip-pill .music-tip-toggle{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;border:1px solid var(--shell-line);background:var(--surf);color:var(--prim);border-radius:50%;box-shadow:0 3px 9px #0c203d45,inset 0 1px 0 #ffffff50;touch-action:none;user-select:none;cursor:grab}
-#music-tip-pill .music-tip-toggle:active{cursor:grabbing}
+#music-tip-pill .music-tip-toggle{display:grid;place-items:center;width:44px;height:44px;min-height:44px;padding:0;border:1px solid var(--shell-line);background:var(--surf);color:var(--prim);border-radius:50%;box-shadow:0 3px 9px #0c203d45,inset 0 1px 0 #ffffff50;touch-action:manipulation;cursor:pointer}
 #music-tip-pill .tool-hint{position:absolute;top:100%;margin-top:4px;width:min(210px,65vw);padding:8px 10px;border-radius:10px;background:var(--shell-panel);border:1px solid var(--shell-line);font-size:12px;line-height:1.45;pointer-events:none}
 #music-tip-card{max-height:calc(100dvh - var(--nav-h,60px) - 62px);overflow-y:auto;box-sizing:border-box}
 #music-tip-stream .music-tip-danmaku,#tip-reading-lane .music-tip-danmaku{box-shadow:none!important;border:0!important;border-radius:0!important;background:none!important;color:var(--text)!important;opacity:.5;white-space:nowrap;letter-spacing:0;text-align:left;font-size:12px!important}

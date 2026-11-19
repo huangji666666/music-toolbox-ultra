@@ -160,9 +160,9 @@
   for(const [action,pc,minor] of [['circleC',0,false],['circleG',7,false],['circleAm',9,true]])routes[action]=['circle','在五度圈查看',()=>{if(CirclePage.selectedKey!==pc||CirclePage.selectedMinor!==minor)CirclePage.selectKey(pc,minor);}];
 
   const pill=document.createElement('aside');pill.id='music-tip-pill';pill.className='music-tip-pill';
-  pill.innerHTML='<button class="music-tip-toggle" data-ui="lightbulb" type="button" title="学习小贴士 · 可拖动" aria-label="学习小贴士" aria-expanded="false"></button>';
+  pill.innerHTML='<button class="music-tip-toggle" data-ui="lightbulb" type="button" title="学习小贴士" aria-label="学习小贴士" aria-expanded="false"></button>';
   const host=document.createElement('div');host.id='music-tip-stream';host.className='music-tip-stream';
-  const dock=document.createElement('div');dock.id='tip-gauge-dock';document.querySelector('#page-tuner .tuner-display').append(dock);dock.append(pill);document.body.append(host);
+  byId('theme-toggle-btn').after(pill);document.body.append(host);
   const close=()=>{byId('music-tip-card')?.remove();pill.firstChild.setAttribute('aria-expanded','false');};
   const syncVisibility=()=>{host.hidden=get(hiddenKey,'0')==='1'||get(foldedKey,'0')==='1';host.replaceChildren();const opt=document.querySelector('#music-tip-settings-v21 [data-auto]');if(opt)opt.checked=get(hiddenKey,'0')!=='1';};
   const setStream=state=>{localStorage.setItem(hiddenKey,state==='off'?'1':'0');localStorage.setItem(foldedKey,state==='fold'?'1':'0');syncVisibility();close();if(!host.hidden)spawn();};
@@ -184,19 +184,15 @@
     pill.firstChild.setAttribute('aria-expanded','true');document.body.append(card);icons(card);host.replaceChildren();placeCard();
   };
   let context=null;
-  pill.firstChild.onclick=()=>{if(dragged){dragged=false;return;}byId('music-tip-card')?close():show(context||draw());};
+  pill.firstChild.onclick=()=>byId('music-tip-card')?close():show(context||draw());
   const settings=document.createElement('section');settings.className='music-tip-settings';settings.id='music-tip-settings-v21';settings.innerHTML='<label>弹幕位置<select><option value="auto">自动</option><option value="spread">全屏留白</option><option value="top">上半屏优先</option><option value="bottom">下半屏优先</option></select></label><label>功能讲解<input type="checkbox" data-guide></label>';
   const mountSettings=()=>{(byId('shell-appearance')||byId('page-settings')).append(settings);};mountSettings();document.addEventListener('DOMContentLoaded',mountSettings,{once:true});const position=settings.querySelector('select');
   const automatic=document.createElement('label');automatic.innerHTML='自动弹幕<input type="checkbox" data-auto>';settings.prepend(automatic);automatic.lastChild.onchange=e=>setStream(e.target.checked?'on':'off');
   const guides=settings.querySelector('[data-guide]');guides.checked=get('mtu-guide-v23','1')==='1';guides.onchange=()=>localStorage.setItem('mtu-guide-v23',guides.checked?'1':'0');
-  const limit=(v,min,max)=>Math.max(min,Math.min(v,max));let drag,dragged=false;
+  const limit=(v,min,max)=>Math.max(min,Math.min(v,max));
   function bounds(){return {w:innerWidth,h:innerHeight,top:Math.max(8,document.querySelector('.top-bar').getBoundingClientRect().bottom+5),bottom:Math.min(innerHeight-8,document.querySelector('nav').getBoundingClientRect().top-5)};}
   function placeCard(){const card=byId('music-tip-card');if(!card)return;const r=pill.getBoundingClientRect(),b=bounds(),h=card.offsetHeight;Object.assign(card.style,{left:`${limit(r.left+22-card.offsetWidth/2,8,b.w-card.offsetWidth-8)}px`,top:`${limit(r.bottom+h+6<b.bottom?r.bottom+6:r.top-h-6,b.top,b.bottom-h)}px`,right:'auto',bottom:'auto'});}
-  function move(x,y){if(pill.parentElement!==document.body)document.body.append(pill);const b=bounds();Object.assign(pill.style,{position:'fixed',left:`${limit(x,6,b.w-50)}px`,top:`${limit(y,b.top,b.bottom-44)}px`,right:'auto',bottom:'auto'});placeCard();}
-  function restore(){if(drag)return;const value=get('mtu-tip-xy','').split(',').map(Number);if(value.length===2&&value.every(Number.isFinite)){move(value[0]*(innerWidth-44),value[1]*(innerHeight-44));return;}pill.removeAttribute('style');if(byId('page-tuner').classList.contains('active'))dock.append(pill);else byId('theme-toggle-btn').before(pill);placeCard();}
-  pill.onpointerdown=e=>{if(e.button!==0)return;const r=pill.getBoundingClientRect();drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx:e.clientX-r.left,dy:e.clientY-r.top};dragged=false;pill.firstChild.setPointerCapture(e.pointerId);};
-  pill.onpointermove=e=>{if(!drag||e.pointerId!==drag.id)return;if(!dragged&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;dragged=true;dock.classList.add('return-target');move(e.clientX-drag.dx,e.clientY-drag.dy);pill.firstChild.setPointerCapture(e.pointerId);};
-  window.addEventListener('pointerup',e=>{if(drag?.id!==e.pointerId)return;drag=null;dock.classList.remove('return-target');if(!dragged)return;const r=pill.getBoundingClientRect(),d=dock.getBoundingClientRect();if(d.width&&Math.hypot(r.left-d.left,r.top-d.top)<=34){localStorage.removeItem('mtu-tip-xy');restore();}else localStorage.setItem('mtu-tip-xy',[r.left/(innerWidth-44),r.top/(innerHeight-44)].join(','));});window.addEventListener('pointercancel',()=>{drag=null;dragged=false;dock.classList.remove('return-target');restore();});window.addEventListener('resize',restore);requestAnimationFrame(restore);
+  window.addEventListener('resize',placeCard);
   for(const option of position.options)option.selected=option.value===get(positionKey,'spread');
   position.onchange=()=>{localStorage.setItem(positionKey,position.value);host.replaceChildren();spawn();};
   const obstacles='button,select,input,textarea,summary,label,a,[role="button"],svg,canvas,#tuner-headstock,#tuner-range,.ear-display,#sight-score,.drum-grid,.music-tip-toggle';
@@ -222,7 +218,7 @@
   };
   const changeScene=()=>{
     const next=document.querySelector('main .page.active')?.id.replace('page-','');if(!scenes[next]||next===scene)return;
-    const follow=!!byId('music-tip-card');scene=next;context=null;close();restore();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
+    const follow=!!byId('music-tip-card');scene=next;context=null;close();host.replaceChildren();hideHint();clearInterval(timer);cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow?show(draw()):spawn());timer=setInterval(spawn,1900);
   };
   const observer=new MutationObserver(changeScene);
   document.querySelectorAll('main > .page').forEach(page=>observer.observe(page,{attributes:true,attributeFilter:['class']}));
