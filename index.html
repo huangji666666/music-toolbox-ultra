@@ -9,8 +9,8 @@
     <meta name="application-name" content="音乐工具箱 Ultra">
     <meta name="apple-mobile-web-app-title" content="音乐工具箱 Ultra">
     <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="icon" href="./icons/app-icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="icon" href="./icons/app-icon.svg?v=41" type="image/svg+xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/bento-180.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
@@ -900,10 +900,15 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             </ul>
         </div>
         <section class="release-notice" aria-label="本次更新公告">
-            <div><strong>本次更新</strong><small>v13.5.28</small></div>
-            <p>同排弦号与琴键波纹 · 节奏自动补小节 · 撤销与重做</p>
-            <details><summary>展开全部更新 · 13.5.14 至 13.5.28</summary><div class="release-list">
-                <section><h3>本轮新增 · 13.5.28</h3><ul>
+            <div><strong>本次更新</strong><small>v13.5.29</small></div>
+            <p>新应用图标 · 同版本不提示更新 · 离线启动与缓存修复</p>
+            <details><summary>展开全部更新 · 13.5.14 至 13.5.29</summary><div class="release-list">
+                <section><h3>本轮新增 · 13.5.29</h3><ul>
+                    <li>浏览器与桌面图标统一使用蓝白三格图标。</li>
+                    <li>区分离线素材准备与真正的版本更新；下载失败不切换。</li>
+                    <li>离线启动保留上一份完整缓存；联网修复不清除个人记录。</li>
+                </ul></section>
+                <section><h3>13.5.28</h3><ul>
                     <li>弦号保持同一行，短箭头对准目标琴键。等待时各弦显示波纹，锁弦后只显示所选琴键。</li>
                     <li>可视化节拍器使用与速度卡等宽的大入口；小节数支持下拉选择 1–32。</li>
                     <li>改变长度时补齐空白小节，保留手工休止与锁轨；编排可撤销、重做。</li>
@@ -980,10 +985,11 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
             </div></details>
         </section>
         <div class="start-update-check" id="start-update-check" data-state="checking" aria-live="polite">
-            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.28</small></div>
+            <div class="start-update-head"><i class="start-update-dot"></i><strong id="start-update-status">检查更新 · 自检中</strong><small id="start-update-version">v13.5.29</small></div>
             <div class="start-update-progress" role="progressbar" aria-label="离线素材与版本检查进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12"><i id="start-update-progress"></i></div>
             <div class="start-update-detail" id="start-update-detail">正在核对离线素材与版本信息；可直接进入，不必等待。</div>
             <button class="start-update-action" id="start-update-action" onclick="PWAUpdate.apply()">更新本地素材</button>
+            <a href="./repair.html?reset=1" id="offline-repair" hidden>修复离线缓存</a>
         </div>
         <div class="start-actions" role="group" aria-label="应用操作">
             <button class="start-btn" onclick="App.startApp()" aria-label="进入应用并启用麦克风">进入应用</button>
@@ -1481,7 +1487,7 @@ html[data-layout="short"]{--nav-h:50px;--page-gap:3px;--page-pad:8px}html[data-l
                 <svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>关于
             </div>
             <div class="setting-row">
-                <span class="setting-label">音乐工具箱 Ultra v13.5.28</span>
+                <span class="setting-label">音乐工具箱 Ultra v13.5.29</span>
                 <span class="setting-val" style="color:var(--text-sub)">BY 黄鸡</span>
             </div>
             <div class="setting-row"><span class="setting-label">内嵌采样许可</span><span class="setting-val" style="color:var(--text-sub);max-width:62%;text-align:right">FreePats · Sonic Pi · VCSL · Virtuosity Drums · C01 自然制音 · CC0 1.0</span></div>

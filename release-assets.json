@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "13.5.28",
-  "build": "2026.11.19.7",
-  "cache": "music-toolbox-ultra-v13.5.28-20261119-7",
+  "version": "13.5.29",
+  "build": "2026.11.19.8",
+  "cache": "music-toolbox-ultra-v13.5.29-20261119-8",
   "generatedAt": "2026-11-19T00:00:00.000Z",
   "assets": [
     {
@@ -12,8 +12,8 @@
     },
     {
       "url": "./app-final.js",
-      "bytes": 465672,
-      "sha256": "6ce1fa28855d67bf441c29297f98c76641f9e6cfc6703c9a3a7e119df3bd74d0"
+      "bytes": 465781,
+      "sha256": "03d92bae056a14f8edadaaf1ce4331c1ed302c6c464975573fe5c656398b05fe"
     },
     {
       "url": "./app-shell.css",
@@ -662,28 +662,48 @@
     },
     {
       "url": "./icons/app-icon.svg",
-      "bytes": 1202,
-      "sha256": "0c0363608ec6063eec49eadc79a902f84cd504cb23e3b07041b9aa5b29564429"
+      "bytes": 1826,
+      "sha256": "a10302e8b35e0bb011ba2c8ef176bff37f84344ff0268ef1d578acebfd049fa3"
+    },
+    {
+      "url": "./icons/bento-180.png",
+      "bytes": 10315,
+      "sha256": "8dfe7b05d8e1205165aeff4ab24010958d195e5e135a9d1ddc47595d5888884a"
+    },
+    {
+      "url": "./icons/bento-192.png",
+      "bytes": 11050,
+      "sha256": "1668a5add20ebe13e146ab66c6adf42d2e81334cbca77e5eb477bd1d45934c7a"
+    },
+    {
+      "url": "./icons/bento-512.png",
+      "bytes": 44798,
+      "sha256": "74102fec0fbe9123d225e40164743b841812dc7a3a4ac21eda7ddf9e69a19ddc"
+    },
+    {
+      "url": "./icons/bento-maskable-512.png",
+      "bytes": 44798,
+      "sha256": "74102fec0fbe9123d225e40164743b841812dc7a3a4ac21eda7ddf9e69a19ddc"
     },
     {
       "url": "./icons/icon-192.png",
-      "bytes": 15509,
-      "sha256": "6ff508747499701d89a4c089fa2ab04a8b08cd3a7cdf553b59f67d39759c1e76"
+      "bytes": 11050,
+      "sha256": "1668a5add20ebe13e146ab66c6adf42d2e81334cbca77e5eb477bd1d45934c7a"
     },
     {
       "url": "./icons/icon-512.png",
-      "bytes": 45610,
-      "sha256": "78b0d87ae712ea6129b6a5453c6620095eb111f674697a45d0d19f50ce79cdf0"
+      "bytes": 44798,
+      "sha256": "74102fec0fbe9123d225e40164743b841812dc7a3a4ac21eda7ddf9e69a19ddc"
     },
     {
       "url": "./icons/icon-maskable-512.png",
-      "bytes": 44904,
-      "sha256": "c1832f3cfeed444e0ca96112a2e4deec6c79b646852c6219f1b5aeb0b73ecc1b"
+      "bytes": 44798,
+      "sha256": "74102fec0fbe9123d225e40164743b841812dc7a3a4ac21eda7ddf9e69a19ddc"
     },
     {
       "url": "./index.html",
-      "bytes": 4570244,
-      "sha256": "af64fdd8bf0cbb45856b95718b38a3033e5bec1ca997035166a4dc019feb43b0"
+      "bytes": 4570747,
+      "sha256": "6409752c64767fb6bde41661c9d183820c941564961b6c43288565d4fc8f1e23"
     },
     {
       "url": "./learning-tips.js",
@@ -742,8 +762,13 @@
     },
     {
       "url": "./manifest.webmanifest",
-      "bytes": 758,
-      "sha256": "04cf67f13291929463ce2ae0ae0eddd0c76069d7b228d1b34b8953c041f4478c"
+      "bytes": 761,
+      "sha256": "2915c7c1d37270cc1a12f7c91ce68e24a6303d8dd4a969fc8f16d8098ba78480"
+    },
+    {
+      "url": "./repair.html",
+      "bytes": 2411,
+      "sha256": "2db3dfc377ac7aa160f321eef8269e904cf7a43c5b20684524b38535e0992a3a"
     },
     {
       "url": "./sight-library-v2.js",
@@ -758,7 +783,7 @@
     {
       "url": "./version.json",
       "bytes": 108,
-      "sha256": "a6737f4b8e41e6fc967a41accdf363c5698c2e5db01b2f88521bf77362283427"
+      "sha256": "addbfa7b563c4d248f4f9cb546696060d1c029f67fab8f4ec6dbdefb6a8a03dd"
     }
   ]
 }

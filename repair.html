@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>音乐工具箱 Ultra · 离线修复</title>
+<style>:root{color-scheme:light dark;font:16px/1.6 system-ui}main{max-width:32rem;margin:12vh auto;padding:20px}h1{font-size:24px}button,a{font:inherit;padding:10px 14px}output{display:block;margin:18px 0}</style>
+<main><h1>音乐工具箱 Ultra · 离线修复</h1><p>联网校验并恢复本应用的离线文件。个人设置和练习记录会保留。</p><button id="repair">修复离线缓存</button><a href="./">打开工具箱</a><output aria-live="polite"></output></main>
+<script>
+const btn=document.querySelector('button'),out=document.querySelector('output');
+const pause=ms=>new Promise(r=>setTimeout(r,ms));
+const ask=(w,type,ms)=>new Promise((resolve,reject)=>{const c=new MessageChannel();const t=setTimeout(()=>{c.port1.close();reject(Error('操作超时，请联网后重试'));},ms);c.port1.onmessage=e=>{clearTimeout(t);c.port1.close();resolve(e.data)};w.postMessage({type},[c.port2]);});
+navigator.serviceWorker?.addEventListener('message',e=>{if(btn.disabled&&e.data?.type==='CACHE_PROGRESS')out.textContent=`校验素材 ${e.data.done}/${e.data.total}`;});
+btn.onclick=async()=>{btn.disabled=true;try{out.textContent='检查线上版本…';const res=await fetch('./version.json?resetProbe='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('无法读取线上版本');const info=await res.json();const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});await reg.update();const limit=Date.now()+180000;let active,switched=false;
+while(Date.now()<limit){if(reg.waiting){if(await ask(reg.waiting,'BUILD_ID',5000)!==info.cache)throw Error('发布尚未同步');reg.waiting.postMessage({type:'SKIP_WAITING'});switched=true;}else if(!reg.installing&&reg.active?.state==='activated'){active=reg.active;break;}await pause(160);}
+if(!active||await ask(active,'BUILD_ID',5000)!==info.cache)throw Error('未能切换到线上版本');if(!switched){out.textContent='校验离线文件…';if(!(await ask(active,'REPAIR_OFFLINE',180000)).ok)throw Error('下载或校验未完成');}out.textContent='修复完成，可以打开工具箱。';}catch(e){out.textContent='修复未完成：'+e.message+'。请确认联网后重试。';}finally{btn.disabled=false;}};
+</script></html>

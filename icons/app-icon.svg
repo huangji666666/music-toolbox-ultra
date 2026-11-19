@@ -1,20 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="音乐工具箱 Ultra 图标">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
-    <linearGradient id="bg" x1="64" y1="32" x2="448" y2="480" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0a84ff"/>
-      <stop offset="1" stop-color="#5856d6"/>
+    <linearGradient id="i41_bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
     </linearGradient>
-    <linearGradient id="glow" x1="150" y1="120" x2="350" y2="400" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#bdeeff"/>
+    <linearGradient id="i41_bl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#007AFF"/>
     </linearGradient>
+    <filter id="i41_sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#0F172A" flood-opacity="0.14"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="174" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="10"/>
-  <path d="M150 154v202M192 132v248M234 116v280M278 116v280M320 132v248M362 154v202" stroke="url(#glow)" stroke-width="8" stroke-linecap="round"/>
-  <path d="M114 256h284" stroke="#ffffff" stroke-opacity=".65" stroke-width="10" stroke-linecap="round"/>
-  <circle cx="278" cy="256" r="31" fill="#ffffff"/>
-  <path d="M278 225l31-50" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
-  <circle cx="150" cy="154" r="11" fill="#64d8ff"/>
-  <circle cx="362" cy="356" r="11" fill="#ffffff"/>
+  <rect width="1024" height="1024" fill="url(#i41_bg)"/>
+  <rect x="164" y="164" width="696" height="696" rx="164" fill="#FFFFFF" filter="url(#i41_sh)"/>
+  <!-- Top big blue module -->
+  <rect x="220" y="220" width="584" height="272" rx="76" fill="url(#i41_bl)"/>
+  <g fill="#FFFFFF">
+    <rect x="316" y="320" width="44" height="72" rx="22" opacity="0.6"/>
+    <rect x="394" y="286" width="44" height="140" rx="22"/>
+    <rect x="472" y="264" width="44" height="184" rx="22"/>
+    <rect x="550" y="294" width="44" height="124" rx="22"/>
+    <rect x="628" y="320" width="44" height="72" rx="22" opacity="0.6"/>
+  </g>
+  <!-- Bottom 2 modules -->
+  <rect x="220" y="528" width="274" height="276" rx="76" fill="#EFF6FF"/>
+  <g fill="none" stroke="#007AFF" stroke-width="26" stroke-linecap="round">
+    <path d="M 320 596 L 320 662 A 37 37 0 0 0 394 662 L 394 596"/>
+    <line x1="357" y1="699" x2="357" y2="742"/>
+  </g>
+  <rect x="530" y="528" width="274" height="276" rx="76" fill="#EFF6FF"/>
+  <circle cx="667" cy="666" r="76" fill="none" stroke="#007AFF" stroke-width="24" stroke-dasharray="32 16"/>
+  <circle cx="667" cy="666" r="24" fill="#38BDF8"/>
 </svg>

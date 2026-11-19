@@ -3,7 +3,8 @@
 (() => {
 'use strict';
 
-const V13_VERSION='13.5.28';
+const V13_VERSION='13.5.29';
+const PAGE_CACHE='music-toolbox-ultra-v13.5.29-20261119-8';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
@@ -693,28 +694,37 @@ const PWAUpdate={
     _node(id){return document.getElementById(id);},
     _withTimeout(promise,ms,label){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error(`${label} timeout`)),ms);Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value);},error=>{clearTimeout(timer);reject(error);});});},
     setState(state,title,detail,progress=100,action=false){
+        this.lastState=[state,title,detail,progress,action];if(state!=='ready')this._node('pwa-update')?.classList.remove('show');const repair=this._node('offline-repair');if(repair)repair.hidden=state!=='error';
         const card=this._node('start-update-check'),status=this._node('start-update-status'),info=this._node('start-update-detail'),bar=this._node('start-update-progress'),wrap=bar?.parentElement,button=this._node('start-update-action'),version=this._node('start-update-version');
         if(card)card.dataset.state=state;if(status)status.textContent=title;if(info)info.textContent=detail;if(version)version.textContent=`v${this.remoteVersion||V13_VERSION}`;
         const value=Math.max(0,Math.min(100,Number(progress)||0));if(bar)bar.style.width=value+'%';if(wrap)wrap.setAttribute('aria-valuenow',String(Math.round(value)));if(button)button.classList.toggle('show',!!action);
         const small=this._node('settings-update-check');if(small){small.dataset.state=state;const btn=small.querySelector('button'),meter=small.querySelector('progress');btn.title=detail;const busy=['checking','downloading','applying'].includes(state);meter.hidden=!busy;if(state==='downloading'&&detail.includes('离线素材 ')&&/\d+\/\d+/.test(detail))meter.value=value;else meter.removeAttribute('value');small.querySelector('output').textContent=({'checking':'检查中','downloading':'下载中','ready':'可更新','applying':'切换中','latest':'已是最新版本','error':'失败 · 重试','offline':'当前离线','local':'本地单文件'})[state]||title;if(!meter.hidden&&meter.hasAttribute('value'))small.querySelector('output').textContent+=` ${value}%`;}
     },
-    setProgress(done,total){if(total>0)this.setState('downloading','正在准备离线素材',`离线素材 ${done}/${total}；准备完成后可选择更新。`,Math.round(done/total*100),false);},
-    dismiss(){document.getElementById('pwa-update')?.classList.remove('show');if(this.registration?.waiting)this.setState('ready','发现新版 · 已准备完成','可直接进入当前版本，稍后也能在提示中更新。',100,true);},
-    show(){this.setState('ready','发现新版 · 已准备完成','新版离线素材已完整下载；更新为可选操作，不影响进入。',100,true);document.getElementById('pwa-update')?.classList.add('show');},
+    setProgress(done,total){if(total>0)this.setState('downloading','正在准备离线素材',`离线素材 ${done}/${total}；可直接进入应用。`,Math.round(done/total*100),false);},
+    dismiss(){document.getElementById('pwa-update')?.classList.remove('show');if(this.confirmedWorker&&this.registration?.waiting===this.confirmedWorker)this.setState('ready','发现新版 · 已准备完成','可直接进入当前版本，稍后也能在提示中更新。',100,true);},
+    async show(){
+        const w=this.registration?.waiting;if(!w)return;
+        const id=await new Promise(resolve=>{const c=new MessageChannel();const finish=value=>{clearTimeout(t);c.port1.close();resolve(value);};const t=setTimeout(()=>finish(null),2500);c.port1.onmessage=e=>finish(e.data);try{w.postMessage({type:'BUILD_ID'},[c.port2]);}catch{finish(null);}});
+        if(this.registration?.waiting!==w)return;
+        if(id===PAGE_CACHE){w.postMessage({type:'SKIP_WAITING'});this.setState('latest','当前版本已就绪','本地素材已准备完成。');return;}
+        if(!id||!this.onlineBuild||id!==this.onlineBuild){this.setState('offline','继续使用当前版本','未确认新的线上构建，不切换版本。');return;}
+        this.confirmedWorker=w;this.setState('ready','发现新版 · 已准备完成','新版已完整下载，可现在切换或稍后再用。',100,true);this._node('pwa-update')?.classList.add('show');
+    },
     apply(){
-        if(this.registration?.waiting){this.setState('applying','正在更新本地素材','正在安全切换到新版本，请稍候…',100,false);try{sessionStorage.setItem('music-toolbox-ultra-reload','1');}catch(e){}this.registration.waiting.postMessage({type:'SKIP_WAITING'});return;}
+        if(this.registration?.waiting&&this.registration.waiting===this.confirmedWorker){this._applyRequested=true;this.setState('applying','正在切换版本','正在打开已校验的版本…',100,false);this.registration.waiting.postMessage({type:'SKIP_WAITING'});return;}
         if(this.registration?.installing){this.setState('downloading','正在准备新版','素材尚未下载完整，完成后按钮会自动出现。',72,false);return;}
         this.setState('checking','重新检查更新','正在重新核对版本与离线素材…',24,false);this.initPromise=null;this.init();
     },
     _watch(worker){
         if(!worker||worker.__xingxianWatched)return;worker.__xingxianWatched=true;
-        if(navigator.serviceWorker.controller)this.setState('downloading','发现新版 · 正在准备本地素材','后台下载完整后才会提供更新按钮。',42,false);else this.setState('downloading','首次离线准备中','正在缓存应用与本地素材；仍可直接进入。',28,false);
+        this.setState('downloading','正在准备离线素材','可直接进入应用。',0,false);
         const onInstalled=()=>{
             if(navigator.serviceWorker.controller)this.show();
             else{this.setState('latest','离线素材已准备','当前版本已完整缓存，可以离线使用。',100,false);toast('应用已缓存，可离线使用',2600);}
         };
         worker.addEventListener('statechange',()=>{
             if(worker.state==='installed')onInstalled();
+            if(worker.state==='activated'&&!this.registration?.waiting)this.setState('latest','当前版本已就绪','可离线使用。');
             if(worker.state==='redundant'&&!this.registration?.waiting)this.setState('error','更新未完成 · 保留当前版本','新版素材未完整通过自检，当前离线版本未受影响。',100,false);
         });
         // Worker may finish between registration and listener attachment. Read the
@@ -729,15 +739,15 @@ const PWAUpdate={
         try{
             const base=new URL('./',document.baseURI),serviceWorkerUrl=new URL('sw.js',base),versionUrl=new URL('version.json',base);document.documentElement.dataset.updateBase=base.pathname;
             this.registration=await this._withTimeout(navigator.serviceWorker.register(serviceWorkerUrl.href,{scope:base.href,updateViaCache:'none'}),5500,'service worker register');
-            if(!this._messageBound){this._messageBound=true;navigator.serviceWorker.addEventListener('message',event=>{const data=event.data||{};if(data.type==='CACHE_PROGRESS')this.setProgress(data.done,data.total);if(data.type==='CACHE_READY'&&navigator.serviceWorker.controller&&this.registration?.waiting)this.show();if(data.type==='CACHE_ERROR')this.setState('error','更新未完成 · 保留当前版本','新版素材下载或校验失败，当前离线版本仍可正常进入。',100,false);});}
-            if(!this._controllerBound){this._controllerBound=true;navigator.serviceWorker.addEventListener('controllerchange',()=>{let reload=false;try{reload=sessionStorage.getItem('music-toolbox-ultra-reload')==='1'||sessionStorage.getItem('xingxian-reload')==='1';if(reload){sessionStorage.removeItem('music-toolbox-ultra-reload');sessionStorage.removeItem('xingxian-reload');}}catch(e){}if(reload)location.reload();});}
-            if(this.registration.waiting){this.show();return;}
+            if(!this._messageBound){this._messageBound=true;navigator.serviceWorker.addEventListener('message',event=>{if(![this.registration?.installing,this.registration?.waiting,this.registration?.active].includes(event.source))return;const data=event.data||{};if(data.type==='CACHE_PROGRESS')this.setProgress(data.done,data.total);if(data.type==='CACHE_ERROR')this.setState('error','素材未完整下载','未切换版本，请联网后重试。',100,false);});}
+            if(!this._controllerBound){this._controllerBound=true;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(this._applyRequested){this._applyRequested=false;location.reload();}});}
             this._watch(this.registration.installing);if(this._observedRegistration!==this.registration){this._observedRegistration=this.registration;this.registration.addEventListener('updatefound',()=>this._watch(this.registration.installing));}
             const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),4200);let info;
-            try{versionUrl.searchParams.set('t',String(Date.now()));const response=await fetch(versionUrl.href,{cache:'no-store',signal:controller.signal,headers:{'cache-control':'no-cache'}});if(!response.ok)throw new Error('version '+response.status);info=await response.json();}finally{clearTimeout(timeout);}
-            this.remoteVersion=info.version||V13_VERSION;document.documentElement.dataset.availableVersion=this.remoteVersion;const changed=this.remoteVersion!==V13_VERSION;
-            if(changed)this.setState('downloading',`发现新版 v${this.remoteVersion}`,'正在后台准备完整离线素材；准备完毕后可选择更新。',38,false);else if(!this.registration.installing)this.setState('latest','已是最新版本',`v${V13_VERSION} · 离线素材自检通过。`,100,false);
-            await this._withTimeout(this.registration.update(),15000,'service worker update');if(this.registration.waiting)this.show();else if(this.registration.installing)this._watch(this.registration.installing);else if(changed)this.setState('error','云端版本未完整发布 · 使用当前版本','version.json 已变化，但未检测到对应的新离线包。请确认已同时上传 sw.js 与全部素材；进入按钮不受影响。',100,false);else this.setState('latest','已是最新版本',`v${V13_VERSION} · 离线素材自检通过。`,100,false);
+            try{versionUrl.searchParams.set('resetProbe',String(Date.now()));const response=await fetch(versionUrl.href,{cache:'no-store',signal:controller.signal});if(!response.ok)throw new Error('version '+response.status);info=await response.json();}finally{clearTimeout(timeout);}
+            if(!info.cache||!info.version)throw new Error('版本信息不完整');this.onlineBuild=info.cache;this.remoteVersion=info.version;document.documentElement.dataset.availableVersion=this.remoteVersion;
+            const changed=info.cache!==PAGE_CACHE;
+            if(changed&&!this.registration.waiting&&!this.registration.installing)await this._withTimeout(this.registration.update(),15000,'service worker update');
+            if(this.registration.waiting)await this.show();else if(this.registration.installing)this._watch(this.registration.installing);else if(changed)this.setState('error','暂不能切换版本','线上构建与本机不一致，当前版本仍可使用。');else this.setState('latest','已是最新版本',`v${V13_VERSION} · 无需更新。`);
         }catch(error){const offline=navigator.onLine===false||error?.name==='AbortError'||error instanceof TypeError;this.setState(offline?'offline':'error',offline?'无网络 · 使用当前版本':'检查失败 · 使用当前版本',offline?'未连接到更新服务，已自动使用设备里的完整离线版本。':'版本自检暂时失败，不影响进入和当前离线素材。',100,false);console.warn('PWA 自检失败',error);}
     },
     init(){if(!this.initPromise)this.initPromise=this._run();return this.initPromise;}
@@ -803,7 +813,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.28';
+const RELEASE_VERSION='13.5.29';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const pageIsActive=name=>document.getElementById(`page-${name}`)?.classList.contains('active');
@@ -1460,7 +1470,7 @@ App.init=async function(){
 (() => {
 'use strict';
 
-const RELEASE_VERSION='13.5.28';
+const RELEASE_VERSION='13.5.29';
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const meterQuarterBeatsLocal=meter=>{const [numerator='4',denominator='4']=String(meter||'4/4').split('/');return Math.max(.25,(Number(numerator)||4)*4/(Number(denominator)||4));};
@@ -1886,7 +1896,7 @@ window.MTU_RELEASE_VERSION=RELEASE_VERSION;
 (() => {
 'use strict';
 
-const FINAL_BUILD='2026.11.19.7';
+const FINAL_BUILD='2026.11.19.8';
 const finalClamp=(value,min,max)=>Math.max(min,Math.min(max,Number(value)||0));
 const finalEscape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const finalIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
@@ -2050,7 +2060,6 @@ SightSinging.setPlaybackProgress=function(ratio,label){
 };
 
 /* 更新失败时显示确切缺失路径，不再只给模糊错误。 */
-if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',event=>{const data=event.data||{};if(data.type==='CACHE_ERROR'&&data.failed)PWAUpdate.setState('error','发布素材不完整 · 使用当前版本',`缺失：${data.failed}。已保留设备中的完整旧缓存。`,100,false);});
 
 document.querySelector('.start-btn')?.setAttribute('aria-label','进入音乐工具箱 Ultra');
 document.documentElement.dataset.finalBuild=FINAL_BUILD;
@@ -2967,6 +2976,7 @@ E.init = function() {
       section.id = 'settings-update-check';
       section.className = 'settings-update-check';
       section.innerHTML = '<button type="button" aria-label="检查更新"><span>检查更新</span><output aria-live="polite"></output><progress max="100" hidden></progress></button>';host.querySelector('.settings-community').firstElementChild.after(section);section.querySelector('button').onclick=()=>section.dataset.state==='ready'?PWAUpdate.apply():PWAUpdate.checkNow();
+      if(PWAUpdate.lastState)PWAUpdate.setState(...PWAUpdate.lastState);
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountSettingsUpdate, { once: true });
     else queueMicrotask(mountSettingsUpdate);

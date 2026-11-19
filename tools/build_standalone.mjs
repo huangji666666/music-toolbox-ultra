@@ -36,6 +36,7 @@ const embeddedApp=app
 let standalone=html
   .replace(/\s*<link rel="manifest"[^>]*>/,'')
   .replace(/\s*<link rel="icon"[^>]*>/,`\n<link rel="icon" href="${dataUri('image/svg+xml',icon)}">`)
+  .replace(/<link rel="apple-touch-icon"[^>]*>/,`<link rel="apple-touch-icon" href="${dataUri('image/png',await fs.readFile(path.join(root,'icons/bento-180.png')))}">`)
   .replace('<link rel="stylesheet" href="./app-final.css">',`<style data-final-module="app-final-css">\n${css}\n</style>`)
   .replace('<link rel="stylesheet" href="./app-shell.css">',`<style data-final-module="app-shell-css">\n${await fs.readFile(path.join(root,'app-shell.css'),'utf8')}\n</style>`)
   .replace('<script src="./sight-library-v2.js"></script>',`<script data-final-module="sight-library">\n${safeInline(library)}\n</script>`)

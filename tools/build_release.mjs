@@ -21,7 +21,7 @@ async function walk(directory){
 
 const html=await fs.readFile(path.join(root,'index.html'),'utf8');
 const linked=[...html.matchAll(/(?:src|href)=["'](\.\/[^"'#?]+)["']/g)].map(match=>match[1]);
-const core=['./index.html','./manifest.webmanifest','./version.json',...linked];
+const core=['./index.html','./repair.html','./manifest.webmanifest','./version.json',...linked];
 const folders=['assets','icons','licenses'];
 const folderFiles=(await Promise.all(folders.map(name=>walk(path.join(root,name))))).flat().map(relative);
 const urls=[...new Set([...core,...folderFiles])].sort();

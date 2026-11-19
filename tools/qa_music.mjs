@@ -47,7 +47,7 @@ async function auditCacheInstall(kind){
  }else{
   assert.equal(rejected,true);assert.equal(entries.has(old),true,'失败应保留旧缓存');assert.equal(messages.some(m=>m.type==='CACHE_READY'),false);
   assert.equal(entries.has(active),kind==='existing','复制失败清理新建目标，但保留此前存在的目标');
-  const error=messages.find(m=>m.type==='CACHE_ERROR');assert.ok(error);assert.ok(error.failed.endsWith('index.html'),'失败定位应指向实际失败资源');
+  const error=messages.find(m=>m.type==='CACHE_ERROR');assert.ok(error);assert.ok(error.failed.endsWith(kind==='download'?'index.html':'app-final.js'),'失败定位应指向实际失败资源');
   if(kind==='existing')assert.ok(entries.get(active).has(scope+'sentinel'));
  }
  checks++;console.log('PASS 实际Service Worker安装：'+({download:'下载失败保留旧缓存',quota:'目标复制配额失败清理半成缓存',existing:'目标复制失败保留已有活动缓存',success:'全部成功后才激活并淘汰旧缓存'})[kind]);
